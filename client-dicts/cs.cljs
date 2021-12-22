@@ -494,7 +494,7 @@
      :props/h2                                        "Střední nadpis"
      :props/h3                                        "Malý nadpis"
      :props/weight-none                               "Normální spoj"
-     :props/strong                                    "Silní spoj"
+     :props/strong                                    "Silný spoj"
      :props/arrowhead-none                            "Bez šipky"
      :props/single                                    "Šipka"
      :props/double                                    "Dvojitá šipka"
