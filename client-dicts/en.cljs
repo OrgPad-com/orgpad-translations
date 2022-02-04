@@ -44,7 +44,6 @@
      :button/send                                     "Send"
      :button/present                                  "Present"
      :button/present-tooltip                          "Start presentation (F5)"
-     :button/agree                                    "Agree and close"
      :button/share                                    "Share"
      :button/exit                                     "Exit"
      :button/show-password                            "Show"
@@ -65,12 +64,13 @@
      :checkout/activate-now                           "Activate now"
      :checkout/continue-for-free                      "Continue for free"
 
-     :consent/popup-text                              (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
+     :consent/title                                   "Usage of cookies in OrgPad"
+     :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
                                                         [:div.consent-text
                                                          "By using this site, you are agreeing with OrgPad's "
-                                                         [:a terms-and-conditions "Terms and Conditions"]
+                                                         [:a.link-button terms-and-conditions "Terms and Conditions"]
                                                          " and "
-                                                         [:a privacy-policy "Privacy policy"]
+                                                         [:a.link-button privacy-policy "Privacy policy"]
                                                          (str ". We employ the use of cookies to enable the functionality "
                                                               "of certain areas to make it easier for people using OrgPad.")])
 
@@ -317,6 +317,8 @@
      :notifications/receipts                          "Receipts when your subscription is automatically renewed"
      :notifications/receive-invitations               "Receive invitations from other people"
      :notifications/unblock-user                      "Unblock this person"
+
+     :onboarding/openable-units                       "Only elevated cells with shadows can be opened."
 
      :orgpage/change-information                      "Change information"
      :orgpage/copy-orgpage                            "Copy into a new OrgPage"

@@ -119,4 +119,22 @@
      :admin-gift-coupon-activated/subject  "Gift coupon for {{tier}} license activated ({{monetary-value}})"
      :admin-subscription-start/subject     "New {{period}} {{tier}} subscription started ({{monetary-value}})"
      :admin-subscription-end/subject       "Existing {{period}} {{tier}} subscription will end soon ({{monetary-value}})"
-     :admin-subscription-renewed/subject   "Existing {{period}} {{tier}} subscription was renewed ({{monetary-value}})"}))
+     :admin-subscription-renewed/subject   "Existing {{period}} {{tier}} subscription was renewed ({{monetary-value}})"
+
+     :reminder/subject                     "OrgPad discount, news and examples"
+     :reminder/preheader                   "What improved in OrgPad in December 2021 and examples how it can be used."
+     :reminder/thank-you                   "First of all, I'd like to thank you for creating an OrgPad account."
+     :reminder/phunt-launch                (str "December is a special month full of surprises. "
+                                                "The biggest surprise of last month came on Christmas Eve. "
+                                                "Santa wasn't responsible though, Product Hunt was. "
+                                                "At least I think so. OrgPad was one of the top five products "
+                                                "on Product Hunt that day. Thanks to that we have been busy over "
+                                                "Christmas answering people's emails and "
+                                                "questions on social media and sharing OrgPad further.")
+     :reminder/button-info                 (str "To make your start in OrgPad easier, I have prepared some examples of how to use OrgPad. "
+                                                "Click the button below to explore them. I have also added some news about OrgPad.")
+     :reminder/button                      "OrgPad news and examples"
+     :reminder/phunt-promo-code            (list "I'd also like to remind you of the "
+                                                 [:b "PHUNT21 promo code for 50% discount."]
+                                                 " You can help us by spreading the word about OrgPad on social media. "
+                                                 "A single tweet, post or mention would be great.")}))

@@ -44,7 +44,6 @@
      :button/send                                     "Poslat"
      :button/present                                  "Prezentovat"
      :button/present-tooltip                          "Začít prezentaci (F5)"
-     :button/agree                                    "Souhlasit a zavřít"
      :button/share                                    "Sdílet"
      :button/exit                                     "Ukončit"
      :button/show-password                            "Ukázat"
@@ -65,12 +64,13 @@
      :checkout/activate-now                           "Aktivovat nyní"
      :checkout/continue-for-free                      "Pokračovat zdarma"
 
-     :consent/popup-text                              (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
+     :consent/title                                   "Používání cookies v OrgPadu"
+     :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
                                                         [:div.consent-text
                                                          "Používáním této stránky souhlasíte s "
-                                                         [:a terms-and-conditions "pravidly a podmínkami"]
+                                                         [:a.link-button terms-and-conditions "pravidly a podmínkami"]
                                                          " společnosti OrgPad a se "
-                                                         [:a privacy-policy "zásadami ochrany osobních údajů"]
+                                                         [:a.link-button privacy-policy "zásadami ochrany osobních údajů"]
                                                          ". Pro určitou funkcionalitu, kterou usnadňujeme práci uživatelům OrgPadu, využíváme cookies."])
 
      :dashboard/confirm-delete                        [:<> [:b "Trvale"] " smazat tuto OrgStránku?"]
@@ -324,6 +324,8 @@
      :notifications/receipts                          "Účty při automatickém obnovení předplatného"
      :notifications/receive-invitations               "Dostávejte pozvánky od ostatních lidí"
      :notifications/unblock-user                      "Odblokujte tuto osobu."
+
+     :onboarding/openable-units                       "Otevřít lze pouze vyvýšené buňky se stíny."
 
      :orgpage/change-information                      "Změnit informace"
      :orgpage/copy-orgpage                            "Kopírovat do nové OrgStránky"

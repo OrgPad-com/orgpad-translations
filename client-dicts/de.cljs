@@ -42,7 +42,6 @@
      :button/send                                     "Senden"
      :button/present                                  "Präsentieren"
      :button/present-tooltip                          "Präsentation starten (F5)"
-     :button/agree                                    "Zustimmen und Schließen"
      :button/share                                    "Teilen"
      :button/exit                                     "Verlassen"
      :button/show-password                            "Anzeigen"
@@ -64,12 +63,13 @@
      :checkout/activate-now                           "Jetzt aktivieren"
      :checkout/continue-for-free                      "Kostenlos fortsetzen"
 
-     :consent/popup-text                              (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
+     :consent/title                                   "Nutzung von Cookies in OrgPad"
+     :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
                                                         [:div.consent-text
                                                          "Mit der Nutzung dieser Webseite stimmen Sie den "
-                                                         [:a terms-and-conditions "Nutzungsbedingungen"]
+                                                         [:a.link-button terms-and-conditions "Nutzungsbedingungen"]
                                                          " und den "
-                                                         [:a privacy-policy "Datenschutz-Bestimmungen"]
+                                                         [:a.link-button privacy-policy "Datenschutz-Bestimmungen"]
                                                          " von OrgPad zu. "
                                                          (str "Um die Funktionalität in bestimmten Bereichen von OrgPad "
                                                               "sicherstellen zu können, werden Cookies verwendet.")])
@@ -318,6 +318,8 @@
      :notifications/receipts                          "Rechnungen bei automatischer Verlängerung des Abos"
      :notifications/receive-invitations               "Einladungen von anderen Personen erhalten"
      :notifications/unblock-user                      "Person entsperren"
+
+     :onboarding/openable-units                       "Nur angehobene Einheiten mit Schatten können geöffnet werden."
 
      :orgpage/change-information                      "Informationen ändern"
      :orgpage/copy-orgpage                            "In eine neue OrgSeite kopieren"
