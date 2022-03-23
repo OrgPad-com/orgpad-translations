@@ -78,19 +78,6 @@
      :contact-user/block-user              "block all messages from {{user}}"
      :contact-user/block-all               "block all messages from all people in OrgPad."
 
-     :christmas-newsletter/subject         "Free version rule changes, news and outlooks"
-     :christmas-newsletter/preheader       "We will introduce you to upcoming changes, news and future plans in OrgPad and ways to support us."
-     :christmas-newsletter/introduction    (str "December is already knocking on the door and so comes the period of recapitulations, analyses and reflections."
-                                                " Allow me to ask you for a few minutes of your time to go over the news and changes that will take place in OrgPad"
-                                                " from December the 1st 2021.")
-     :christmas-newsletter/button-info     "Since I’ve made this newsletter directly in OrgPad, please proceed to it by clicking on the following button"
-     :christmas-newsletter/button          "Go to Newsletter"
-     :christmas-newsletter/button-info2    (list "or this link: " [:a {:href "https://orgpad.com/s/newsletter-end-2021"}
-                                                                   "https://orgpad.com/s/newsletter-end-2021"]
-                                                 ". The newsletter concerns, among other things, changes in the rules of the free version.")
-     :christmas-newsletter/best-wishes     "I wish you a pleasant and peaceful advent."
-     :christmas-newsletter/best-wishes2    "Sincerely, on behalf of the entire OrgPad team"
-
      :new-payment/subject                  "Payment succeeded"
      :new-payment/preheader                "You renewed your subscription to the {{tier}} plan, valid until {{subscription-end}}."
      :new-payment/common-info              (list "You have successfully renewed your subscription to the {{tier}} plan. It is valid until "

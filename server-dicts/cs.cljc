@@ -73,19 +73,6 @@
      :contact-user/block-user             "zablokovat všechny zprávy od {{user}}"
      :contact-user/block-all              "zablokovat všechny zprávy od všech lidí z OrgPadu."
 
-     :christmas-newsletter/subject        "Změna pravidel free verze, novinky a výhledy"
-     :christmas-newsletter/preheader      "Probereme s Vámi nadcházející změny, novinky a další plány v OrgPadu a možnosti, jak nás podpořit."
-     :christmas-newsletter/introduction   (str "prosinec již klepe na dveře a přichází tak období rekapitulací, analýz a zamýšlení se."
-                                               " Dovolte mi proto požádat Vás o pár minut Vašeho času, projdeme společně novinky a změny,"
-                                               " které v OrgPadu nastanou od 1. prosince 2021. ")
-     :christmas-newsletter/button-info    "Newsletter je zpracovaný přímo v OrgPadu, přejděte na něj, prosím, kliknutím na následující tlačítko"
-     :christmas-newsletter/button         "Přejít na Newsletter"
-     :christmas-newsletter/button-info2   (list "nebo tento odkaz: " [:a {:href "https://orgpad.com/s/newsletter-konec-2021"}
-                                                                      "https://orgpad.com/s/newsletter-konec-2021"]
-                                                ". Newsletter se týká mimo jiné změn v pravidlech free verze. ")
-     :christmas-newsletter/best-wishes    "Přeji Vám příjemný a poklidný advent."
-     :christmas-newsletter/best-wishes2   "S pozdravem za celý tým OrgPadu"
-
      :new-payment/subject                 "Platba proběhla v pořádku"
      :new-payment/preheader               "Obnovili jste Vaše předplatné {{tier}} pro období do {{subscription-end}}."
      :new-payment/common-info             (list "úspěšně jste obnovili Vaše předplatné {{tier}} pro období do "
