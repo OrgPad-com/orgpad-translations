@@ -99,7 +99,8 @@
      :editors/hidden-info                             "Click to write"
 
      :embedding-code/code                             "Code"
-     :embedding-code/description                      "To embed this OrgPage into your website, insert the following code into your website:"
+     :embedding-code/description                      [:<> "To embed this OrgPage into your " [:b "website"]
+                                                       ", insert the following code into your website:"]
 
      :error/orgpage-access-denied                     "You do not have access to this OrgPage. Try to log in."
      :error/usergroup-access-denied                   "Permissions to edit the team denied."
@@ -212,8 +213,11 @@
                                                        {:info/num-files [:info/count "files" "file" "files"]}]
      :info/uploading-images                           [:i18n/plural "Uploading {info/count} {info/num-images} ..."
                                                        {:info/num-images [:info/count "images" "image" "images"]}]
-     :info/uploading-images-failed                    [:i18n/plural "Failed to upload {info/count} {info/num-images}."
-                                                       {:info/num-images [:info/count "images" "image" "images"]}]
+     :info/uploading-images-failed                    (fn [info]
+                                                        (if info
+                                                          [:i18n/plural "Failed to upload {info/count} {info/num-images}."
+                                                           {:info/num-images [:info/count "images" "image" "images"]}]
+                                                          "Failed to upload at least one image."))
      :info/uploading-attachments-failed               "Uploading files failed."
      :info/presentation-link-copied                   "The link for this presentation copied."
      :info/storage-exceeded                           "The owner of this OrgPage does not have {upload/total-size} left to upload these files."
@@ -272,6 +276,7 @@
      :loading/restoring-opened-pages                  "Restoring position of opened pages ..."
      :loading/getting-orgpage                         "Downloading an OrgPage from the server ..."
      :loading/getting-dashboard                       "Downloading the list of available OrgPages from the server ..."
+     :loading/getting-website                         "Downloading a website from the server ..."
      :loading/uploading-orgpage                       "Uploading an OrgPage to the server ..."
      :loading/authorizing-user                        "Authorizing the user ..."
      :loading/ws-init                                 "Setting up connection to the server ..."
@@ -319,6 +324,9 @@
      :notifications/unblock-user                      "Unblock this person"
 
      :onboarding/openable-units                       "Only elevated cells with shadows can be opened."
+     :onboarding/zoom                                 "Scroll to zoom"
+     :onboarding/drag-canvas                          "Move by dragging"
+     :onboarding/open-units                           "Cells with shadows have content"
 
      :orgpage/change-information                      "Change information"
      :orgpage/copy-orgpage                            "Copy into a new OrgPage"
@@ -336,9 +344,12 @@
      :orgpage/zoom-in                                 "Zoom in"
      :orgpage/zoom-out                                "Zoom out"
      :orgpage/create-unit-double-click                "Double click to create a cell."
+     :orgpage/cannot-edit-on-small-screen             (str "Currently, it is not possible to create cells on a touch screen. "
+                                                           "In the side menu you can upload pictures and files and create notes.")
      :orgpage/switch-to-edit                          "Switch to edit."
 
      :orgpage/untitled                                "Untitled OrgPage"
+     :orgpage/title                                   "OrgPage title"
      :orgpage/untitled-unit                           "Untitled cell"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
@@ -348,6 +359,10 @@
                                                         (str "{orgpage/title}"
                                                              (when (> num-pages 1) " (page {orgpage/position})")))
      :orgpage/path-title-closed-opened-index          "{orgpage/title} (page {orgpage/closed-index} → {orgpage/opened-index})"
+     :orgpage/copy-done                               (fn [{:orgpage/keys [title url]}]
+                                                        [:<> "A copy available as "
+                                                         [:a.link-button {:href   url
+                                                                          :target "_blank"} title]])
 
      :orgpage-stats/number-of-units                   "Number of cells"
      :orgpage-stats/number-of-links                   "Number of links"
@@ -359,7 +374,8 @@
      :org-role/employee                               "Employee"
      :org-role/admin                                  "Administrator"
 
-     :panel/mobile-limitations                        [:<> "Creating or editing OrgPages is " [:b "not yet possible"] " at mobile. We are addressing this in an upcoming version, please use desktop at this moment."]
+     :panel/mobile-limitations                        [:<> "Creating or editing OrgPages is " [:b "not yet possible"] " on mobile. "
+                                                       "We are addressing this in an upcoming version, please use desktop at this moment."]
      :panel/create-orgpage                            "New OrgPage"
      :panel/logo-tooltip                              "Go home"
      :panel/edit-info                                 "Switch to editing where you can create and delete cells and links, modify content, and more"
@@ -519,7 +535,7 @@
      :selection/link                                  "Connect cells"
      :selection/hide-contents                         "Hide contents"
      :selection/show-contents                         "Show contents"
-     :selection/copy-units-links                      "Copy cells and links"
+     :selection/copy-units-links                      "Copy cells and links to clipboard"
      :selection/flip-links                            "Flip link directions"
      :selection/delete                                "Delete selected"
 
@@ -544,7 +560,7 @@
      :settings/unlink-google                          "Unlink Google"
      :settings/set-password-text                      " Set password before unlinking."
      :settings/linked-accounts-info                   "Link your Facebook or Google account to OrgPad so you can use them to log in."
-     :settings/profile-info                           "People will recognise you on OrgPad with the info below."
+     :settings/profile-info                           "With the given information you will be easier to find for co-workers on a project."
      :settings/select-language                        "Language of the app (Ctrl+Shift+L): "
 
      :settings/delete-account                         "Delete account"
@@ -568,6 +584,8 @@
      :share-orgpage/to-read                           "to read"
      :share-orgpage/to-edit                           "to edit"
      :share-orgpage/links-tooltip                     "Grant access via shareable links"
+     :share-orgpage/advanced                          "Advanced"
+     :share-orgpage/advanced-tooltip                  "Specialized options for sharing."
      :share-orgpage/new-user-or-usergroup             "Name, email or team"
      :share-orgpage/link-permission-start             "Allow people"
      :share-orgpage/link-permission-end               "this OrgPage."
@@ -586,6 +604,7 @@
      :share-orgpage/shareable-link                    "Shareable link"
      :share-orgpage/show-embedding-code               "Embed into your website"
      :share-orgpage/start-with-presentation           "Start with a presentation."
+     :share-orgpage/template-link-switch              "Create a template link."
      :share-orgpage/user-not-registered               " is not yet registered at OrgPad."
      :share-orgpage/users                             "People"
      :share-orgpage/users-tooltip                     "Grant access to individual people"
@@ -713,4 +732,21 @@
      :wire-transfer/start-trial                       "Wire transfer sent"
      :wire-transfer/start-trial-result-title          "Thank you for the payment"
      :wire-transfer/copy                              "Copy to clipboard"
+
+     :website-editor/settings                         "Settings"
+     :website-editor/routes                           "Routes"
+     :website-editor/menus                            "Menus"
+     :website-editor/create-menu                      "Create menu"
+     :website-editor/edited-menu                      "Edited menu"
+     :website-editor/untitled-menu                    "Untitled menu"
+     :website-editor/num-subitems                     [:i18n/plural "{menu-item/num-children} {menu-item/children-label}"
+                                                       #:menu-item{:children-label [:menu-item/num-children
+                                                                                    "children" "child" "children"]}]
+     :website-editor/delete-menu-item                 "Delete this menu item"
+     :website-editor/add-menu-item                    "Add menu item"
+     :website-editor/menu-item-label                  "Item label"
+     :menu-item/path-type                             "Opens a routes"
+     :menu-item/url-type                              "Opens an external URL"
+     :menu-item/children-type                         "Opens a submenu"
+     :website-editor/menu-item-path                   "Route"
      }))

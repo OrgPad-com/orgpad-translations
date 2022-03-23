@@ -98,7 +98,8 @@
      :editors/hidden-info                             "Pro psaní klikněte"
 
      :embedding-code/code                             "Kód"
-     :embedding-code/description                      "Pro vložení OrgStránky do vaší webové stránky, zkopírujte do Vaší webové stránky následující kód:"
+     :embedding-code/description                      [:<> "Pro vložení OrgStránky do Vaší " [:b "webové stránky"]
+                                                       ", zkopírujte do Vaší webové stránky následující kód:"]
 
      :error/orgpage-access-denied                     "K této OrgStránce nemáte přístup. Zkuste se přihlásit."
      :error/usergroup-access-denied                   "Zamítnuta práva k editaci týmu."
@@ -212,8 +213,11 @@
                                                        {:info/num-files [:info/count "souborů" "souboru" "souborů" "souborů"]}]
      :info/uploading-images                           [:i18n/plural "Nahravání {info/count} {info/num-images} ..."
                                                        {:info/num-images [:info/count "obrázků" "obrázku" "obrázků" "obrázků"]}]
-     :info/uploading-images-failed                    [:i18n/plural "Nahravání {info/count} {info/num-images} selhalo."
-                                                       {:info/num-images [:info/count "obrázků" "obrázku" "obrázků" "obrázků"]}]
+     :info/uploading-images-failed                    (fn [info]
+                                                        (if info
+                                                          [:i18n/plural "Nahravání {info/count} {info/num-images} selhalo."
+                                                           {:info/num-images [:info/count "obrázků" "obrázku" "obrázků" "obrázků"]}]
+                                                          "Nahravání nejméně jednoho obrázku selhalo."))
      :info/uploading-attachments-failed               "Nahravání souborů selhalo."
      :info/presentation-link-copied                   "Zkopírován odkaz k této prezentaci."
      :info/storage-exceeded                           "Vlastníkovi této stránky OrgPage nezbývá {upload/total-size} pro nahrání těchto souborů."
@@ -326,6 +330,9 @@
      :notifications/unblock-user                      "Odblokujte tuto osobu."
 
      :onboarding/openable-units                       "Otevřít lze pouze vyvýšené buňky se stíny."
+     :onboarding/zoom                                 "Přibližujte se kolečkem myši"
+     :onboarding/drag-canvas                          "Pohybujte se taháním"
+     :onboarding/open-units                           "Buňky se stíny mají obsah"
 
      :orgpage/change-information                      "Změnit informace"
      :orgpage/copy-orgpage                            "Kopírovat do nové OrgStránky"
@@ -343,9 +350,12 @@
      :orgpage/zoom-in                                 "Přiblížení"
      :orgpage/zoom-out                                "Oddálení"
      :orgpage/create-unit-double-click                "Dvojklikem vytvořte buňku."
+     :orgpage/cannot-edit-on-small-screen             (str "V současné době není na dotykových zařízeních možné vytvářet buňky. "
+                                                           "V postranním menu můžete nahrávat obrázky a soubory a vytvářet poznámky.")
      :orgpage/switch-to-edit                          "Přepnout na úpravy"
 
      :orgpage/untitled                                "OrgStránka bez názvu"
+     :orgpage/title                                   "Název OrgStránky"
      :orgpage/untitled-unit                           "Nepojmenovaná jednotka"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
@@ -355,6 +365,10 @@
                                                         (str "{orgpage/title}"
                                                              (when (> num-pages 1) " (stránka {orgpage/position})")))
      :orgpage/path-title-closed-opened-index          "{orgpage/title} (stránka {orgpage/closed-index} → {orgpage/opened-index})"
+     :orgpage/copy-done                               (fn [{:orgpage/keys [title url]}]
+                                                        [:<> "Kopie je dostupná jako "
+                                                         [:a.link-button {:href   url
+                                                                          :target "_blank"} title]])
 
      :orgpage-stats/number-of-units                   "Počet buněk"
      :orgpage-stats/number-of-links                   "Počet spojů"
@@ -366,7 +380,8 @@
      :org-role/employee                               "Zaměstnanec"
      :org-role/admin                                  "Správce"
 
-     :panel/mobile-limitations                        [:<> "OrgStránku " [:b "nelze zatím"] " vytvářet ani upravit na mobilu. Vyřešíme to v nadcházející verzi, v tuto chvíli prosím používejte desktop."]
+     :panel/mobile-limitations                        [:<> "OrgStránku " [:b "nelze zatím"] " vytvářet ani upravit na mobilu. "
+                                                       "Podporu přidáme v nadcházející verzi, v tuto chvíli prosím použijte počítač."]
      :panel/create-orgpage                            "Nová OrgStránka"
      :panel/logo-tooltip                              "Jít na hlavní stránku"
      :panel/edit-info                                 "Přepnout na úpravy, kde můžete vytvořit a smazat buňky a spoje, upravit obsah a další"
@@ -526,7 +541,7 @@
      :selection/link                                  "Propojit buňky"
      :selection/hide-contents                         "Schovat obsahy"
      :selection/show-contents                         "Zobrazit obsahy"
-     :selection/copy-units-links                      "Zkopírovat buňky a spoje"
+     :selection/copy-units-links                      "Zkopírovat buňky a spoje do schránky"
      :selection/flip-links                            "Změnit směry spojů"
      :selection/delete                                "Vymazat vybrané"
 
@@ -551,7 +566,7 @@
      :settings/unlink-google                          "Zrušit propojení s Googlem"
      :settings/set-password-text                      " Nastavte heslo před zrušením propojení."
      :settings/linked-accounts-info                   "Propojte svůj účet na Facebooku nebo na Googlu s OrgPadem, abyste ho mohli využít k přihlášení."
-     :settings/profile-info                           "Lidé Vás na OrgPadu poznají pomocí níže uvedených informací."
+     :settings/profile-info                           "Pomocí zadaných informací Vás spolupracující na společných projektech snadněji naleznou."
      :settings/select-language                        "Jazyk aplikace (Ctrl+Shift+L): "
 
      :settings/delete-account                         "Smazat účet"
@@ -574,6 +589,8 @@
      :share-orgpage/to-read                           "číst"
      :share-orgpage/to-edit                           "upravit"
      :share-orgpage/links-tooltip                     "Udělte přístup prostřednictvím odkazů ke sdílení"
+     :share-orgpage/advanced                          "Pokročilé"
+     :share-orgpage/advanced-tooltip                  "Pokročilé možnosti sdílení."
      :share-orgpage/new-user-or-usergroup             "Jméno, email nebo tým"
      :share-orgpage/link-permission-start             "Umožněte lidem"
      :share-orgpage/link-permission-end               "tuto OrgStránku."
@@ -592,6 +609,7 @@
      :share-orgpage/shareable-link                    "Sdílitelný odkaz"
      :share-orgpage/show-embedding-code               "Vložit do webové stránky"
      :share-orgpage/start-with-presentation           "Začít s prezentací."
+     :share-orgpage/template-link-switch              "Vytvořit odkaz na šablonu."
      :share-orgpage/user-not-registered               " ještě není registrovaný v OrgPadu."
      :share-orgpage/users                             "Lidé"
      :share-orgpage/users-tooltip                     "Umožnit přístup jednotlivým lidem"

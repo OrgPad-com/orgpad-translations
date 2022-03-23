@@ -99,7 +99,8 @@
      :editors/hidden-info                             "Klicken Sie zum Schreiben"
 
      :embedding-code/code                             "Code"
-     :embedding-code/description                      "Um diese OrgSeite in Ihre Webseite einzubetten, fügen Sie den angegebenen Code in Ihre Webseite ein:"
+     :embedding-code/description                      [:<> "Um diese OrgSeite in Ihre " [:b "Webseite"]
+                                                       " einzubetten, fügen Sie den angegebenen Code in Ihre Webseite ein:"]
 
      :error/orgpage-access-denied                     "Sie haben keinen Zugriff zu dieser OrgSeite. Versuchen Sie sich anzumelden."
      :error/usergroup-access-denied                   "Berechtigung zum bearbeiten des Teams wurde verweigert."
@@ -214,8 +215,11 @@
                                                        {:info/num-files [:info/count "Dateien" "Datei" "Dateien"]}]
      :info/uploading-images                           [:i18n/plural "Hochladen von {info/count} {info/num-images} ..."
                                                        {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
-     :info/uploading-images-failed                    [:i18n/plural "Das Hochladen von {info/count} {info/num-images} hat fehlgeschlagen."
-                                                       {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
+     :info/uploading-images-failed                    (fn [info]
+                                                        (if info
+                                                          [:i18n/plural "Das Hochladen von {info/count} {info/num-images} hat fehlgeschlagen."
+                                                           {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
+                                                          "Das Hochladen von mindestens einem Bild hat fehlgeschlagen."))
      :info/uploading-attachments-failed               "Das Hochladen von Dateien hat fehlgeschlagen."
      :info/presentation-link-copied                   "Der Link zu dieser Präsentation wurde kopiert."
      :info/attachments-too-large                      (str "Das Hochladen von {upload/total-size} ist fehlgeschlagen."
@@ -320,6 +324,9 @@
      :notifications/unblock-user                      "Person entsperren"
 
      :onboarding/openable-units                       "Nur angehobene Einheiten mit Schatten können geöffnet werden."
+     :onboarding/zoom                                 "Zum Zoomen scrollen"
+     :onboarding/drag-canvas                          "Mit dem Ziehen bewegen"
+     :onboarding/open-units                           "Einheiten mit Schatten haben Inhalt"
 
      :orgpage/change-information                      "Informationen ändern"
      :orgpage/copy-orgpage                            "In eine neue OrgSeite kopieren"
@@ -327,8 +334,8 @@
      :orgpage/detail                                  "Detail"
      :orgpage/meta-description                        "Beschreibung"
      :orgpage/meta-new-tag                            "Markierungen (Tags)"
-     :orgpage/meta-info                               (str "Diese Informationen helfen Ihnen und anderen zu wissen, worum es in dieser OrgSeite geht. "
-                                                           "Sie können in der Liste von OrgSeiten nach den Markierungen (Tags) filtern.")
+     :orgpage/meta-info                               (str "Diese Informationen helfen Ihnen und anderen zu verstehen, wovon diese OrgSeite handelt. "
+                                                           "Mithilfe von Markierungen (Tags) können Sie nach bestimmten OrgSeiten in der Liste filtern.")
      :orgpage/meta-info-in-share-orgpage              "Vor dem Teilen der OrgSeite müssen Sie eine Überschrift erfassen."
      :orgpage/share-tooltip                           "Diese OrgSeite mit anderen teilen"
      :orgpage/share-orgpage                           "OrgSeite teilen"
@@ -337,9 +344,12 @@
      :orgpage/zoom-in                                 "Vergrößern (reinzoomen)"
      :orgpage/zoom-out                                "Verkleinern (rauszoomen)"
      :orgpage/create-unit-double-click                "Mit dem Doppelklick erstellen Sie eine Einheit."
+     :orgpage/cannot-edit-on-small-screen             (str "Es ist derzeit nicht möglich, Einheiten per Touch zu erstellen. "
+                                                           "Im Seitenmenü können Sie Bilder und Dateien hochladen und Notizen erstellen.")
      :orgpage/switch-to-edit                          "Zum Bearbeiten wechseln."
 
      :orgpage/untitled                                "Unbenannte OrgSeite"
+     :orgpage/title                                   "Titel der OrgSeite"
      :orgpage/untitled-unit                           "Unbenannte Einheit"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
@@ -349,6 +359,10 @@
                                                         (str "{orgpage/title}"
                                                              (when (> num-pages 1) " (Seite {orgpage/position})")))
      :orgpage/path-title-closed-opened-index          "{orgpage/title} (Seite {orgpage/closed-index} → {orgpage/opened-index})"
+     :orgpage/copy-done                               (fn [{:orgpage/keys [title url]}]
+                                                        [:<> "Eine Kopie verfügbar als "
+                                                         [:a.link-button {:href   url
+                                                                          :target "_blank"} title]])
 
      :orgpage-stats/number-of-units                   "Anzahl der Einheiten"
      :orgpage-stats/number-of-links                   "Anzahl der Verbindungen"
@@ -521,7 +535,7 @@
      :selection/link                                  "Einheiten verbinden"
      :selection/hide-contents                         "Inhalte ausblenden"
      :selection/show-contents                         "Inhalte einblenden"
-     :selection/copy-units-links                      "Einheiten und Verbindungen kopieren"
+     :selection/copy-units-links                      "Einheiten und Verbindungen in die Zwischenablage kopieren"
      :selection/flip-links                            "Richtung wechseln"
      :selection/delete                                "Auswahl löschen"
 
@@ -546,7 +560,7 @@
      :settings/unlink-google                          "Verbindung zu Google trennen"
      :settings/set-password-text                      " Setzen Sie vor dem Trennen der Verbindung bitte ein Passwort."
      :settings/linked-accounts-info                   "Verbindnen Sie Ihr Facebook oder Google Konto mit OrgPad, sodass Sie diese Konten zur Anmeldung benutzen können."
-     :settings/profile-info                           "Leute werden Sie mit den angeführten Informationen bei OrgPad erkennen."
+     :settings/profile-info                           "Über die angeführten Informationen sind Sie leichter für Mitwirkende an gemeinsamen Projekten auffindbar."
      :settings/select-language                        "Sprache für die Anwendung auswählen (STRG+UMSCHALT+L): "
 
      :settings/delete-account                         "Konto löschen"
@@ -570,6 +584,8 @@
      :share-orgpage/to-read                           "Lesen"
      :share-orgpage/to-edit                           "Bearbeiten"
      :share-orgpage/links-tooltip                     "Zugriff erteilen mittels teilbaren Links"
+     :share-orgpage/advanced                          "Erweitertes"
+     :share-orgpage/advanced-tooltip                  "Erweiterte Möglichkeiten zum Teilen."
      :share-orgpage/new-user-or-usergroup             "Name, E-Mail oder Team"
      :share-orgpage/link-permission-start             "Personen Berechtigung erteilen zum "
      :share-orgpage/link-permission-end               " dieser OrgSeite."
@@ -582,12 +598,13 @@
      :share-orgpage/publish-tooltip                   "Zugriff allen erteilen"
      :share-orgpage/remove-user                       "Berechtigung entfernen"
      :share-orgpage/reset-links                       (fn [{:share/keys [reset-links]}]
-                                                        [:<> "Falls Sie einen Link ausversehen geteilt haben, können Sie "
+                                                        [:<> "Falls Sie einen Link aus Versehen geteilt haben, können Sie "
                                                          [:span.link-button reset-links "alle vorherigen Links ungültig machen"]
                                                          "."])
      :share-orgpage/shareable-link                    "Teilbarer Link"
      :share-orgpage/show-embedding-code               "In Ihre Webseite einbetten"
      :share-orgpage/start-with-presentation           "Mit einer Präsentation starten."
+     :share-orgpage/template-link-switch              "Link zur Vorlage erstellen."
      :share-orgpage/user-not-registered               " ist noch nicht bei OrgPad registriert."
      :share-orgpage/users                             "Personen"
      :share-orgpage/users-tooltip                     "Zugriff einzelnen Personen erteilen"
@@ -660,7 +677,7 @@
      :role/view                                       "Kann lesen"
      :role/member                                     "Mitglied"
 
-     :unit-panel/create-link                          "Klicken oder Ziehung zum Verbinden; Umschalttaste halten um mehrere Verbindungen zu erstellen"
+     :unit-panel/create-link                          "Klicken oder Ziehen zum Verbinden; Umschalttaste halten um mehrere Verbindungen zu erstellen"
      :unit-panel/change-link-style                    (str "Stil der Einheit ändern; "
                                                            "Umschalttaste halten um Stil vom Standard übernehmen, "
                                                            "STRG halten zum Standard setzen; "

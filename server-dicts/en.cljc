@@ -118,7 +118,8 @@
      :admin-free-license-activated/subject "Free {{tier}} license activated ({{monetary-value}})"
      :admin-gift-coupon-activated/subject  "Gift coupon for {{tier}} license activated ({{monetary-value}})"
      :admin-subscription-start/subject     "New {{period}} {{tier}} subscription started ({{monetary-value}})"
-     :admin-subscription-end/subject       "Existing {{period}} {{tier}} subscription will end soon ({{monetary-value}})"
+     :admin-subscription-failed/subject    "Renewal of {{period}} {{tier}} subscription failed ({{monetary-value}})"
+     :admin-subscription-end/subject       "Renewal of {{period}} {{tier}} subscription canceled ({{monetary-value}})"
      :admin-subscription-renewed/subject   "Existing {{period}} {{tier}} subscription was renewed ({{monetary-value}})"
 
      :reminder/subject                     "OrgPad discount, news and examples"
