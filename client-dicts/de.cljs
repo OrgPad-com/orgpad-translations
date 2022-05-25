@@ -35,7 +35,7 @@
      :button/logout                                   "Abmelden"
      :button/publish                                  "Veröffentlichen"
      :button/read                                     "Lesen"
-     :button/register                                 "Registieren"
+     :button/register                                 "Registrieren"
      :button/save                                     "Änderungen speichern"
      :button/save-tooltip                             "Änderungen speichern (STRG+Eingabetaste)"
      :button/upload                                   "Hochladen"
@@ -65,8 +65,7 @@
 
      :consent/title                                   "Nutzung von Cookies in OrgPad"
      :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
-                                                        [:div.consent-text
-                                                         "Mit der Nutzung dieser Webseite stimmen Sie den "
+                                                        [:<> "Mit der Nutzung dieser Webseite stimmen Sie den "
                                                          [:a.link-button terms-and-conditions "Nutzungsbedingungen"]
                                                          " und den "
                                                          [:a.link-button privacy-policy "Datenschutz-Bestimmungen"]
@@ -113,9 +112,6 @@
      :error/email-missing-mx-record                   "Kein E-Mail-Server unter der Domäne."
      :error/email-invalid                             "Ungültige E-Mail."
      :error/error                                     "Fehler: "
-     :error/safari-unsupported                        (str "Der Webbrowser Safari wird zurzeit nicht unterstützt."
-                                                           " Bitte verwenden Sie einen anderen Webbrowser, zum Beispiel"
-                                                           " Google Chrome,  Microsoft Edge, Vivaldi oder Firefox.")
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Ungültige OrgSeite" (when id " {orgpage/id}")
                                                              ". Fehlerhaft kopierter Link?"))
@@ -134,7 +130,7 @@
      :error/unknown-login-or-email                    "Unbekannte E-Mail oder Team-Name."
      :error/unknown-user                              "„{usergroups/member}“ existiert nicht."
      :error/unknown-usergroup                         "Das Team wurde gelöscht"
-     :error/upload-failed                             "Hochladen der OrgSeite: \"{orgpage/title}\" hat fehlgeschlagen"
+     :error/upload-failed                             "Hochladen der OrgSeite: \"{orgpage/title}\" ist fehlgeschlagen"
 
      :feedback/ask-question                           "Frage stellen"
      :feedback/hide-button                            "Schaltfläche dauerhaft ausblenden"
@@ -217,10 +213,10 @@
                                                        {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
      :info/uploading-images-failed                    (fn [info]
                                                         (if info
-                                                          [:i18n/plural "Das Hochladen von {info/count} {info/num-images} hat fehlgeschlagen."
+                                                          [:i18n/plural "Das Hochladen von {info/count} {info/num-images} ist fehlgeschlagen."
                                                            {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
-                                                          "Das Hochladen von mindestens einem Bild hat fehlgeschlagen."))
-     :info/uploading-attachments-failed               "Das Hochladen von Dateien hat fehlgeschlagen."
+                                                          "Das Hochladen von mindestens einem Bild ist fehlgeschlagen."))
+     :info/uploading-attachments-failed               "Das Hochladen von Dateien ist fehlgeschlagen."
      :info/presentation-link-copied                   "Der Link zu dieser Präsentation wurde kopiert."
      :info/attachments-too-large                      (str "Das Hochladen von {upload/total-size} ist fehlgeschlagen."
                                                            " Auf einmal kann nur höchstens 500 MB hochgeladen werden.")
@@ -231,6 +227,10 @@
      :import/google-docs                              "Sie können Daten aus Microsoft Office oder Google Docs einfach in eine OrgSeite einfügen."
      :import/supported-formats                        "Zurzeit unterstützen wir diese Formate:"
      :import/lucidchart                               [:<> [:b "Lucidchart"] " exportiert als eine .vsdx Datei."]
+
+     :ios/install-info                                "Installieren Sie die OrgPad-App"
+     :ios/share-button                                "1. Öffnen"
+     :ios/add-to-home-screen                          "2. Antippen"
 
      :lang/cs                                         "Tschechisch"
      :lang/de                                         "Deutsch"
@@ -344,8 +344,7 @@
      :orgpage/zoom-in                                 "Vergrößern (reinzoomen)"
      :orgpage/zoom-out                                "Verkleinern (rauszoomen)"
      :orgpage/create-unit-double-click                "Mit dem Doppelklick erstellen Sie eine Einheit."
-     :orgpage/cannot-edit-on-small-screen             (str "Es ist derzeit nicht möglich, Einheiten per Touch zu erstellen. "
-                                                           "Im Seitenmenü können Sie Bilder und Dateien hochladen und Notizen erstellen.")
+     :orgpage/create-unit-hold-or-double-tap          "Mit Halten oder doppeltem Antippen erstellen Sie eine Einheit."
      :orgpage/switch-to-edit                          "Zum Bearbeiten wechseln."
 
      :orgpage/untitled                                "Unbenannte OrgSeite"
@@ -374,8 +373,6 @@
      :org-role/employee                               "Mitarbeiter"
      :org-role/admin                                  "Administrator"
 
-     :panel/mobile-limitations                        [:<> "Das Erstellen und Bearbeiten von OrgSeiten ist auf mobilen Geräten " [:b "noch nicht möglich"]
-                                                       " . Wir werden die Unterstützung in einer neuen Version hinzufügen. Bitte benutzen Sie die Desktop-Version."]
      :panel/create-orgpage                            "Neue OrgSeite"
      :panel/logo-tooltip                              "Zur Startseite"
      :panel/edit-info                                 "Welchseln Sie zum Bearbeiten, wo Sie Einheiten und Verbindungen erstellen, bearbeiten, löschen und noch mehr können."
@@ -386,13 +383,15 @@
                                                                              "Einheiten" "Einheit" "Einheiten"]
                                                                 :link-label [:delete/num-links
                                                                              "Verbindungen" "Verbindung" "Verbindungen"]}]
-
+     :panel/refresh                                   "Neu laden"
      :panel/switch-style                              "Stil von neuen Einheiten und Verbindungen wechseln; Ziehen erstellt eine neue Einheit"
      :panel/profile                                   "Profil"
      :panel/settings                                  "Einstellungen"
      :panel/usergroups                                "Teams"
      :panel/stats                                     "Statistiken"
      :panel/administration                            "Verwaltung"
+     :panel/ios-install-info                          "App installieren"
+     :panel/upload-attachment                         "Bilder oder Dateien in neue Einheiten einfügen"
 
      :password/too-short                              "Mindestens 8 Zeichen erforderlich"
      :password/different-passwords                    "Passwörter stimmen nicht überein"
@@ -407,13 +406,8 @@
      :password-reset/enter-current-and-new-password   "Geben Sie Ihr aktuelles Passwort und zweimal das neue Passwort ein."
      :password-reset/enter-new-password-twice         "Das neue Passwort bitte zweimal eingeben."
 
-     :pending-activation/email-already-used           "Die E-Mail wird mit einem anderen Konto bereits genutzt."
-     :pending-activation/email-not-recieved           "Falls Sie keine E-Mail-Bestätigung erhalten haben, können Sie diese neu senden lassen. Sie können die E-Mail sogar korrigieren."
-     :pending-activation/email-sent                   "E-Mail-Bestätigung gesendet."
-     :pending-activation/instructions                 "Aus Sicherheitsgründen müssen Sie Ihre E-Mail zuerst bestätigen. Klicken Sie auf den Bestätigungslink in der E-Mail, die wir Ihnen geschickt haben."
-     :pending-activation/resend                       "E-Mail-Bestätigung neu senden"
-
      :path/add-step                                   "Schritt hinzufügen"
+     :path/add-step-tooltip                           "Halten Sie SHIFT, um die Kamera zu kopieren"
      :path/title                                      "Präsentation {path/num-paths}"
      :paths/create-new-path                           "Präsentation erstellen"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
@@ -441,6 +435,22 @@
      :payments/receipts                               "Rechnungen:"
      :payments/receipt-label                          "Rechnung {receipt/date-range}"
      :payments/customer-portal-failed                 "Beim Laden der Abo-Verwaltung ist ein Problem aufgetreten."
+
+     :pending-activation/email-already-used           "Die E-Mail wird mit einem anderen Konto bereits genutzt."
+     :pending-activation/email-not-recieved           "Falls Sie keine E-Mail-Bestätigung erhalten haben, können Sie diese neu senden lassen. Sie können die E-Mail sogar korrigieren."
+     :pending-activation/email-sent                   "E-Mail-Bestätigung gesendet."
+     :pending-activation/instructions                 "Aus Sicherheitsgründen müssen Sie Ihre E-Mail zuerst bestätigen. Klicken Sie auf den Bestätigungslink in der E-Mail, die wir Ihnen geschickt haben."
+     :pending-activation/resend                       "E-Mail-Bestätigung neu senden"
+
+     :permission/admin                                "Kann teilen und löschen"
+     :permission/admin-tooltip                        "Kann auch anpassen wer sonst auf das Dokument zugreifen kann."
+     :permission/edit                                 "Kann bearbeiten"
+     :permission/edit-tooltip                         "Kann die OrgSeite beliebig verändern."
+     :permission/comment                              "Kann kommentieren"
+     :permission/comment-tooltip                      (str "Kann eigene Einheiten erstellen, verbinden und verändern. "
+                                                           "Kann aber nicht den Rest der OrgSeite bearbeiten.")
+     :permission/view                                 "Kann lesen"
+     :permission/view-tooltip                         "Kann die OrgSeite nur lesen ohne Änderungen vorzunehmen."
 
      :presentation/presentation                       "Präsentation"
      :presentation/step                               "Schritt"
@@ -582,10 +592,11 @@
      :share-orgpage/invite-by-email                   "Wollen Sie diese mit einer E-Mail in bestimmter Sprache einladen?"
      :share-orgpage/links                             "Links"
      :share-orgpage/to-read                           "Lesen"
+     :share-orgpage/to-comment                        "zu kommentieren"
      :share-orgpage/to-edit                           "Bearbeiten"
      :share-orgpage/links-tooltip                     "Zugriff erteilen mittels teilbaren Links"
-     :share-orgpage/advanced                          "Erweitertes"
-     :share-orgpage/advanced-tooltip                  "Erweiterte Möglichkeiten zum Teilen."
+     :share-orgpage/embed                             "Einbetten"
+     :share-orgpage/embed-tooltip                     "In Ihre Webseite einbetten"
      :share-orgpage/new-user-or-usergroup             "Name, E-Mail oder Team"
      :share-orgpage/link-permission-start             "Personen Berechtigung erteilen zum "
      :share-orgpage/link-permission-end               " dieser OrgSeite."
@@ -602,7 +613,6 @@
                                                          [:span.link-button reset-links "alle vorherigen Links ungültig machen"]
                                                          "."])
      :share-orgpage/shareable-link                    "Teilbarer Link"
-     :share-orgpage/show-embedding-code               "In Ihre Webseite einbetten"
      :share-orgpage/start-with-presentation           "Mit einer Präsentation starten."
      :share-orgpage/template-link-switch              "Link zur Vorlage erstellen."
      :share-orgpage/user-not-registered               " ist noch nicht bei OrgPad registriert."
@@ -672,12 +682,10 @@
                                                                           :target "_blank"} title]])
 
      :role/owner                                      "Inhaber"
-     :role/admin                                      "Kann teilen und löschen"
-     :role/edit                                       "Kann bearbeiten"
-     :role/view                                       "Kann lesen"
      :role/member                                     "Mitglied"
 
-     :unit-panel/create-link                          "Klicken oder Ziehen zum Verbinden; Umschalttaste halten um mehrere Verbindungen zu erstellen"
+     :unit-panel/link                                 "Klicken oder Ziehen zum Verbinden; Umschalttaste halten um mehrere Verbindungen zu erstellen"
+     :unit-panel/upload-attachment                    "Bild oder Datei in diese Einheit einfügen"
      :unit-panel/change-link-style                    (str "Stil der Einheit ändern; "
                                                            "Umschalttaste halten um Stil vom Standard übernehmen, "
                                                            "STRG halten zum Standard setzen; "

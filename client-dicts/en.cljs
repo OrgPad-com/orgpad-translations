@@ -16,6 +16,8 @@
      :attachments/used-images                         "Images in OrgPage"
      :attachments/unused-images                       "Images on the side"
      :attachments/uploading-files                     "Uploading the files ..."
+     :attachments/previous-attachment                 "Previous file or image"
+     :attachments/next-attachment                     "Next file or image"
 
      :button/back                                     "Back"
      :button/cancel                                   "Cancel"
@@ -66,8 +68,7 @@
 
      :consent/title                                   "Usage of cookies in OrgPad"
      :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
-                                                        [:div.consent-text
-                                                         "By using this site, you are agreeing with OrgPad's "
+                                                        [:<> "By using this site, you are agreeing with OrgPad's "
                                                          [:a.link-button terms-and-conditions "Terms and Conditions"]
                                                          " and "
                                                          [:a.link-button privacy-policy "Privacy policy"]
@@ -113,9 +114,9 @@
      :error/email-missing-mx-record                   "No email server found at this domain."
      :error/email-invalid                             "Not an email."
      :error/error                                     "Error: "
-     :error/safari-unsupported                        (str "Safari web browser is not supported at this point."
-                                                           " Please use a different browser like Google Chrome,"
-                                                           " Microsoft Edge, Vivaldi or Firefox.")
+     ; DOČASNĚ
+     ; DOČASNĚ
+     ; DOČASNĚ
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Incorrect OrgPage" (when id " {orgpage/id}")
                                                              ". Wrongly copied link?"))
@@ -231,6 +232,10 @@
      :import/supported-formats                        "Now we support these formats:"
      :import/lucidchart                               [:<> [:b "Lucidchart"] " exported as .vsdx file."]
 
+     :ios/install-info                                "Install OrgPad app"
+     :ios/share-button                                "1. Open"
+     :ios/add-to-home-screen                          "2. Tap"
+
      :lang/cs                                         "Czech"
      :lang/de                                         "German"
      :lang/en                                         "English"
@@ -344,8 +349,7 @@
      :orgpage/zoom-in                                 "Zoom in"
      :orgpage/zoom-out                                "Zoom out"
      :orgpage/create-unit-double-click                "Double click to create a cell."
-     :orgpage/cannot-edit-on-small-screen             (str "Currently, it is not possible to create cells on a touch screen. "
-                                                           "In the side menu you can upload pictures and files and create notes.")
+     :orgpage/create-unit-hold-or-double-tap          "Hold or double tap to create a cell."
      :orgpage/switch-to-edit                          "Switch to edit."
 
      :orgpage/untitled                                "Untitled OrgPage"
@@ -374,8 +378,6 @@
      :org-role/employee                               "Employee"
      :org-role/admin                                  "Administrator"
 
-     :panel/mobile-limitations                        [:<> "Creating or editing OrgPages is " [:b "not yet possible"] " on mobile. "
-                                                       "We are addressing this in an upcoming version, please use desktop at this moment."]
      :panel/create-orgpage                            "New OrgPage"
      :panel/logo-tooltip                              "Go home"
      :panel/edit-info                                 "Switch to editing where you can create and delete cells and links, modify content, and more"
@@ -386,13 +388,15 @@
                                                                              "cells" "cell" "cells"]
                                                                 :link-label [:delete/num-links
                                                                              "links" "link" "links"]}]
-
+     :panel/refresh                                   "Refresh"
      :panel/switch-style                              "Switch style of new cells and links; drag to create a new cell"
      :panel/profile                                   "Profile"
      :panel/settings                                  "Settings"
      :panel/usergroups                                "Teams"
      :panel/stats                                     "Stats"
      :panel/administration                            "Administration"
+     :panel/ios-install-info                          "Install app"
+     :panel/upload-attachment                         "Insert images or files into new cells"
 
      :password/too-short                              "At least 8 characters required"
      :password/different-passwords                    "Passwords do not match"
@@ -407,13 +411,8 @@
      :password-reset/enter-current-and-new-password   "Enter the current password and twice the new password."
      :password-reset/enter-new-password-twice         "Enter the new password twice."
 
-     :pending-activation/email-already-used           "Email already used on another account."
-     :pending-activation/email-not-recieved           "Haven't received the activation email? Click the button below. You can even modify your email address."
-     :pending-activation/email-sent                   "Activation email sent. "
-     :pending-activation/instructions                 "For security reasons we have to verify your email first. Click the activation link in an email we sent you."
-     :pending-activation/resend                       "Resend activation email"
-
      :path/add-step                                   "Add a step"
+     :path/add-step-tooltip                           "Hold SHIFT to copy the camera"
      :path/title                                      "Presentation {path/num-paths}"
      :paths/create-new-path                           "Create a presentation"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
@@ -441,6 +440,22 @@
      :payments/receipts                               "Receipts:"
      :payments/receipt-label                          "Receipt {receipt/date-range}"
      :payments/customer-portal-failed                 "Something went wrong while loading plan management website."
+
+     :pending-activation/email-already-used           "Email already used on another account."
+     :pending-activation/email-not-recieved           "Haven't received the activation email? Click the button below. You can even modify your email address."
+     :pending-activation/email-sent                   "Activation email sent. "
+     :pending-activation/instructions                 "For security reasons we have to verify your email first. Click the activation link in an email we sent you."
+     :pending-activation/resend                       "Resend activation email"
+
+     :permission/admin                                "Can share and delete"
+     :permission/admin-tooltip                        "Can also modify who else has access to the document."
+     :permission/edit                                 "Can edit"
+     :permission/edit-tooltip                         "Can do any changes to the OrgPage."
+     :permission/comment                              "Can comment"
+     :permission/comment-tooltip                      (str "Can create new owned cells, connect them and modify them. "
+                                                           "Cannot modify the rest of the OrgPage.")
+     :permission/view                                 "Can read"
+     :permission/view-tooltip                         "Can read the OrgPage without doing any changes."
 
      :presentation/presentation                       "Presentation"
      :presentation/step                               "Step"
@@ -582,10 +597,11 @@
      :share-orgpage/invite-by-email                   "Do you want to invite them by email using a specific language?"
      :share-orgpage/links                             "Links"
      :share-orgpage/to-read                           "to read"
+     :share-orgpage/to-comment                        "to comment"
      :share-orgpage/to-edit                           "to edit"
      :share-orgpage/links-tooltip                     "Grant access via shareable links"
-     :share-orgpage/advanced                          "Advanced"
-     :share-orgpage/advanced-tooltip                  "Specialized options for sharing."
+     :share-orgpage/embed                             "Embed"
+     :share-orgpage/embed-tooltip                     "Embed into your website"
      :share-orgpage/new-user-or-usergroup             "Name, email or team"
      :share-orgpage/link-permission-start             "Allow people"
      :share-orgpage/link-permission-end               "this OrgPage."
@@ -602,7 +618,6 @@
                                                          [:span.link-button reset-links "invalidate all previous links"]
                                                          "."])
      :share-orgpage/shareable-link                    "Shareable link"
-     :share-orgpage/show-embedding-code               "Embed into your website"
      :share-orgpage/start-with-presentation           "Start with a presentation."
      :share-orgpage/template-link-switch              "Create a template link."
      :share-orgpage/user-not-registered               " is not yet registered at OrgPad."
@@ -671,12 +686,10 @@
                                                                           :target "_blank"} title]])
 
      :role/owner                                      "Owner"
-     :role/admin                                      "Can share and delete"
-     :role/edit                                       "Can edit"
-     :role/view                                       "Can read"
      :role/member                                     "Member"
 
-     :unit-panel/create-link                          "Click or drag to connect; hold SHIFT to create multiple connections"
+     :unit-panel/link                                 "Click or drag to connect; hold SHIFT to create multiple connections"
+     :unit-panel/upload-attachment                    "Insert image or file into this cell"
      :unit-panel/change-link-style                    (str "Change style of this cell; "
                                                            "hold SHIFT to set the current, "
                                                            "hold CTRL to copy to the default; "

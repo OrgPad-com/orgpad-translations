@@ -16,6 +16,8 @@
      :attachments/used-images                         "Obrázky v OrgStránce"
      :attachments/unused-images                       "Obrázky stranou"
      :attachments/uploading-files                     "Nahrávání souborů ..."
+     :attachments/previous-attachment                 "Předchozí soubor nebo obrázek"
+     :attachments/next-attachment                     "Následující soubor nebo obrázek"
 
      :button/back                                     "Zpět"
      :button/cancel                                   "Zrušit"
@@ -66,8 +68,7 @@
 
      :consent/title                                   "Používání cookies v OrgPadu"
      :consent/text                                    (fn [{:consent/keys [terms-and-conditions privacy-policy]}]
-                                                        [:div.consent-text
-                                                         "Používáním této stránky souhlasíte s "
+                                                        [:<> "Používáním této stránky souhlasíte s "
                                                          [:a.link-button terms-and-conditions "pravidly a podmínkami"]
                                                          " společnosti OrgPad a se "
                                                          [:a.link-button privacy-policy "zásadami ochrany osobních údajů"]
@@ -112,9 +113,6 @@
      :error/email-missing-mx-record                   "Emailový server na doméně nenalezen."
      :error/email-invalid                             "Není email."
      :error/error                                     "Chyba: "
-     :error/safari-unsupported                        (str "Webový prohlížeč Safari není v současnosti podporován."
-                                                           " Prosím, použijte jiný webový prohlížeč, například "
-                                                           " Google Chrome, Microsoft Edge, Vivaldi nebo Firefox.")
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Chybná OrgStránka" (when id " {orgpage/id}")
                                                              ". Špatně zkopírovaný odkaz?"))
@@ -230,6 +228,10 @@
      :import/google-docs                              "Pokud chcete importovat data z Microsoft Office nebo Google Docs, stačí je vložit ze schránky do OrgStránky."
      :import/supported-formats                        "Teď podporujeme následující formáty:"
      :import/lucidchart                               [:<> [:b "Lucidchart"] " exportovaný jako .vsdx soubor."]
+
+     :ios/install-info                                "Nainstalujte aplikaci OrgPad"
+     :ios/share-button                                "1. Otevřete"
+     :ios/add-to-home-screen                          "2. Klepněte"
 
      :lang/cs                                         "Česky"
      :lang/de                                         "Německy"
@@ -350,8 +352,7 @@
      :orgpage/zoom-in                                 "Přiblížení"
      :orgpage/zoom-out                                "Oddálení"
      :orgpage/create-unit-double-click                "Dvojklikem vytvořte buňku."
-     :orgpage/cannot-edit-on-small-screen             (str "V současné době není na dotykových zařízeních možné vytvářet buňky. "
-                                                           "V postranním menu můžete nahrávat obrázky a soubory a vytvářet poznámky.")
+     :orgpage/create-unit-hold-or-double-tap          "Držením nebo dvojtým poklepáním vytvořte buňku."
      :orgpage/switch-to-edit                          "Přepnout na úpravy"
 
      :orgpage/untitled                                "OrgStránka bez názvu"
@@ -380,8 +381,6 @@
      :org-role/employee                               "Zaměstnanec"
      :org-role/admin                                  "Správce"
 
-     :panel/mobile-limitations                        [:<> "OrgStránku " [:b "nelze zatím"] " vytvářet ani upravit na mobilu. "
-                                                       "Podporu přidáme v nadcházející verzi, v tuto chvíli prosím použijte počítač."]
      :panel/create-orgpage                            "Nová OrgStránka"
      :panel/logo-tooltip                              "Jít na hlavní stránku"
      :panel/edit-info                                 "Přepnout na úpravy, kde můžete vytvořit a smazat buňky a spoje, upravit obsah a další"
@@ -392,13 +391,15 @@
                                                                              "buněk" "buňky" "buněk" "buněk"]
                                                                 :link-label [:delete/num-links
                                                                              "spojů" "spoje" "spojů" "spojů"]}]
-
+     :panel/refresh                                   "Obnovit"
      :panel/switch-style                              "Přepnout styl nových buněk a spojů; táhnutím vyrobit novou buňku"
      :panel/profile                                   "Profil"
      :panel/settings                                  "Nastavení"
      :panel/usergroups                                "Týmy"
      :panel/stats                                     "Statistiky"
      :panel/administration                            "Administrace"
+     :panel/ios-install-info                          "Nainstalovat aplikaci"
+     :panel/upload-attachment                         "Vložte obrázky nebo soubory do nových buněk"
 
      :password/too-short                              "Alespoň 8 znaků"
      :password/different-passwords                    "Hesla se neshodují"
@@ -413,13 +414,8 @@
      :password-reset/enter-current-and-new-password   "Vložte současné heslo a dvakrát nové heslo."
      :password-reset/enter-new-password-twice         "Vložte dvakrát nové heslo."
 
-     :pending-activation/email-already-used           "Email je již použitý na jiném účtu."
-     :pending-activation/email-not-recieved           "Neobdrželi jste aktivační email? Klikněte na tlačítko níže. Můžete změnit Vaši emailovou adresu."
-     :pending-activation/email-sent                   "Aktivační email odeslán. "
-     :pending-activation/instructions                 "Z bezpečnostních důvodů musíme nejprve ověřit Váš email. Klikněte na aktivační odkaz v emailu, který jsme Vám odeslali."
-     :pending-activation/resend                       "Znovu zaslat aktivační email"
-
      :path/add-step                                   "Přidat krok"
+     :path/add-step-tooltip                           "Podržte SHIFT pro zkopírování kamery"
      :path/title                                      "Prezentace {path/num-paths}"
      :paths/create-new-path                           "Vytvořit prezentaci"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
@@ -447,6 +443,22 @@
      :payments/receipts                               "Účty:"
      :payments/receipt-label                          "Účet {receipt/date-range}"
      :payments/customer-portal-failed                 "Při nahrávání webové stránky správy předplatného nastala chyba."
+
+     :pending-activation/email-already-used           "Email je již použitý na jiném účtu."
+     :pending-activation/email-not-recieved           "Neobdrželi jste aktivační email? Klikněte na tlačítko níže. Můžete změnit Vaši emailovou adresu."
+     :pending-activation/email-sent                   "Aktivační email odeslán. "
+     :pending-activation/instructions                 "Z bezpečnostních důvodů musíme nejprve ověřit Váš email. Klikněte na aktivační odkaz v emailu, který jsme Vám odeslali."
+     :pending-activation/resend                       "Znovu zaslat aktivační email"
+
+     :permission/admin                                "Může sdílet a mazat"
+     :permission/admin-tooltip                        "Může měnit, kdo bude mít přístup k OrgStránce, nebo ji celou smazat."
+     :permission/edit                                 "Může upravovat"
+     :permission/edit-tooltip                         "Může dělat jakékoliv úpravy v OrgStránce."
+     :permission/comment                              "Může komentovat"
+     :permission/comment-tooltip                      (str "Může vytvářet, upravovat a propojovat vlastní buňky. "
+                                                           "Nemůže ale upravovat zbytek OrgStránky.")
+     :permission/view                                 "Může číst"
+     :permission/view-tooltip                         "Může OrgStránku číst ale nemůže dělat žádné změny."
 
      :presentation/presentation                       "Prezentace"
      :presentation/step                               "Krok"
@@ -587,10 +599,11 @@
      :share-orgpage/invite-by-email                   "Chcete jej pozvat emailem v určitém jazyce?"
      :share-orgpage/links                             "Odkazy"
      :share-orgpage/to-read                           "číst"
+     :share-orgpage/to-comment                        "komentovat"
      :share-orgpage/to-edit                           "upravit"
      :share-orgpage/links-tooltip                     "Udělte přístup prostřednictvím odkazů ke sdílení"
-     :share-orgpage/advanced                          "Pokročilé"
-     :share-orgpage/advanced-tooltip                  "Pokročilé možnosti sdílení."
+     :share-orgpage/embed                             "Vložit"
+     :share-orgpage/embed-tooltip                     "Vložit do webové stránky"
      :share-orgpage/new-user-or-usergroup             "Jméno, email nebo tým"
      :share-orgpage/link-permission-start             "Umožněte lidem"
      :share-orgpage/link-permission-end               "tuto OrgStránku."
@@ -607,7 +620,6 @@
                                                          [:span.link-button reset-links "zneplatnit všechny předchozí odkazy"]
                                                          "."])
      :share-orgpage/shareable-link                    "Sdílitelný odkaz"
-     :share-orgpage/show-embedding-code               "Vložit do webové stránky"
      :share-orgpage/start-with-presentation           "Začít s prezentací."
      :share-orgpage/template-link-switch              "Vytvořit odkaz na šablonu."
      :share-orgpage/user-not-registered               " ještě není registrovaný v OrgPadu."
@@ -676,12 +688,10 @@
                                                                           :target "_blank"} title]])
 
      :role/owner                                      "Vlastník"
-     :role/admin                                      "Může sdílet a mazat"
-     :role/edit                                       "Může upravit"
-     :role/view                                       "Může číst"
      :role/member                                     "Člen"
 
-     :unit-panel/create-link                          "Pro propojení klikněte nebo táhněte; podržte SHIFT pro vytvoření více spojů"
+     :unit-panel/link                                 "Pro propojení klikněte nebo táhněte; podržte SHIFT pro vytvoření více spojů"
+     :unit-panel/upload-attachment                    "Vložte obrázek nebo soubor do této buňky"
      :unit-panel/change-link-style                    (str "Změna stylu této buňky; "
                                                            "podržte SHIFT pro nastavení aktuálního stylu, "
                                                            "podržte CTRL pro zkopírování do aktuálního stylu; "
