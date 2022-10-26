@@ -20,6 +20,7 @@
      :button/back                                     "Назад"
      :button/cancel                                   "Відхилити"
      :button/close                                    "Закрити"
+     :button/comment                                  "Коментувати"
      :button/copied                                   "Скопійовано"
      :button/copy                                     "Копіювати"
      :button/copy-link                                "Копіювати посилання"
@@ -74,7 +75,10 @@
                                                               "певних областей для полегшення використання OrgPad.")])
 
      :dashboard/confirm-delete                        [:<> [:b "Назавжди"] " видалити цю ОргСторінку?"]
-     :dashboard/login-needed                          [:<> [:b "Увійти"] " або " [:b "зареєструватись,"] " щоб створити нові ОргСторінки."]
+     :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
+                                                        [:<> [:a {:href login-url} "Увійти"] " або "
+                                                         [:a {:href register-url} "зареєструватись,"]
+                                                         " щоб створити нові ОргСторінки."])
      :dashboard/owned-orgpages                        "Мої ОргСторінки"
      :dashboard/public-orgpages                       "Опублікувати ОргСторінки"
      :dashboard/shared-orgpages                       "ОргСторінки, якими поділились з вами"
@@ -277,7 +281,6 @@
      :loading/getting-dashboard                       "Завантаження списка доступних ОргСторінок із сервера ..."
      :loading/getting-website                         "Завантаження веб-сайту з сервера ..."
      :loading/uploading-orgpage                       "Завантаження ОргСторінки на сервер ..."
-     :loading/authorizing-user                        "Авторизація користувача ..."
      :loading/ws-init                                 "Налаштування зв'язку з сервером ..."
      :loading/ws-closed                               "Зв'язок із сервером втрачено. Спробуйте перепідключитись. Якщо проблема не зникне, перезавантажте сторінку."
      :loading/administration                          "Завантаження даних адміністратора ..."
@@ -289,6 +292,7 @@
 
      :login/continue-with-facebook                    "Продовжити з Facebook"
      :login/continue-with-google                      "Продовжити з Google"
+     :login/continue-with-microsoft                   "Продовжити з Microsoft"
      :login/forgotten-password                        "Забули пароль"
      :login/forgotten-password-email-resent           "Електронний лист для скидання пароля надіслано."
      :login/forgotten-password-description            "Введіть електронну адресу, на яку ми відправимо вам посилання, щоб скинути ваш пароль. Це посилання дійсне протягом 24 годин."
@@ -302,6 +306,12 @@
 
      :login-util/separator                            "або"
 
+     :meta/description                                "Опис"
+     :meta/new-tag                                    "Додати тег"
+     :meta/info                                       (str "Інформація, наведена нижче, допоможе дізнатися, про що ця ОргСторінка. "
+                                                           "Ви можете відфільтровувати за тегами список ОргСторінок.")
+     :meta/info-in-share-orgpage                      "Перед поширенням цієї ОргСторінки потрібно встановити назву."
+
      :notes/create-note                               "Нова нотатка"
      :notes/edit-note                                 "Редагувати нотатку"
      :notes/manage-notes                              "Управляти нотатками"
@@ -309,6 +319,7 @@
      :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
                                                        {:notes/notes-label [:notes/num-notes
                                                                             "нотаток" "нотатка" "нотатки" "нотаток"]}]
+     :notes/untitled                                  "Нотатка без назви"
      :notes/confirm-delete                            "Видалити цю нотатку?"
      :notes/notes-description                         "Зафіксуйте свої ідеї та відсортуйте їх пізніше."
 
@@ -331,11 +342,6 @@
      :orgpage/copy-orgpage                            "Скопіювати до нової ОргСторінки"
      :orgpage/delete-orgpage                          "Видалити ОргСторінку"
      :orgpage/detail                                  "Розкрити подробиці"
-     :orgpage/meta-description                        "Опис"
-     :orgpage/meta-new-tag                            "Додати тег"
-     :orgpage/meta-info                               (str "Інформація, наведена нижче, допоможе дізнатися, про що ця ОргСторінка. "
-                                                           "Ви можете відфільтровувати за тегами список ОргСторінок.")
-     :orgpage/meta-info-in-share-orgpage              "Перед поширенням цієї ОргСторінки потрібно встановити назву."
      :orgpage/share-tooltip                           "Поділитись цією ОргСторінкою з іншими"
      :orgpage/share-orgpage                           "Поділитись ОргСторінкою"
      :orgpage/show-information                        "Показати інформацію"
@@ -349,6 +355,7 @@
      :orgpage/untitled                                "ОргСторінка без назви"
      :orgpage/title                                   "Назва ОргСторінки"
      :orgpage/untitled-unit                           "Комірка без назви"
+     :orgpage/untitled-path                           "Презентація без назви"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
                                                                              "кроків" "крок" "кроки" "кроків"]}]
@@ -377,7 +384,7 @@
      :panel/edit-info                                 "Перейти до режиму редагування, де можна створювати і видаляти комірки та посилання, змінювати вміст та інше"
      :panel/read-info                                 "Перейти до режиму перегляду, де не можна нічого змінювати, проте переглядати вміст простіше"
      :panel/undo-deletion                             "Скасування видалення"
-     :panel/undo-deletion-info                        [:i18n/plural "Скасувати видалення {delete/num-units} {delete/unit-label} і {delete/num-links} {delete/link-label}."
+     :panel/undo-deletion-info                        [:i18n/plural "Скасувати видалення {delete/num-units} {delete/unit-label} і {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
                                                                              "комірок" "комірка" "комірки" "комірок"]
                                                                 :link-label [:delete/num-links
@@ -391,6 +398,7 @@
      :panel/administration                            "Адміністрація"
      :panel/ios-install-info                          "Встановити додаток"
      :panel/upload-attachment                         "Вставте зображення або файли в нові клітинки"
+     :panel/selection-mode                            "Почати вибір"
 
      :password/too-short                              "Потрібно щонайменше 8 символів"
      :password/different-passwords                    "Пароль не співпадає"
@@ -507,6 +515,8 @@
      :promotion/max-usages-reached                    "Використовувався занадто багато разів"
      :promotion/expired                               "Термін дії закінчився"
      :promotion/one-year-free                         "1 рік безкоштовно"
+     :promotion/duration-free                         [:i18n/plural "{promotion/duration} {promotion/days} безкоштовно"
+                                                       {:promotion/days [:promotion/duration "днів" "день" "дні" "днів"]}]
      :promotion/for-one-year                          " на 1 рік"
      :promotion/for-six-months                        " на 6 місяців"
 
@@ -567,6 +577,10 @@
      :settings/account-not-linked-to-google           [:<> " Ваш обліковий запис " [:b " не прив'язаний "] " до Google."]
      :settings/link-google                            "Прив'язати Google"
      :settings/unlink-google                          "Відкріпити Google"
+     :settings/account-linked-to-microsoft            [:<> " Ваш обліковий запис " [:b " прив'язаний "] " до Microsoft."]
+     :settings/account-not-linked-to-microsoft        [:<> " Ваш обліковий запис " [:b " не прив'язаний "] " до Microsoft."]
+     :settings/link-microsoft                         "Прив'язати Microsoft"
+     :settings/unlink-microsoft                       "Відкріпити Microsoft"
      :settings/set-password-text                      " Встановіть пароль перед тим, як відв'язати."
      :settings/linked-accounts-info                   "Прив'яжіть ваш обліковий запис у Facebook або Google до облікового запису OrgPad, щоб ви могли використовувати його для входу."
      :settings/profile-info                           "Надана інформація допоможе вам легше знайти співробітників по проекту."
@@ -579,7 +593,6 @@
 
      :share-orgpage/campaigns                         "Campaigns"
      :share-orgpage/copy-template-link                "Скопіювати посилання на шаблон"
-     :share-orgpage/copy-template-link-tooltip        "Люди можуть використовувати це посилання для створення власних копій цієї ОргСторінки"
      :share-orgpage/dialog-title                      "Поширити {orgpage/title}"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
                                                         [:<> (str "Люди, що не мають облікового запису OrgPad, одержать запрошення з посиланням."
@@ -594,6 +607,7 @@
      :share-orgpage/to-comment                        "коментувати"
      :share-orgpage/to-edit                           "щоб редагувати"
      :share-orgpage/links-tooltip                     "Надайте доступ через посилання для спільного доступу"
+     :share-orgpage/template-info                     "Люди можуть використовувати це посилання для створення власних копій цієї ОргСторінки."
      :share-orgpage/embed                             "Вставити"
      :share-orgpage/embed-tooltip                     "Вставте у свій веб-сайт"
      :share-orgpage/new-user-or-usergroup             "Ім'я, електронна адреса або група"

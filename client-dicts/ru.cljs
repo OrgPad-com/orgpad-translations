@@ -20,6 +20,7 @@
      :button/back                                     "Назад"
      :button/cancel                                   "Отклонить"
      :button/close                                    "Закрыть"
+     :button/comment                                  "Комментировать"
      :button/copied                                   "Скопировано"
      :button/copy                                     "Копировать"
      :button/copy-link                                "Копировать ссылку"
@@ -74,7 +75,10 @@
                                                               "определенных областей для облегчения использования OrgPad.")])
 
      :dashboard/confirm-delete                        [:<> [:b "Навсегда"] " удалить эту ОргСтраничку?"]
-     :dashboard/login-needed                          [:<> [:b "Войти"] " или " [:b "зарегистрироваться,"] " чтобы создать новые OrgPages."]
+     :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
+                                                        [:<> [:a {:href login-url} "Войти"] " или "
+                                                         [:a {:href register-url} "зарегистрироваться,"]
+                                                         " чтобы создать новые OrgPages."])
      :dashboard/owned-orgpages                        "Мои ОргСтранички"
      :dashboard/public-orgpages                       "Опубликовать ОргСтранички"
      :dashboard/shared-orgpages                       "ОргСтранички, которыми с вами поделились"
@@ -277,7 +281,6 @@
      :loading/getting-dashboard                       "Загрузка списка доступных ОргСтраничек из сервера ..."
      :loading/getting-website                         "Загрузка веб-сайта из сервера ..."
      :loading/uploading-orgpage                       "Выгрузка ОргСтранички на сервер ..."
-     :loading/authorizing-user                        "Авторизация пользователя ..."
      :loading/ws-init                                 "Настройка связи с сервером ..."
      :loading/ws-closed                               "Связь с сервером утрачена. Попробуйте переподключиться. Если проблема не исчезнет, перезагрузите страницу."
      :loading/administration                          "Загрузка данных администратора ..."
@@ -289,6 +292,7 @@
 
      :login/continue-with-facebook                    "Продолжить с Facebook"
      :login/continue-with-google                      "Продолжить с Google"
+     :login/continue-with-microsoft                   "Продолжить с Microsoft"
      :login/forgotten-password                        "Забыли пароль"
      :login/forgotten-password-email-resent           "Электронное письмо для сброса пароля отправлено."
      :login/forgotten-password-description            "Введите электронный адрес, на который мы отправим вам ссылку, чтобы сбросить ваш пароль. Эта ссылка действительна в течение 24 часов."
@@ -302,6 +306,12 @@
 
      :login-util/separator                            "или"
 
+     :meta/description                                "Описание"
+     :meta/new-tag                                    "Добавить тэг"
+     :meta/info                                       (str "Приведенная ниже информация поможет узнать, о чем эта ОргСтраничка. "
+                                                           "Вы можете отфильтровывать по тэгам список ОргСтраничек.")
+
+     :meta/info-in-share-orgpage                      "Перед публикацией этой ОргСтранички необходимо установить название."
      :notes/create-note                               "Новая заметка"
      :notes/edit-note                                 "Редактировать заметку"
      :notes/manage-notes                              "Управлять заметками"
@@ -309,6 +319,7 @@
      :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
                                                        {:notes/notes-label [:notes/num-notes
                                                                             "заметок" "заметка" "заметки" "заметок"]}]
+     :notes/untitled                                  "Безымянная заметка"
      :notes/confirm-delete                            "Удалить эту заметку?"
      :notes/notes-description                         "Зафиксируйте свои идеи и отсортируйте их позже."
 
@@ -331,11 +342,6 @@
      :orgpage/copy-orgpage                            "Скопировать в новую ОргСтраничку"
      :orgpage/delete-orgpage                          "Удалить ОргСтраничку"
      :orgpage/detail                                  "Раскрыть подробности"
-     :orgpage/meta-description                        "Описание"
-     :orgpage/meta-new-tag                            "Добавить тэг"
-     :orgpage/meta-info                               (str "Приведенная ниже информация поможет узнать, о чем эта ОргСтраничка. "
-                                                           "Вы можете отфильтровывать по тэгам список ОргСтраничек.")
-     :orgpage/meta-info-in-share-orgpage              "Перед публикацией этой ОргСтранички необходимо установить название."
      :orgpage/share-tooltip                           "Поделиться этой ОргСтраничкой с другими"
      :orgpage/share-orgpage                           "Поделиться ОргСтраничкой"
      :orgpage/show-information                        "Показать информацию"
@@ -349,6 +355,7 @@
      :orgpage/untitled                                "Безымянная ОргСтраничка"
      :orgpage/title                                   "Название ОргСтранички"
      :orgpage/untitled-unit                           "Безымянная ячейка"
+     :orgpage/path-unit                               "Безымянная презентация"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
                                                                              "шагов" "шаг" "шагa" "шагов"]}]
@@ -377,7 +384,7 @@
      :panel/edit-info                                 "Перейти к режиму редактирования, где можно создавать и удалять ячейки и ссылки, менять содержимое и т.п."
      :panel/read-info                                 "Перейти к режиму просмотра, где нельзя ничего изменять, но просматривать содержимое проще"
      :panel/undo-deletion                             "Отмена удаления"
-     :panel/undo-deletion-info                        [:i18n/plural "Отменить удаление {delete/num-units} {delete/unit-label} и {delete/num-links} {delete/link-label}."
+     :panel/undo-deletion-info                        [:i18n/plural "Отменить удаление {delete/num-units} {delete/unit-label} и {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
                                                                              "ячеек" "ячейка" "ячейки" "ячеек"]
                                                                 :link-label [:delete/num-links
@@ -391,6 +398,7 @@
      :panel/administration                            "Администрация"
      :panel/ios-install-info                          "Установить приложение"
      :panel/upload-attachment                         "Вставте изображения или файлы в новые ячейки"
+     :panel/selection-mode                            "Начать выбор"
 
      :password/too-short                              "Необходимо как минимум 8 символов"
      :password/different-passwords                    "Пароль не совпадает"
@@ -507,6 +515,8 @@
      :promotion/max-usages-reached                    "Использовался слишком много раз"
      :promotion/expired                               "Срок действия истек"
      :promotion/one-year-free                         "1 год бесплатно"
+     :promotion/duration-free                         [:i18n/plural "{promotion/duration} {promotion/days} бесплатно"
+                                                       {:promotion/days [:promotion/duration "дней" "день" "дня" "дней"]}]
      :promotion/for-one-year                          " на 1 год"
      :promotion/for-six-months                        " на 6 месяцев"
 
@@ -567,6 +577,10 @@
      :settings/account-not-linked-to-google           [:<> " Ваша учетная запись " [:b " не привязана "] " к Google."]
      :settings/link-google                            "Привязать Google"
      :settings/unlink-google                          "Открепить Google"
+     :settings/account-linked-to-microsoft            [:<> " Ваша учетная запись " [:b " привязана "] " к Microsoft."]
+     :settings/account-not-linked-to-microsoft        [:<> " Ваша учетная запись " [:b " не привязана "] " к Microsoft."]
+     :settings/link-microsoft                         "Привязать Microsoft"
+     :settings/unlink-microsoft                       "Открепить Microsoft"
      :settings/set-password-text                      " Установите пароль перед тим, как открепить."
      :settings/linked-accounts-info                   "Привяжите вашу учетную запись в Facebook или Google к учетной записи OrgPad, чтобы вы могли использовать ее для входа."
      :settings/profile-info                           "Предоставленная информация облегчит вам поиск сотрудников по проекту."
@@ -579,7 +593,6 @@
 
      :share-orgpage/campaigns                         "Campaigns"
      :share-orgpage/copy-template-link                "Скопировать ссылку на шаблон"
-     :share-orgpage/copy-template-link-tooltip        "Люди могут использовать эту ссылку для создания собственных копий этой ОргСтранички"
      :share-orgpage/dialog-title                      "Поделиться {orgpage/title}"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
                                                         [:<> (str "Люди, не имеющие учетной записи OrgPad, получат приглашение со ссылкой."
@@ -594,6 +607,7 @@
      :share-orgpage/to-comment                        "комментировать"
      :share-orgpage/to-edit                           "для редактирования"
      :share-orgpage/links-tooltip                     "Предоставьте доступ по ссылке для общего доступа"
+     :share-orgpage/template-info                     "Люди могут использовать эту ссылку для создания собственных копий этой ОргСтранички."
      :share-orgpage/embed                             "Встроить"
      :share-orgpage/embed-tooltip                     "Вставьте в свой веб-сайт"
      :share-orgpage/new-user-or-usergroup             "Имя, адрес электронной почты или группа"

@@ -1,6 +1,8 @@
 (ns orgpad.client.i18n.dicts.en
   (:require [clojure.string :as str]
-            [orgpad.common.i18n.dict.en :as en]))
+            [orgpad.common.i18n.dict.en :as en]
+            [orgpad.client.util.unicode :as unicode]
+            [re-frame.core :as rf]))
 
 (def dict
   "A dictionary map from keywords to the corresponding English texts."
@@ -22,6 +24,7 @@
      :button/back                                     "Back"
      :button/cancel                                   "Cancel"
      :button/close                                    "Close"
+     :button/comment                                  "Comment"
      :button/copied                                   "Copied"
      :button/copy                                     "Copy"
      :button/copy-link                                "Copy link"
@@ -47,6 +50,7 @@
      :button/present                                  "Present"
      :button/present-tooltip                          "Start presentation (F5)"
      :button/share                                    "Share"
+     :button/start                                    "Start"
      :button/exit                                     "Exit"
      :button/show-password                            "Show"
      :button/hide-password                            "Hide"
@@ -76,7 +80,20 @@
                                                               "of certain areas to make it easier for people using OrgPad.")])
 
      :dashboard/confirm-delete                        [:<> [:b "Permanently"] " delete this OrgPage?"]
-     :dashboard/login-needed                          [:<> [:b "Log in"] " or " [:b "register"] " to create new OrgPages."]
+     :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
+                                                        [:<> [:a {:href login-url} "Log in"] " or "
+                                                         [:a {:href register-url} "register"]
+                                                         " to create new OrgPages."])
+     :dashboard/org-subscription-expired              (fn [{:dashboard/keys [info-link]
+                                                            :org/keys       [name subscription-expired]}]
+                                                        [:<> "Subscription of your school " name " have expired on " subscription-expired ". "
+                                                         "For renewal, contact your management. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "More information"] " about 95% discount for schools."])
+     :dashboard/school-subscription-info              (fn [{:dashboard/keys [info-link]}]
+                                                        [:<> "Get OrgPad for your school without limits with a 95% discount. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "More information."]])
      :dashboard/owned-orgpages                        "My OrgPages"
      :dashboard/public-orgpages                       "Published OrgPages"
      :dashboard/shared-orgpages                       "OrgPages shared with you"
@@ -93,6 +110,8 @@
      :editors/remove-page                             "Remove this page"
      :editors/previous-page                           "Previous page; hold SHIFT to move this page to the left"
      :editors/next-page                               "Next page; hold SHIFT to move this page to the right"
+     :editors/set-comment                             "Change into a comment cell with your profile image"
+     :editors/unset-comment                           "Change into a normal cell, removing the profile image"
      :editors/title                                   "Title"
      :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
                                                         (str "Switch to this page"
@@ -219,8 +238,11 @@
                                                           [:i18n/plural "Failed to upload {info/count} {info/num-images}."
                                                            {:info/num-images [:info/count "images" "image" "images"]}]
                                                           "Failed to upload at least one image."))
+     :info/uploading-youtubes-failed                  [:i18n/plural "{info/count} Youtube {info/num-youtubes} not found."
+                                                       {:info/num-youtubes [:info/count "videos" "video" "videos"]}]
      :info/uploading-attachments-failed               "Uploading files failed."
      :info/presentation-link-copied                   "The link for this presentation copied."
+     :info/max-orgpages-exceeded                      "The owner of this OrgPage cannot create an additional OrgPage."
      :info/storage-exceeded                           "The owner of this OrgPage does not have {upload/total-size} left to upload these files."
      :info/attachments-too-large                      (str "Cannot upload {upload/total-size} in a single upload."
                                                            " The maximum size of all uploaded attachments is 500 MB.")
@@ -283,7 +305,6 @@
      :loading/getting-dashboard                       "Downloading the list of available OrgPages from the server ..."
      :loading/getting-website                         "Downloading a website from the server ..."
      :loading/uploading-orgpage                       "Uploading an OrgPage to the server ..."
-     :loading/authorizing-user                        "Authorizing the user ..."
      :loading/ws-init                                 "Setting up connection to the server ..."
      :loading/ws-closed                               "Connection to server closed, trying to reconnect. If the problem persists, reload the page."
      :loading/administration                          "Loading administration data ..."
@@ -295,6 +316,7 @@
 
      :login/continue-with-facebook                    "Continue with Facebook"
      :login/continue-with-google                      "Continue with Google"
+     :login/continue-with-microsoft                   "Continue with Microsoft"
      :login/forgotten-password                        "Forgotten password"
      :login/forgotten-password-email-resent           "Password reset email sent already."
      :login/forgotten-password-description            "Enter an email address for which we will send you a link to reset your password. This link is valid for 24 hours."
@@ -308,6 +330,27 @@
 
      :login-util/separator                            "or"
 
+     :meta/orgpage-thumbnail                          "OrgPage image"
+     :meta/thumbnail-info                             (str "Choose image displayed for this OrgPage. It is used in "
+                                                           "the list of OrgPages, in embeds and when shared in social networks.")
+     :meta/automatic-screenshot                       "Automatically generated screenshot. Updates five minutes after each change."
+     :meta/custom-thumbnail                           "Custom uploaded image of size 1360x768."
+     :meta/upload-thumbnail                           "Upload custom image"
+     :meta/thumbnail-upload-failed                    "Failed to upload image."
+     :meta/description                                "Description"
+     :meta/new-tag                                    "Tag"
+     :meta/info                                       (str "Information below helps you and others to know what this OrgPage is about. "
+                                                           "You can filter by tags in the OrgPages list.")
+     :meta/info-in-share-orgpage                      "Before sharing this OrgPage, title has to be set."
+     :meta/info-move-to-new-orgpage                   [:i18n/plural (str "Move the selected {selection/num-units} {selection/units-label} "
+                                                                         "and {selection/num-links} {selection/links-label} into a new OrgPage "
+                                                                         "with the following information. In the current OrgPage, these cells and links "
+                                                                         "will be replaced by a single cell, containing the new OrgPage inside.")
+                                                       {:selection/units-label [:selection/num-units "cells" "cell" "cells"]
+                                                        :selection/links-label [:selection/num-links "links" "link" "links"]}]
+     :meta/move-to-new-orgpage-title                  "Move to {meta/title}"
+     :meta/move-to-new-orgpage                        "Move to a new OrgPage"
+
      :notes/create-note                               "New note"
      :notes/edit-note                                 "Edit a note"
      :notes/manage-notes                              "Manage notes"
@@ -315,6 +358,7 @@
      :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
                                                        {:notes/notes-label [:notes/num-notes
                                                                             "notes" "note" "notes"]}]
+     :notes/untitled                                  "Untitled note"
      :notes/confirm-delete                            "Delete this note?"
      :notes/notes-description                         "Capture your ideas and sort them later."
 
@@ -337,11 +381,6 @@
      :orgpage/copy-orgpage                            "Copy into a new OrgPage"
      :orgpage/delete-orgpage                          "Delete OrgPage"
      :orgpage/detail                                  "Detail"
-     :orgpage/meta-description                        "Description"
-     :orgpage/meta-new-tag                            "Tag"
-     :orgpage/meta-info                               (str "Information below helps you and others to know what this OrgPage is about. "
-                                                           "You can filter by tags in the OrgPages list.")
-     :orgpage/meta-info-in-share-orgpage              "Before sharing this OrgPage, title has to be set."
      :orgpage/share-tooltip                           "Share this OrgPage with others"
      :orgpage/share-orgpage                           "Share OrgPage"
      :orgpage/show-information                        "Show information"
@@ -355,6 +394,7 @@
      :orgpage/untitled                                "Untitled OrgPage"
      :orgpage/title                                   "OrgPage title"
      :orgpage/untitled-unit                           "Untitled cell"
+     :orgpage/untitled-path                           "Untitled presentation"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
                                                                              "steps" "step" "steps"]}]
@@ -367,6 +407,18 @@
                                                         [:<> "A copy available as "
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
+     :orgpage/change-color                            "Change color of this OrgPage"
+     :orgpage/autoshare                               (fn [{:user/keys [label permission on-click]}]
+                                                        [:<> "This OrgPage is automatically shared with " label " for "
+                                                         (case permission
+                                                           :permission/view "reading"
+                                                           :permission/comment "commenting"
+                                                           :permission/edit "editing"
+                                                           nil)
+                                                         ". " [:span.link-button {:on-click on-click} "Click here"]
+                                                         " to cancel sharing."])
+
+     :orgpage-placement/activate                      "View here"
 
      :orgpage-stats/number-of-units                   "Number of cells"
      :orgpage-stats/number-of-links                   "Number of links"
@@ -383,7 +435,7 @@
      :panel/edit-info                                 "Switch to editing where you can create and delete cells and links, modify content, and more"
      :panel/read-info                                 "Switch to reading where nothing can be changed but browsing the content is easier"
      :panel/undo-deletion                             "Undo deletion"
-     :panel/undo-deletion-info                        [:i18n/plural "Revert the deletion of {delete/num-units} {delete/unit-label} and {delete/num-links} {delete/link-label}."
+     :panel/undo-deletion-info                        [:i18n/plural "Revert the deletion of {delete/num-units} {delete/unit-label} and {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
                                                                              "cells" "cell" "cells"]
                                                                 :link-label [:delete/num-links
@@ -397,6 +449,7 @@
      :panel/administration                            "Administration"
      :panel/ios-install-info                          "Install app"
      :panel/upload-attachment                         "Insert images or files into new cells"
+     :panel/selection-mode                            "Start selection"
 
      :password/too-short                              "At least 8 characters required"
      :password/different-passwords                    "Passwords do not match"
@@ -464,6 +517,10 @@
      :presentation/next-step                          "The next step"
      :presentation/last-step                          "The last step"
      :presentation/present                            "Start presentation"
+     :presentation/slideshow                          "Automatically play steps"
+     :presentation/step-duration                      "Step duration in seconds"
+     :presentation/loop-slideshow                     "Repeat at the end"
+     :presentation/stop-slideshow                     "Stop automatically playing steps"
      :presentation/exit-tooltip                       "Exit presentation"
 
      :presentation/share-presentation                 "Share this presentation with others."
@@ -513,6 +570,8 @@
      :promotion/max-usages-reached                    "Used too many times"
      :promotion/expired                               "Expired"
      :promotion/one-year-free                         "1 year free"
+     :promotion/duration-free                         [:i18n/plural "{promotion/duration} {promotion/days} free"
+                                                       {:promotion/days [:promotion/duration "days" "day" "days"]}]
      :promotion/for-one-year                          " for 1 year"
      :promotion/for-six-months                        " for 6 months"
 
@@ -548,8 +607,9 @@
                                                                                 "links" "link" "links"]}]
 
      :selection/link                                  "Connect cells"
-     :selection/hide-contents                         "Hide contents"
+     :selection/hide-contents                         "Hide contents (ESCAPE)"
      :selection/show-contents                         "Show contents"
+     :selection/move-to-new-orgpage                   "Move to a new OrgPage"
      :selection/copy-units-links                      "Copy cells and links to clipboard"
      :selection/flip-links                            "Flip link directions"
      :selection/delete                                "Delete selected"
@@ -573,6 +633,10 @@
      :settings/account-not-linked-to-google           [:<> " Your account is " [:b " not linked "] " to Google."]
      :settings/link-google                            "Link Google"
      :settings/unlink-google                          "Unlink Google"
+     :settings/account-linked-to-microsoft            [:<> " Your account is " [:b " linked "] " to Microsoft."]
+     :settings/account-not-linked-to-microsoft        [:<> " Your account is " [:b " not linked "] " to Microsoft."]
+     :settings/link-microsoft                         "Link Microsoft"
+     :settings/unlink-microsoft                       "Unlink Microsoft"
      :settings/set-password-text                      " Set password before unlinking."
      :settings/linked-accounts-info                   "Link your Facebook or Google account to OrgPad so you can use them to log in."
      :settings/profile-info                           "With the given information you will be easier to find for co-workers on a project."
@@ -585,7 +649,6 @@
 
      :share-orgpage/campaigns                         "Campaigns"
      :share-orgpage/copy-template-link                "Copy template link"
-     :share-orgpage/copy-template-link-tooltip        "People can use this link to create their own copies of this OrgPage"
      :share-orgpage/dialog-title                      "Share {orgpage/title}"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
                                                         [:<> (str "People without an OrgPad account will get an invitation with a link."
@@ -595,16 +658,36 @@
      :share-orgpage/invite-for-editing                "Invite for editing"
      :share-orgpage/invite-for-viewing                "Invite for reading"
      :share-orgpage/invite-by-email                   "Do you want to invite them by email using a specific language?"
+     :share-orgpage/show-profile                      "Show profile"
      :share-orgpage/links                             "Links"
      :share-orgpage/to-read                           "to read"
      :share-orgpage/to-comment                        "to comment"
      :share-orgpage/to-edit                           "to edit"
      :share-orgpage/links-tooltip                     "Grant access via shareable links"
+     :share-orgpage/template                          "Template"
+     :share-orgpage/template-tooltip                  "Links automatically creating a copy of this OrgPage"
+     :share-orgpage/template-info                     "People can use this link to create their own copies of this OrgPage."
+     :share-orgpage/template-autoshare-none           "Do not share the copies with me."
+     :share-orgpage/template-autoshare                (fn [{:share-orgpage/keys [template-autoshare]}]
+                                                        (str "Share the copies with me for "
+                                                             (case template-autoshare
+                                                               :permission/view "reading"
+                                                               :permission/comment "commenting"
+                                                               :permission/edit "editing") "."))
      :share-orgpage/embed                             "Embed"
      :share-orgpage/embed-tooltip                     "Embed into your website"
      :share-orgpage/new-user-or-usergroup             "Name, email or team"
      :share-orgpage/link-permission-start             "Allow people"
      :share-orgpage/link-permission-end               "this OrgPage."
+     :share-orgpage/orgpage-info                      "Info"
+     :share-orgpage/orgpage-info-tooltip              "Information about the owner and whether the OrgPage is published"
+     :share-orgpage/user-permission                   (fn [{:permissions/keys [user-permission]}]
+                                                        (str "This OrgPage is shared with you for "
+                                                             (case user-permission
+                                                               :permission/view "reading"
+                                                               :permission/comment "commenting"
+                                                               :permission/edit "editing") "."))
+     :share-orgpage/remove-yourself                   "Remove yourself"
      :share-orgpage/private-info                      "Only you and the people with whom you have shared the OrgPage directly or through a link have access. Every newly created document is private."
      :share-orgpage/publish-for-editing-info          "The OrgPage is public. Anyone on the Internet can search and edit it."
      :share-orgpage/publish-for-reading-info          "The OrgPage is public. Anyone on the Internet can search and read it. Only you or the people with whom you have shared the OrgPage for editing can make changes."
@@ -762,4 +845,7 @@
      :menu-item/url-type                              "Opens an external URL"
      :menu-item/children-type                         "Opens a submenu"
      :website-editor/menu-item-path                   "Route"
+
+     :youtube-placement/watch-on-prefix               (str "Watch" unicode/nbsp "on")
+     :youtube-placement/watch-on-suffix               ""
      }))

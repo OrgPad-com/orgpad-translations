@@ -1,6 +1,7 @@
 (ns orgpad.client.i18n.dicts.cs
   (:require [clojure.string :as str]
-            [orgpad.common.i18n.dict.cs :as cs]))
+            [orgpad.common.i18n.dict.cs :as cs]
+            [orgpad.client.util.unicode :as unicode]))
 
 (def dict
   "A dictionary map from keywords to the corresponding Czech texts."
@@ -22,6 +23,7 @@
      :button/back                                     "Zpět"
      :button/cancel                                   "Zrušit"
      :button/close                                    "Zavřít"
+     :button/comment                                  "Komentovat"
      :button/copied                                   "Zkopírováno"
      :button/copy                                     "Kopírovat"
      :button/copy-link                                "Kopírovat odkaz"
@@ -47,6 +49,7 @@
      :button/present                                  "Prezentovat"
      :button/present-tooltip                          "Začít prezentaci (F5)"
      :button/share                                    "Sdílet"
+     :button/start                                    "Start"
      :button/exit                                     "Ukončit"
      :button/show-password                            "Ukázat"
      :button/hide-password                            "Skrýt"
@@ -75,7 +78,20 @@
                                                          ". Pro určitou funkcionalitu, kterou usnadňujeme práci uživatelům OrgPadu, využíváme cookies."])
 
      :dashboard/confirm-delete                        [:<> [:b "Trvale"] " smazat tuto OrgStránku?"]
-     :dashboard/login-needed                          [:<> "Abyste mohli vytvořit novou OrgStránku, " [:b "přihlaste se"] " nebo " [:b "se registrujte"] "."]
+     :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
+                                                        [:<> "Abyste mohli vytvořit novou OrgStránku, "
+                                                         [:a {:href login-url} "přihlaste se"] " nebo "
+                                                         [:a {:href register-url} "se registrujte"] "."])
+     :dashboard/org-subscription-expired              (fn [{:dashboard/keys [info-link]
+                                                            :org/keys       [name subscription-expired]}]
+                                                        [:<> "Předplatné Vaší školy " name " vypršelo dne " subscription-expired ". "
+                                                         "Pro obnovu kontaktujte vedení. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Více informací"] " o 95% slevě pro školy."])
+     :dashboard/school-subscription-info              (fn [{:dashboard/keys [info-link]}]
+                                                        [:<> "Získejte pro svoji školu OrgPad bez limitů s 95% slevou. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Více informací."]])
      :dashboard/owned-orgpages                        "Moje OrgStránky"
      :dashboard/public-orgpages                       "Veřejné OrgStránky"
      :dashboard/shared-orgpages                       "OrgStránky sdílené s Vámi"
@@ -92,6 +108,8 @@
      :editors/remove-page                             "Odstranit tuto stránku"
      :editors/previous-page                           "Předchozí stránka; podržte SHIFT pro přesunutí této stránky doleva"
      :editors/next-page                               "Následující stránka; podržte SHIFT pro přesunutí této stránky doprava"
+     :editors/set-comment                             "Změnit v komentářovou buňku s vaší profilovkou"
+     :editors/unset-comment                           "Změnit v normální buňku odebráním profilovky"
      :editors/title                                   "Nadpis"
      :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
                                                         (str "Přepnout na tuto stránku"
@@ -216,9 +234,12 @@
                                                           [:i18n/plural "Nahravání {info/count} {info/num-images} selhalo."
                                                            {:info/num-images [:info/count "obrázků" "obrázku" "obrázků" "obrázků"]}]
                                                           "Nahravání nejméně jednoho obrázku selhalo."))
+     :info/uploading-youtubes-failed                  [:i18n/plural "{info/count} Youtube {info/num-youtubes} nenalezeno."
+                                                       {:info/num-youtubes [:info/count "videí" "video" "videa" "videí"]}]
      :info/uploading-attachments-failed               "Nahravání souborů selhalo."
      :info/presentation-link-copied                   "Zkopírován odkaz k této prezentaci."
-     :info/storage-exceeded                           "Vlastníkovi této stránky OrgPage nezbývá {upload/total-size} pro nahrání těchto souborů."
+     :info/max-orgpages-exceeded                      "Vlastník této OrgStránky nemůže vytvořit další OrgStránku."
+     :info/storage-exceeded                           "Vlastníkovi této OrgStránky nezbývá {upload/total-size} pro nahrání těchto souborů."
      :info/attachments-too-large                      (str "Nahrávání {upload/total-size} selhalo."
                                                            " Najednou je možné nahrát nejvýše 500 MB.")
 
@@ -287,17 +308,19 @@
      :loading/restoring-opened-pages                  "Obnovení pozic otevřených stránek ..."
      :loading/getting-orgpage                         "Stahování OrgStránky ze serveru ..."
      :loading/getting-dashboard                       "Stahování seznamu dostupných OrgStránek ze serveru ..."
+     :loading/getting-website                         "Stahování webové stránky ze serveru ..."
      :loading/uploading-orgpage                       "Nahravání OrgStránky na server ..."
-     :loading/authorizing-user                        "Autorizování uživatele ..."
      :loading/ws-init                                 "Vytváření spojení se serverem ..."
      :loading/ws-closed                               "Spojení se serverem uzavřené, pokouším se znovu připojit. Pokud problém přetrvává, obnovte stránku."
      :loading/administration                          "Nahravání administrativních dat ..."
      :loading/profile                                 "Nahrávání profilu ..."
      :loading/style                                   "Nahravání stylů ..."
+     :loading/start-trial                             "Začínáme 7 denní zkušební předplatné ..."
      :loading/uploading-attachments                   "Nahravání příloh na server ..."
 
      :login/continue-with-facebook                    "Pokračovat s Facebookem"
      :login/continue-with-google                      "Pokračovat s Googlem"
+     :login/continue-with-microsoft                   "Pokračovat s Microsoftem"
      :login/forgotten-password                        "Zapomenuté heslo"
      :login/forgotten-password-email-resent           "Email pro obnovení hesla již odeslán."
      :login/forgotten-password-description            "Vložte emailovou adresu, kam Vám pošleme odkaz pro obnovení hesla. Tento odkaz je funkční 24 hodin."
@@ -311,6 +334,27 @@
 
      :login-util/separator                            "nebo"
 
+     :meta/orgpage-thumbnail                          "Obrázek OrgStránky "
+     :meta/thumbnail-info                             (str "Zvolte si obrázek, který se bude zobrazovat pro tuto OrgStránku. Používá se"
+                                                           " v seznamu OrgStránek, při vložení OrgStránky a při sdílení na sociálních sítích.")
+     :meta/automatic-screenshot                       "Automaticky generovaný snímek. Obnovuje se pět minut po libovolné změně."
+     :meta/custom-thumbnail                           "Vlastní obrázek o velikosti 1360x768."
+     :meta/upload-thumbnail                           "Nahrát vlastní obrázek"
+     :meta/thumbnail-upload-failed                    "Nahrát obrázek se nepodařilo."
+     :meta/description                                "Popis"
+     :meta/new-tag                                    "Štítek"
+     :meta/info                                       (str "Informace níže pomáhají Vám a ostatním zjistit, o čem je tato OrgStránka. "
+                                                           "Štítky můžete v seznamu OrgStránek využít k filtrování.")
+     :meta/info-in-share-orgpage                      "Před sdílením této OrgStránky musí být nastavený nadpis."
+     :meta/info-move-to-new-orgpage                   [:i18n/plural (str "Přesunout vybraných {selection/num-units} {selection/units-label} "
+                                                                         "a {selection/num-links} {selection/links-label} do nové OrgStránky "
+                                                                         "s následujícími informacemi. V současné OrgStránce budou tyto buňky a spoje nahrazeny "
+                                                                         "jedinou buňkou, která bude uvnitř obsahovat nově vytvořenou OrgStránku.")
+                                                       {:selection/units-label [:selection/num-units "buněk" "buňku" "buňky" "buněk"]
+                                                        :selection/links-label [:selection/num-links "spojů" "spoj" "spoje" "spojů"]}]
+     :meta/move-to-new-orgpage-title                  "Přesunout do {meta/title}"
+     :meta/move-to-new-orgpage                        "Přesunout do nové OrgStránky"
+
      :notes/create-note                               "Nová poznámka"
      :notes/edit-note                                 "Upravit poznámku"
      :notes/manage-notes                              "Spravovat poznámky"
@@ -318,6 +362,7 @@
      :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
                                                        {:notes/notes-label [:notes/num-notes
                                                                             "poznámek" "poznámka" "poznámky" "poznámek"]}]
+     :notes/untitled                                  "Poznámka bez názvu"
      :notes/confirm-delete                            "Smazat tuto poznámku?"
      :notes/notes-description                         "Zachyťte své nápady a uspořádejte je později."
 
@@ -340,11 +385,6 @@
      :orgpage/copy-orgpage                            "Kopírovat do nové OrgStránky"
      :orgpage/delete-orgpage                          "Smazat OrgStránku"
      :orgpage/detail                                  "Podrobnosti"
-     :orgpage/meta-description                        "Popis"
-     :orgpage/meta-new-tag                            "Štítek"
-     :orgpage/meta-info                               (str "Informace níže pomáhají Vám a ostatním zjistit, o čem je tato OrgStránka. "
-                                                           "Štítky můžete v seznamu OrgStránek využít k filtrování.")
-     :orgpage/meta-info-in-share-orgpage              "Před sdílením této OrgStránky musí být nastavený nadpis."
      :orgpage/share-tooltip                           "Sdílejte tuto OrgStránku s ostatními"
      :orgpage/share-orgpage                           "Sdílení OrgStránky"
      :orgpage/show-information                        "Zobrazit informace"
@@ -358,6 +398,7 @@
      :orgpage/untitled                                "OrgStránka bez názvu"
      :orgpage/title                                   "Název OrgStránky"
      :orgpage/untitled-unit                           "Nepojmenovaná jednotka"
+     :orgpage/untitled-path                           "Nepojmenovaná prezentace"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
                                                                              "kroků" "krok" "kroky" "kroků"]}]
@@ -370,6 +411,18 @@
                                                         [:<> "Kopie je dostupná jako "
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
+     :orgpage/change-color                            "Změnit barvu této OrgStránky"
+     :orgpage/autoshare                               (fn [{:user/keys [label permission on-click]}]
+                                                        [:<> "Tato OrgStránka je automaticky sdílena s " label " pro "
+                                                         (case permission
+                                                           :permission/view "čtení"
+                                                           :permission/comment "komentování"
+                                                           :permission/edit "editování"
+                                                           nil)
+                                                         ". " [:span.link-button {:on-click on-click} "Klikněte zde"]
+                                                         " pro zrušení sdílení."])
+
+     :orgpage-placement/activate                      "Prohlížet zde"
 
      :orgpage-stats/number-of-units                   "Počet buněk"
      :orgpage-stats/number-of-links                   "Počet spojů"
@@ -386,7 +439,7 @@
      :panel/edit-info                                 "Přepnout na úpravy, kde můžete vytvořit a smazat buňky a spoje, upravit obsah a další"
      :panel/read-info                                 "Přepnout na čtení, kde nic nemůže být změněno, ale procházení obsahu je jednodušší"
      :panel/undo-deletion                             "Vrátit smazání"
-     :panel/undo-deletion-info                        [:i18n/plural "Vrátit smazání {delete/num-units} {delete/unit-label} a {delete/num-links} {delete/link-label}."
+     :panel/undo-deletion-info                        [:i18n/plural "Vrátit smazání {delete/num-units} {delete/unit-label} a {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
                                                                              "buněk" "buňky" "buněk" "buněk"]
                                                                 :link-label [:delete/num-links
@@ -400,6 +453,7 @@
      :panel/administration                            "Administrace"
      :panel/ios-install-info                          "Nainstalovat aplikaci"
      :panel/upload-attachment                         "Vložte obrázky nebo soubory do nových buněk"
+     :panel/selection-mode                            "Začít výběr"
 
      :password/too-short                              "Alespoň 8 znaků"
      :password/different-passwords                    "Hesla se neshodují"
@@ -467,6 +521,10 @@
      :presentation/next-step                          "Další krok"
      :presentation/last-step                          "Poslední krok"
      :presentation/present                            "Začít prezentaci"
+     :presentation/slideshow                          "Automaticky přehrávat kroky"
+     :presentation/step-duration                      "Délka kroku v sekundách"
+     :presentation/loop-slideshow                     "Opakovat na konci"
+     :presentation/stop-slideshow                     "Zastavit automatické přehrávání kroků"
      :presentation/exit-tooltip                       "Ukončit prezentaci"
 
      :presentation/share-presentation                 "Sdílejte tuto prezentaci s ostatními."
@@ -516,6 +574,8 @@
      :promotion/max-usages-reached                    "Použit příliš mnohokrát"
      :promotion/expired                               "Vypršel"
      :promotion/one-year-free                         "1 rok zdarma"
+     :promotion/duration-free                         [:i18n/plural "{promotion/duration} {promotion/days} zdarma"
+                                                       {:promotion/days [:promotion/duration "dnů" "den" "dny" "dnů"]}]
      :promotion/for-one-year                          " na 1 rok"
      :promotion/for-six-months                        " na 6 měsíců"
 
@@ -553,6 +613,7 @@
      :selection/link                                  "Propojit buňky"
      :selection/hide-contents                         "Schovat obsahy"
      :selection/show-contents                         "Zobrazit obsahy"
+     :selection/move-to-new-orgpage                   "Přesunout do nové OrgStránky"
      :selection/copy-units-links                      "Zkopírovat buňky a spoje do schránky"
      :selection/flip-links                            "Změnit směry spojů"
      :selection/delete                                "Vymazat vybrané"
@@ -576,6 +637,10 @@
      :settings/account-not-linked-to-google           [:<> "Váš účet " [:b " není propojený "] " s Googlem."]
      :settings/link-google                            "Propojit s Googlem"
      :settings/unlink-google                          "Zrušit propojení s Googlem"
+     :settings/account-linked-to-microsoft            [:<> "Váš účet je " [:b " propojený "] " s Microsoftem."]
+     :settings/account-not-linked-to-microsoft        [:<> "Váš účet " [:b " není propojený "] " s Microsoftem."]
+     :settings/link-microsoft                         "Propojit s Microsoftem"
+     :settings/unlink-microsoft                       "Zrušit propojení s Microsoftem"
      :settings/set-password-text                      " Nastavte heslo před zrušením propojení."
      :settings/linked-accounts-info                   "Propojte svůj účet na Facebooku nebo na Googlu s OrgPadem, abyste ho mohli využít k přihlášení."
      :settings/profile-info                           "Pomocí zadaných informací Vás spolupracující na společných projektech snadněji naleznou."
@@ -586,8 +651,8 @@
      :settings/confirm-delete-account-info            "Trvale smaže všechny Vaše OrgStránky a jejich data."
      :settings/delete-account-info                    [:<> "Smazání účtu " [:b "trvale"] " smaže všechny Vaše OrgStránky a jejich data."]
 
+     :share-orgpage/campaigns                         "Kampaně"
      :share-orgpage/copy-template-link                "Kopírovat odkaz na šablonu"
-     :share-orgpage/copy-template-link-tooltip        "Lidé můžou využívat tento odkaz k vytvoření vlastích kopií této OrgStránky"
      :share-orgpage/dialog-title                      "Sdílení {orgpage/title}"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
                                                         [:<> (str "Lidé bez účtu na OrgPadu obdrží pozvánku s odkazem."
@@ -597,16 +662,36 @@
      :share-orgpage/invite-for-editing                "Pozvat pro úpravy"
      :share-orgpage/invite-for-viewing                "Pozvat pro čtení"
      :share-orgpage/invite-by-email                   "Chcete jej pozvat emailem v určitém jazyce?"
+     :share-orgpage/show-profile                      "Ukázat profil"
      :share-orgpage/links                             "Odkazy"
      :share-orgpage/to-read                           "číst"
      :share-orgpage/to-comment                        "komentovat"
      :share-orgpage/to-edit                           "upravit"
      :share-orgpage/links-tooltip                     "Udělte přístup prostřednictvím odkazů ke sdílení"
+     :share-orgpage/template                          "Šablona"
+     :share-orgpage/template-tooltip                  "Odkazy, které automaticky vytvoří kopii této OrgStránky"
+     :share-orgpage/template-info                     "Lidé mohou využít tento odkaz k vytvoření vlastních kopií této OrgStránky."
+     :share-orgpage/template-autoshare-none           "Nesdílet kopie se mnou."
+     :share-orgpage/template-autoshare                (fn [{:share-orgpage/keys [template-autoshare]}]
+                                                        (str "Sdílet kopie se mnou pro "
+                                                             (case template-autoshare
+                                                               :permission/view "čtení"
+                                                               :permission/comment "komentování"
+                                                               :permission/edit "editování") "."))
      :share-orgpage/embed                             "Vložit"
      :share-orgpage/embed-tooltip                     "Vložit do webové stránky"
      :share-orgpage/new-user-or-usergroup             "Jméno, email nebo tým"
      :share-orgpage/link-permission-start             "Umožněte lidem"
      :share-orgpage/link-permission-end               "tuto OrgStránku."
+     :share-orgpage/orgpage-info                      "Info"
+     :share-orgpage/orgpage-info-tooltip              "Informace o vlastníkovi a jestli je OrgStránka zveřejněná"
+     :share-orgpage/user-permission                   (fn [{:permissions/keys [user-permission]}]
+                                                        (str "Tato OrgStránka je s Vámi sdílena pro "
+                                                             (case user-permission
+                                                               :permission/view "čtení"
+                                                               :permission/comment "komentování"
+                                                               :permission/edit "editování") "."))
+     :share-orgpage/remove-yourself                   "Odebrat sebe"
      :share-orgpage/private-info                      "Přístup máte pouze Vy a lidé, se kterými jste OrgStránku sdíleli přímo nebo pomocí odkazu. Každý nově vytvořený dokument je soukromý."
      :share-orgpage/publish-for-editing-info          "OrgStránka je veřejná. Každý na internetu ji může vyhledat a upravovat."
      :share-orgpage/publish-for-reading-info          "OrgStránka je veřejná. Každý na internetu ji může vyhledat a číst. Změny můžete dělat pouze Vy nebo lidé, se kterými jste OrgStránku sdíleli pro úpravy."
@@ -745,4 +830,7 @@
      :wire-transfer/start-trial                       "Platba odeslána"
      :wire-transfer/start-trial-result-title          "Děkujeme za platbu"
      :wire-transfer/copy                              "Zkopírovat do schránky"
+
+     :youtube-placement/watch-on-prefix               (str "Sledujte" unicode/nbsp "na")
+     :youtube-placement/watch-on-suffix               ""
      }))

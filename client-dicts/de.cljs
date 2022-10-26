@@ -6,7 +6,9 @@
   "A dictionary map from keywords to the corresponding German texts."
   (merge
     de/dict
-    {:attachments/allows-access-to-file               "Erlaubt den Zugriff auf diese Datei."
+    {:administration/page-title                       "Administration - OrgPad"
+
+     :attachments/allows-access-to-file               "Erlaubt den Zugriff auf diese Datei."
      :attachments/allows-access-to-image              "Erlaubt den Zugriff auf dieses Bild."
      :attachments/no-preview                          "Keine Ansicht verfügbar."
      :attachments/used-files                          "Dateien in der OrgSeite"
@@ -14,10 +16,13 @@
      :attachments/used-images                         "Bilder in der OrgSeite"
      :attachments/unused-images                       "Bilder beiseite"
      :attachments/uploading-files                     "Dateien werden hochgeladen ..."
+     :attachments/previous-attachment                 "Vorherige Datei oder Bild"
+     :attachments/next-attachment                     "Weitere Datei oder Bild"
 
      :button/back                                     "Zurück"
      :button/cancel                                   "Abbrechen"
      :button/close                                    "Schließen"
+     :button/comment                                  "Kommentieren"
      :button/copied                                   "Kopiert"
      :button/copy                                     "Kopieren"
      :button/copy-link                                "Link kopieren"
@@ -43,6 +48,7 @@
      :button/present                                  "Präsentieren"
      :button/present-tooltip                          "Präsentation starten (F5)"
      :button/share                                    "Teilen"
+     :button/start                                    "Starten"
      :button/exit                                     "Verlassen"
      :button/show-password                            "Anzeigen"
      :button/hide-password                            "Ausblenden"
@@ -74,7 +80,20 @@
                                                               "sicherstellen zu können, werden Cookies verwendet.")])
 
      :dashboard/confirm-delete                        [:<> "Sind Sie sicher, dass Sie diese OrgSeite endgültig löschen wollen?"]
-     :dashboard/login-needed                          [:<> "Um OrgSeiten zu erstellen, müssen Sie sich " [:b "anmelden"] " oder " [:b "registrieren"] "."]
+     :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
+                                                        [:<> "Um OrgSeiten zu erstellen, müssen Sie sich "
+                                                         [:a {:href login-url} "anmelden"] " oder "
+                                                         [:a {:href register-url} "registrieren"] "."])
+     :dashboard/org-subscription-expired              (fn [{:dashboard/keys [info-link]
+                                                            :org/keys       [name subscription-expired]}]
+                                                        [:<> "Das Abo Ihrer Schule " name " ist am " subscription-expired "ausgelaufen. "
+                                                         "Für die Erneuerung, kontaktieren Sie Ihre Verwaltung. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Mehr Informationen"] " über den etwa 95% hohen Rabatt für Schulen."])
+     :dashboard/school-subscription-info              (fn [{:dashboard/keys [info-link]}]
+                                                        [:<> "Erwerben Sie OrgPad für Ihre Schule ohne Einschränkungen mit einem 95% Rabatt. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Mehr Informationen."]])
      :dashboard/owned-orgpages                        "Meine OrgSeiten"
      :dashboard/public-orgpages                       "Veröffentlichte OrgSeiten"
      :dashboard/shared-orgpages                       "Mit Ihnen geteilte OrgSeiten"
@@ -91,6 +110,8 @@
      :editors/remove-page                             "Diese Seite löschen"
      :editors/previous-page                           "Vorherige Seite; Umschalttaste halten um diese Seite nach links zu verschieben"
      :editors/next-page                               "Nächste Seite; Umschalttaste halten um diese Seite nach rechts zu verschieben"
+     :editors/set-comment                             "Zu einer Kommentar-Einheit mit Ihrem Profilbild wechseln"
+     :editors/unset-comment                           "Zu einer normalen Einheit ohne Ihr Profilbild wechseln"
      :editors/title                                   "Überschrift"
      :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
                                                         (str "Zu dieser Seite wechseln"
@@ -216,8 +237,12 @@
                                                           [:i18n/plural "Das Hochladen von {info/count} {info/num-images} ist fehlgeschlagen."
                                                            {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
                                                           "Das Hochladen von mindestens einem Bild ist fehlgeschlagen."))
+     :info/uploading-youtubes-failed                  [:i18n/plural "{info/count} Youtube-{info/num-youtubes} nicht gefunden."
+                                                       {:info/num-youtubes [:info/count "Videos" "Video" "Videos"]}]
      :info/uploading-attachments-failed               "Das Hochladen von Dateien ist fehlgeschlagen."
      :info/presentation-link-copied                   "Der Link zu dieser Präsentation wurde kopiert."
+     :info/max-orgpages-exceeded                      "Der Inhaber dieser OrgSeite kann keine zusätzlichen OrgSeiten erstellen."
+     :info/storage-exceeded                           "Der Inhaber dieser OrgSeiten hat die benötigten {upload/total-size} zum Hochladen dieser Dateien nicht übrig."
      :info/attachments-too-large                      (str "Das Hochladen von {upload/total-size} ist fehlgeschlagen."
                                                            " Auf einmal kann nur höchstens 500 MB hochgeladen werden.")
 
@@ -277,18 +302,21 @@
      :loading/restoring-opened-pages                  "Positionen von geöffneten Seiten wird wieder hergestellt ..."
      :loading/getting-orgpage                         "Herunterladen der OrgSeite vom Server ..."
      :loading/getting-dashboard                       "Herunterladen der Lister verfügbarer OrgSeiten vom Server ..."
+     :loading/getting-website                         "Herunterladen der Webseite vom Server ..."
      :loading/uploading-orgpage                       "Hochladen einer OrgSeite zum Server ..."
-     :loading/authorizing-user                        "Benutzer wird authorisiert ..."
      :loading/ws-init                                 "Aufbau der Verbindung zum Server ..."
      :loading/ws-closed                               (str "Verbindung zum Server geschlossen, eine Neuverbindung wird versucht. "
                                                            "Falls das Problem andauert, laden Sie die Seite bitte neu.")
      :loading/administration                          "Verwaltungsdaten werden geladen ..."
      :loading/profile                                 "Profil wird geladen ..."
      :loading/style                                   "Stile werden geladen ..."
+     ;; Needed?
+     :loading/start-trial                             "7-Tage Probe-Abo wird gestartet..."
      :loading/uploading-attachments                   "Hochladen der Anhänge zum Server ..."
 
      :login/continue-with-facebook                    "Mit Facebook fortfahren"
      :login/continue-with-google                      "Mit Google fortfahren"
+     :login/continue-with-microsoft                   "Mit Microsoft fortfahren"
      :login/forgotten-password                        "Passwort vergessen"
      :login/forgotten-password-email-resent           "E-Mail zum Zurücksetzen bereits gesendet."
      :login/forgotten-password-description            (str "Geben Sie bitte eine E-Mail Adresse ein, für welche wir Ihnen einen Link zum Zurücksetzen des Passworts zusenden werden."
@@ -302,6 +330,28 @@
 
      :login-util/separator                            "oder"
 
+     :meta/orgpage-thumbnail                          "OrgSeiten-Ansicht"
+     :meta/thumbnail-info                             (str "Wählen Sie die Ansicht für diese OrgSeite. Diese wird in der Übersicht der OrgSeiten,"
+                                                           " beim Einbetten und beim Teilen auf sozialen Netzwerken verwendet.")
+     :meta/automatic-screenshot                       "Automatisch generierter Snapschuss. Wird 5 Minuten nach einer Änderung erstellt."
+     :meta/custom-thumbnail                           "Eigenes Bild mit den Abmessungen 1360x768."
+     :meta/upload-thumbnail                           "Eigenes Bild hochladen"
+     :meta/thumbnail-upload-failed                    "Hochladen der Ansicht ist fehlgeschlagen."
+     :meta/description                                "Beschreibung"
+     :meta/new-tag                                    "Markierungen (Tags)"
+     :meta/info                                       (str "Diese Informationen helfen Ihnen und anderen zu verstehen, wovon diese OrgSeite handelt. "
+                                                           "Mithilfe von Markierungen (Tags) können Sie nach bestimmten OrgSeiten in der Liste filtern.")
+     :meta/info-in-share-orgpage                      "Vor dem Teilen der OrgSeite müssen Sie eine Überschrift erfassen."
+     :meta/info-move-to-new-orgpage                   [:i18n/plural (str "Die {selection/num-units} {selection/units-label} "
+                                                                         "und {selection/num-links} {selection/links-label} in eine neue OrgSeite "
+                                                                         "mit den folgenden Informationen verschieben. In der aktuellen OrgSeite "
+                                                                         "werden die Einheiten und Verbindungen mit einer Einheit ersetzt, die "
+                                                                         "die neu entstandene OrgSeite beinhaltet.")
+                                                       {:selection/units-label [:selection/num-units "ausgewählten Einheiten" "ausgewählte Einheit" "ausgewählten Einheiten"]
+                                                        :selection/links-label [:selection/num-links "Verbindungen" "Verbindung" "Verbindungen"]}]
+     :meta/move-to-new-orgpage-title                  "Zu {meta/title} verschieben"
+     :meta/move-to-new-orgpage                        "Zu einer neuen OrgSeite verschieben"
+
      :notes/create-note                               "Neue Notiz"
      :notes/edit-note                                 "Notiz bearbeiten"
      :notes/manage-notes                              "Notizen verwalten"
@@ -309,6 +359,7 @@
      :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
                                                        {:notes/notes-label [:notes/num-notes
                                                                             "Notizen" "Notiz" "Notizen"]}]
+     :notes/untitled                                  "Unbenannte Notiz"
      :notes/confirm-delete                            "Wollen Sie wirklich diese Notiz löschen?"
      :notes/notes-description                         "Erfassen Sie Ideen und sortieren Sie diese später."
 
@@ -332,11 +383,6 @@
      :orgpage/copy-orgpage                            "In eine neue OrgSeite kopieren"
      :orgpage/delete-orgpage                          "OrgSeite löschen"
      :orgpage/detail                                  "Detail"
-     :orgpage/meta-description                        "Beschreibung"
-     :orgpage/meta-new-tag                            "Markierungen (Tags)"
-     :orgpage/meta-info                               (str "Diese Informationen helfen Ihnen und anderen zu verstehen, wovon diese OrgSeite handelt. "
-                                                           "Mithilfe von Markierungen (Tags) können Sie nach bestimmten OrgSeiten in der Liste filtern.")
-     :orgpage/meta-info-in-share-orgpage              "Vor dem Teilen der OrgSeite müssen Sie eine Überschrift erfassen."
      :orgpage/share-tooltip                           "Diese OrgSeite mit anderen teilen"
      :orgpage/share-orgpage                           "OrgSeite teilen"
      :orgpage/show-information                        "Informationen anzeigen"
@@ -350,6 +396,7 @@
      :orgpage/untitled                                "Unbenannte OrgSeite"
      :orgpage/title                                   "Titel der OrgSeite"
      :orgpage/untitled-unit                           "Unbenannte Einheit"
+     :orgpage/untitled-path                           "Unbenannte Präsentation"
      :orgpage/path-num-steps                          [:i18n/plural "{orgpage/num-steps} {orgpage/step-label}"
                                                        {:orgpage/step-label [:orgpage/num-steps
                                                                              "Schritte" "Schritt" "Schritte"]}]
@@ -362,6 +409,18 @@
                                                         [:<> "Eine Kopie verfügbar als "
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
+     :orgpage/change-color                            "Die Farbe dieser OrgSeite wechseln"
+     :orgpage/autoshare                               (fn [{:user/keys [label permission on-click]}]
+                                                        [:<> "Diese OrgSeite wird automatisch mit " label " zum "
+                                                         (case permission
+                                                           :permission/view "Lesen"
+                                                           :permission/comment "Kommentieren"
+                                                           :permission/edit "Bearbeiten"
+                                                           nil)
+                                                         " geteilt. Zum Beenden des Teilens "
+                                                         [:span.link-button {:on-click on-click} "hier anklicken"] "."])
+
+     :orgpage-placement/activate                      "Hier ansehen"
 
      :orgpage-stats/number-of-units                   "Anzahl der Einheiten"
      :orgpage-stats/number-of-links                   "Anzahl der Verbindungen"
@@ -378,7 +437,7 @@
      :panel/edit-info                                 "Welchseln Sie zum Bearbeiten, wo Sie Einheiten und Verbindungen erstellen, bearbeiten, löschen und noch mehr können."
      :panel/read-info                                 "Wechseln Sie zum Lesen, wo Sie keine Anpassungen vornehmen können, aber das Lesen ist dort einfacher."
      :panel/undo-deletion                             "Rückgängig machen"
-     :panel/undo-deletion-info                        [:i18n/plural "Das Löschen von {delete/num-units} {delete/unit-label} und {delete/num-links} {delete/link-label} rückgängig machen."
+     :panel/undo-deletion-info                        [:i18n/plural "Das Löschen von {delete/num-units} {delete/unit-label} und {delete/num-links} {delete/link-label} rückgängig machen (STRG+Z)."
                                                        #:delete{:unit-label [:delete/num-units
                                                                              "Einheiten" "Einheit" "Einheiten"]
                                                                 :link-label [:delete/num-links
@@ -392,6 +451,7 @@
      :panel/administration                            "Verwaltung"
      :panel/ios-install-info                          "App installieren"
      :panel/upload-attachment                         "Bilder oder Dateien in neue Einheiten einfügen"
+     :panel/selection-mode                            "Auswahl anfangen"
 
      :password/too-short                              "Mindestens 8 Zeichen erforderlich"
      :password/different-passwords                    "Passwörter stimmen nicht überein"
@@ -459,6 +519,10 @@
      :presentation/next-step                          "Nächster Schritt"
      :presentation/last-step                          "Letzter Schritt"
      :presentation/present                            "Präsentation starten"
+     :presentation/slideshow                          "Automatische Wiedergabe der Schritte"
+     :presentation/step-duration                      "Dauer eines Schrittes in Sekunden"
+     :presentation/loop-slideshow                     "Am Ende wiederholen"
+     :presentation/stop-slideshow                     "Automatische Wiedergabe der Schritte stoppen"
      :presentation/exit-tooltip                       "Präsentation abbrechen"
 
      :presentation/share-presentation                 "Teilen Sie diese Präsentation mit anderen."
@@ -508,6 +572,8 @@
      :promotion/max-usages-reached                    "Zu oft verwendet"
      :promotion/expired                               "Ausgelaufen"
      :promotion/one-year-free                         "1 Jahr kostenlos"
+     :promotion/duration-free                         [:i18n/plural "{promotion/duration} {promotion/days} kostenlos"
+                                                       {:promotion/days [:promotion/duration "Tage" "Tag" "Tage"]}]
      :promotion/for-one-year                          " für 1 Jahr"
      :promotion/for-six-months                        " für 6 Monate"
 
@@ -545,6 +611,7 @@
      :selection/link                                  "Einheiten verbinden"
      :selection/hide-contents                         "Inhalte ausblenden"
      :selection/show-contents                         "Inhalte einblenden"
+     :selection/move-to-new-orgpage                   "In eine neue OrgSeite verschieben"
      :selection/copy-units-links                      "Einheiten und Verbindungen in die Zwischenablage kopieren"
      :selection/flip-links                            "Richtung wechseln"
      :selection/delete                                "Auswahl löschen"
@@ -568,6 +635,10 @@
      :settings/account-not-linked-to-google           [:<> "Ihr Konto ist " [:b "nicht"] " mit Google verbunden."]
      :settings/link-google                            "Mit Google verbinden"
      :settings/unlink-google                          "Verbindung zu Google trennen"
+     :settings/account-linked-to-microsoft            [:<> "Ihr Konto ist mit Microsoft " [:b "verbunden"] "."]
+     :settings/account-not-linked-to-microsoft        [:<> "Ihr Konto ist " [:b "nicht"] " mit Microsoft verbunden."]
+     :settings/link-microsoft                         "Mit Microsoft verbinden"
+     :settings/unlink-microsoft                       "Verbindung zu Microsoft trennen"
      :settings/set-password-text                      " Setzen Sie vor dem Trennen der Verbindung bitte ein Passwort."
      :settings/linked-accounts-info                   "Verbindnen Sie Ihr Facebook oder Google Konto mit OrgPad, sodass Sie diese Konten zur Anmeldung benutzen können."
      :settings/profile-info                           "Über die angeführten Informationen sind Sie leichter für Mitwirkende an gemeinsamen Projekten auffindbar."
@@ -578,8 +649,8 @@
      :settings/confirm-delete-account-info            "Das Löschen wird alle Ihre OrgSeiten und die Daten darin zerstören."
      :settings/delete-account-info                    [:<> "Das Löschen wird alle Ihre OrgSeiten und die Daten darin " [:b "dauerhaft zerstören"] "."]
 
+     :share-orgpage/campaigns                         "Kampagne"
      :share-orgpage/copy-template-link                "Link zur Vorlage kopieren"
-     :share-orgpage/copy-template-link-tooltip        "Leute können diesen Link verwenden, um eine eigene Kopie dieser OrgSeite zu erstellen."
      :share-orgpage/dialog-title                      "\"{orgpage/title}\" teilen"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
                                                         [:<> (str "Personen ohne ein OrgPad-Konto werden eine Einladung mit einem Link erhalten."
@@ -590,16 +661,36 @@
      :share-orgpage/invite-for-editing                "Einladen zum Bearbeiten"
      :share-orgpage/invite-for-viewing                "Einladen zum Lesen"
      :share-orgpage/invite-by-email                   "Wollen Sie diese mit einer E-Mail in bestimmter Sprache einladen?"
+     :share-orgpage/show-profile                      "Profil anzeigen"
      :share-orgpage/links                             "Links"
      :share-orgpage/to-read                           "Lesen"
      :share-orgpage/to-comment                        "zu kommentieren"
      :share-orgpage/to-edit                           "Bearbeiten"
      :share-orgpage/links-tooltip                     "Zugriff erteilen mittels teilbaren Links"
+     :share-orgpage/template                          "Vorlage"
+     :share-orgpage/template-tooltip                  "Links die automatisch eine Kopie der OrgSeite erstellen"
+     :share-orgpage/template-info                     "Leute können diesen Link verwenden, um eine eigene Kopie dieser OrgSeite zu erstellen."
+     :share-orgpage/template-autoshare-none           "Kopien werden mit dem Inhaber nicht geteilt."
+     :share-orgpage/template-autoshare                (fn [{:share-orgpage/keys [template-autoshare]}]
+                                                        (str "Kopien werden mit dem Inhaber dieser OrgSeite zum "
+                                                             (case template-autoshare
+                                                               :permission/view "Lesen"
+                                                               :permission/comment "Kommentieren"
+                                                               :permission/edit "Bearbeiten") " geteilt."))
      :share-orgpage/embed                             "Einbetten"
      :share-orgpage/embed-tooltip                     "In Ihre Webseite einbetten"
      :share-orgpage/new-user-or-usergroup             "Name, E-Mail oder Team"
      :share-orgpage/link-permission-start             "Personen Berechtigung erteilen zum "
      :share-orgpage/link-permission-end               " dieser OrgSeite."
+     :share-orgpage/orgpage-info                      "Informationen"
+     :share-orgpage/orgpage-info-tooltip              "Informationen über den Inhaber und ob die OrgSeite veröffentlicht ist"
+     :share-orgpage/user-permission                   (fn [{:permissions/keys [user-permission]}]
+                                                        (str "Diese OrgSeite ist mit Ihnen zum "
+                                                             (case user-permission
+                                                               :permission/view "Lesen"
+                                                               :permission/comment "Kommentieren"
+                                                               :permission/edit "Bearbeiten") " geteilt."))
+     :share-orgpage/remove-yourself                   "Sich selbst entfernen"
      :share-orgpage/private-info                      "Nur Sie und die Personen, mit denen Sie die OrgSeite direkt oder über einen Link geteilt haben, haben Zugang. Jedes neu erstellte Dokument ist privat."
      :share-orgpage/publish-for-editing-info          "Die OrgSeite ist öffentlich. Jeder im Internet kann sie durchsuchen und bearbeiten."
      :share-orgpage/publish-for-reading-info          "Die OrgSeite ist öffentlich. Jeder im Internet kann sie durchsuchen und lesen. Nur Sie selber oder die Personen, mit denen Sie die OrgSeite zur Bearbeitung geteilt haben, können Änderungen vornehmen."
@@ -739,4 +830,7 @@
      :wire-transfer/start-trial                       "Überweisung gesendet"
      :wire-transfer/start-trial-result-title          "Danke für die Bezahlung"
      :wire-transfer/copy                              "In die Zwischenablage kopieren"
+
+     :youtube-placement/watch-on-prefix               "Auf"
+     :youtube-placement/watch-on-suffix               "ansehen"
      }))
