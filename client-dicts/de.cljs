@@ -15,7 +15,7 @@
      :attachments/unused-files                        "Dateien beiseite"
      :attachments/used-images                         "Bilder in der OrgSeite"
      :attachments/unused-images                       "Bilder beiseite"
-     :attachments/uploading-files                     "Dateien werden hochgeladen ..."
+     :attachments/uploading-files                     "Dateien werden hochgeladen …"
      :attachments/previous-attachment                 "Vorherige Datei oder Bild"
      :attachments/next-attachment                     "Weitere Datei oder Bild"
 
@@ -36,14 +36,19 @@
      :button/drop                                     "Ablegen"
      :button/edit                                     "Bearbeiten"
      :button/import                                   "Importieren"
+     :button/insert                                   "Einfügen"
      :button/login                                    "Anmelden"
      :button/logout                                   "Abmelden"
      :button/publish                                  "Veröffentlichen"
      :button/read                                     "Lesen"
      :button/register                                 "Registrieren"
+     :button/register-to-save                         "Zum Speichern registrieren"
+     :button/remove                                   "Entfernen"
+     :button/reset                                    "Zurücksetzen"
      :button/save                                     "Änderungen speichern"
      :button/save-tooltip                             "Änderungen speichern (STRG+Eingabetaste)"
      :button/upload                                   "Hochladen"
+     :button/upload-from-computer                     "Vom Computer hochladen"
      :button/send                                     "Senden"
      :button/present                                  "Präsentieren"
      :button/present-tooltip                          "Präsentation starten (F5)"
@@ -96,35 +101,29 @@
                                                               :target "_blank"} "Mehr Informationen."]])
      :dashboard/owned-orgpages                        "Meine OrgSeiten"
      :dashboard/public-orgpages                       "Veröffentlichte OrgSeiten"
-     :dashboard/shared-orgpages                       "Mit Ihnen geteilte OrgSeiten"
+     :dashboard/shared-orgpages                       "Mit mir geteilte OrgSeiten"
      :dashboard/usergroup-orgpages                    "{usergroup/name}'s OrgSeiten"
-     :dashboard/public-permission-edit                "Mit allen zum Bearbeiten geteilt"
      :dashboard/public-permission-view                "Mit allen zum Lesen geteilt"
-     :dashboard/create-public-orgpage                 "Als öffentlich erstellen"
-     :dashboard/leave-orgpage-as-public               "Als öffentlich belassen"
-     :dashboard/owner-reached-private-limit           "Der Inhaber hat das Limit erreicht"
-     :dashboard/copy-as-public                        "Als öffentlich kopieren"
-     :dashboard/copy-from-template-as-public          "Als öffentlich von der Vorlage kopieren"
+     :dashboard/public-permission-comment             "Mit allen zum Kommentieren geteilt"
+     :dashboard/public-permission-edit                "Mit allen zum Bearbeiten geteilt"
+     :dashboard/help-or-inspiration-button            "Hier geht's weiter!"
 
-     :editors/create-page                             "Seite hinzufügen"
-     :editors/remove-page                             "Diese Seite löschen"
-     :editors/previous-page                           "Vorherige Seite; Umschalttaste halten um diese Seite nach links zu verschieben"
-     :editors/next-page                               "Nächste Seite; Umschalttaste halten um diese Seite nach rechts zu verschieben"
-     :editors/set-comment                             "Zu einer Kommentar-Einheit mit Ihrem Profilbild wechseln"
-     :editors/unset-comment                           "Zu einer normalen Einheit ohne Ihr Profilbild wechseln"
-     :editors/title                                   "Überschrift"
-     :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
-                                                        (str "Zu dieser Seite wechseln"
-                                                             (when can-edit "; Umschalttaste halten um aktuelle Seite dahin zu verschieben")))
-     :editors/hidden-info                             "Klicken Sie zum Schreiben"
+     :dashboard-filter/filter                         "Filtrieren der OrgSeiten"
+     :dashboard-filter/ordering                       "Sortierung der OrgSeiten"
+     :dashboard-filter/filter-and-ordering            "Filtrieren und Sortieren der OrgSeiten"
+     :dashboard-filter/title                          "Filtrieren und Sortieren der angezeigten OrgSeiten"
+     :dashboard-filter/ordering-label                 "Sortierung der OrgSeiten"
+     :dashboard-filter/title-order                    "Alphabetisch dem Titel nach"
+     :dashboard-filter/creation-time-order            "Neuste zuerst"
+     :dashboard-filter/last-modified-order            "Zuletzt angepasste zuerst"
+     :dashboard-filter/most-viewed-order              "Meist gelesene zuerst"
+     :dashboard-filter/search-tags                    "Suchmarkierungen (Such-Tags)"
 
      :embedding-code/code                             "Code"
-     :embedding-code/description                      [:<> "Um diese OrgSeite in Ihre " [:b "Webseite"]
-                                                       " einzubetten, fügen Sie den angegebenen Code in Ihre Webseite ein:"]
+     :embedding-code/description                      "Fügen Sie die OrgPage in eine Webseite oder eine andere Anwendung ein."
 
      :error/orgpage-access-denied                     "Sie haben keinen Zugriff zu dieser OrgSeite. Versuchen Sie sich anzumelden."
      :error/usergroup-access-denied                   "Berechtigung zum bearbeiten des Teams wurde verweigert."
-     :error/already-member                            "„{usergroups/member}“ ist bereits Mitglied."
      :error/administration-access                     "Verwaltungszugriff wurde verweigert."
      :error/creation-unauthorized                     "Zum erstellen von OrgSeiten müssen Sie sich anmelden."
      :error/deleting-denied                           "Löschen der OrgSeite wurde verweigert."
@@ -132,7 +131,6 @@
      :error/email-not-registered                      "Kein Konto mit dieser E-Mail."
      :error/email-missing-mx-record                   "Kein E-Mail-Server unter der Domäne."
      :error/email-invalid                             "Ungültige E-Mail."
-     :error/error                                     "Fehler: "
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Ungültige OrgSeite" (when id " {orgpage/id}")
                                                              ". Fehlerhaft kopierter Link?"))
@@ -140,16 +138,17 @@
      :error/incorrect-password                        "Ungültiges Passwort."
      :error/incorrect-profile-id                      "Ungültiger Link zum Profil. Fehlerhaft kopierter Link?"
      :error/lost-permission                           "Sie haben den Zugriff zu dieser OrgSeite verloren."
+     :error/missing-emails                            (fn [{:missing-emails/keys [emails]}]
+                                                        (str "E-Mails ohne ein Konto: " emails))
      :error/name-already-used                         "Dieser Name wird bereits genutzt"
+     :error/name-not-valid                            "Benutzen Sie mindestens 5 Zeichen"
      :error/orgpage-removed                           (fn [{:orgpage/keys [title]}]
-                                                        (str "Die OrgSeite " (when title "\"{orgpage/title}\"") " wurde entfernt."))
+                                                        (str "Die OrgSeite " (when title "„{orgpage/title}“") " wurde entfernt."))
      :error/owner-of-orgpage                          "Die Person ist bereits der Inhaber dieser OrgSeite."
-     :error/passwords-mismatch                        "Passwörter stimmen nicht überein"
      :error/profile-not-found                         "Profil nicht gefunden."
      :error/unknown-error                             "Unbekannter Fehler, bitte erneut versuchen."
      :error/unknown-id                                "Unbekannte OrgSeite."
      :error/unknown-login-or-email                    "Unbekannte E-Mail oder Team-Name."
-     :error/unknown-user                              "„{usergroups/member}“ existiert nicht."
      :error/unknown-usergroup                         "Das Team wurde gelöscht"
      :error/upload-failed                             "Hochladen der OrgSeite: \"{orgpage/title}\" ist fehlgeschlagen"
 
@@ -169,7 +168,7 @@
                                                         (str "Banküberweisung"
                                                              (when currency
                                                                (str " in " (name currency))) " für "
-                                                             "jährlich"
+                                                             "jährliches"
                                                              (if (= tier "standard")
                                                                " Standard"
                                                                " Professional")
@@ -177,28 +176,23 @@
      :feedback/wire-transfer                          (fn [{:user/keys [email]}]
                                                         [:<> "Schreiben Sie uns Ihre " [:b "Rechnungsadresse"] " und weitere Informationen für die Rechnungsstellung."
                                                          " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] " kontaktieren."])
-     :feedback/school-plan-title                      "Ich möchte einen Abo für meine Schule kaufen"
-     :feedback/school-plan                            (fn [{:user/keys     [email]
+     :feedback/org-plan-title                         (fn [{:feedback/keys [org-type]}]
+                                                        (str "Ich möchte ein Abo für "
+                                                             (case org-type
+                                                               :feedback/school-plan "meine Schule"
+                                                               :feedback/enterprise-plan "mein Unternehmen"
+                                                               "meine Organisation")
+                                                             " kaufen"))
+     :feedback/org-plan                               (fn [{:user/keys     [email]
                                                             :feedback/keys [phone]}]
-                                                        [:<> "Geben Sie uns an, " [:b "wie groß Ihre Schule ist"]
-                                                         ",  wie viele Lehrer und Schüler OrgPad nutzen möchten, und geben Sie alle weiteren Informationen an."
-                                                         " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] "kontaktieren."
-                                                         ". Alternativ können Sie uns auch unter "
-                                                         [:a.link-button {:href (str "tel:" (str/replace phone #" " ""))} phone] "anrufen."])
-     :feedback/enterprise-plan-title                  "Ich möchte einen Abo für mein Unternehmen kaufen"
-     :feedback/enterprise-plan                        (fn [{:user/keys     [email]
-                                                            :feedback/keys [phone]}]
-                                                        [:<> "Geben Sie uns an, " [:b "wie groß Ihr Unternehmen ist"]
-                                                         " und wie viele Personen OrgPad nutzen möchten."
-                                                         " Haben Sie zusätzliche Anforderungen?"
-                                                         " Möchten Sie OrgPad gegen einen Aufpreis selbst hosten?"
-                                                         " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] "kontaktieren."
-                                                         ". Alternativ können Sie uns auch unter "
-                                                         [:a.link-button {:href (str "tel:" (str/replace phone #" " ""))} phone] "."])
-     :feedback/upgrade-subscription-title             "Aktualisieren Sie mein Abo auf den Profi-Abo"
+                                                        [:<> "Durch dieses Formular werden Sie einen Vertreter der Firma OrgPad s.r.o. ansprechen."
+                                                         " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] " kontaktieren."
+                                                         " Alternativ können Sie uns auch unter "
+                                                         [:a.link-button {:href (str "tel:" (str/replace phone #" " ""))} phone] " anrufen."])
+     :feedback/upgrade-subscription-title             "Aktualisieren Sie mein Abo auf das Profi-Abo"
      :feedback/upgrade-subscription                   (fn [{:user/keys [email]}]
                                                         [:<> "Geben Sie uns an, wie wir Ihr bestehendes Abo ändern sollen, und geben Sie uns alle weiteren Informationen."
-                                                         " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] "kontaktieren."])
+                                                         " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] " kontaktieren."])
      :feedback/billing-period-title                   (fn [{:feedback/keys [period]}]
                                                         (str "Bitte ändern Sie meinen Abrechnungszeitraum auf " (if (= period "yearly")
                                                                                                                   "jährliche"
@@ -207,6 +201,21 @@
                                                         [:<> "Die Änderung wird nach Ablauf des aktuellen Abrechnungszeitraums vorgenommen."
                                                          " Bei jährlicher Abrechnung gibt es 15% Rabatt."
                                                          " Wir werden Sie in Kürze unter Ihrer E-Mail Adresse " [:b email] " kontaktieren."])
+     :feedback/org-name                               (fn [{:feedback/keys [org-type]}]
+                                                        (str "Name " (case org-type
+                                                                       :feedback/school-plan "der Schule"
+                                                                       :feedback/enterprise-plan "des Unternehmens"
+                                                                       "der Organisation")))
+     :feedback/position-within-org                    (fn [{:feedback/keys [org-type]}]
+                                                        (str "Position innerhalb " (case org-type
+                                                                                     :feedback/school-plan "der Schule"
+                                                                                     :feedback/enterprise-plan "des Unternehmens"
+                                                                                     "der Organisation")))
+     :feedback/org-website                            (fn [{:feedback/keys [org-type]}]
+                                                        (str "Webseite " (case org-type
+                                                                           :feedback/school-plan "der Schule"
+                                                                           :feedback/enterprise-plan "des Unternehmens"
+                                                                           "der Organisation")))
 
      :help-screen/units-with-shadows                  "Einheiten mit Schatten können mit einem Mausklick geöffnet und geschlossen werden."
      :help-screen/flat-units                          "Flache Einheiten haben keinen weiteren Inhalt."
@@ -228,9 +237,9 @@
 
      :help-screen/help                                "Hilfe finden Sie hier!"
 
-     :info/uploading-attachments                      [:i18n/plural "Hochladen von {info/count} {info/num-files} ..."
+     :info/uploading-attachments                      [:i18n/plural "Hochladen von {info/count} {info/num-files} …"
                                                        {:info/num-files [:info/count "Dateien" "Datei" "Dateien"]}]
-     :info/uploading-images                           [:i18n/plural "Hochladen von {info/count} {info/num-images} ..."
+     :info/uploading-images                           [:i18n/plural "Hochladen von {info/count} {info/num-images} …"
                                                        {:info/num-images [:info/count "Bildern" "Bild" "Bildern"]}]
      :info/uploading-images-failed                    (fn [info]
                                                         (if info
@@ -245,6 +254,8 @@
      :info/storage-exceeded                           "Der Inhaber dieser OrgSeiten hat die benötigten {upload/total-size} zum Hochladen dieser Dateien nicht übrig."
      :info/attachments-too-large                      (str "Das Hochladen von {upload/total-size} ist fehlgeschlagen."
                                                            " Auf einmal kann nur höchstens 500 MB hochgeladen werden.")
+     :info/drop-info                                  (str "Lassen Sie über einer beliebigen Einheit oder über der grauen Leinwand los,"
+                                                           " um eine neue Einheit zu erstellen.")
 
      :import/another-format                           [:<> "Wenn Sie Daten im anderen Format importieren möchten, bitte schreiben Sie uns unter "
                                                        [:b "support@orgpad.com"] "."]
@@ -284,6 +295,8 @@
                                                            " und kann mit dem Wechsel zur höheren Abo-Stufe erweitert werden.")
      :limit/attachments-size-clickable                (str "Die Gesamtgröße aller hochgeladeten Dateien und Bildern ist beschränkt."
                                                            " Clicken Sie, um zum höheren Abo zu wechseln, welches die Obergrenze erhöht.")
+     :limit/attachments-size-try-out                  (str "Die Gesamtgröße aller hochgeladeten Dateien und Bildern ist beschränkt."
+                                                           " Zum erhöhen der Obergrenze auf 100 MB, klicken Sie zum Erstellen eines Kontos.")
 
      :limits/max-orgpages                             "Dokumente"
      :limits/max-storage                              "Speicher"
@@ -297,38 +310,38 @@
      :link-panel/delete                               "Verbindung löschen"
      :link-panel/change-link-style                    "Stil der Verbindung ändern; Umschalttaste halten um Stil vom Standard übernehmen, STRG halten zum Standard setzen"
 
-     :loading/initial-autoresize                      "Berechnung von Größen aller Einheiten, {loading/num-units} verbleiben ..."
-     :loading/initial-layout                          "Initiales Layout wird verbessert ..."
-     :loading/restoring-opened-pages                  "Positionen von geöffneten Seiten wird wieder hergestellt ..."
-     :loading/getting-orgpage                         "Herunterladen der OrgSeite vom Server ..."
-     :loading/getting-dashboard                       "Herunterladen der Lister verfügbarer OrgSeiten vom Server ..."
-     :loading/getting-website                         "Herunterladen der Webseite vom Server ..."
-     :loading/uploading-orgpage                       "Hochladen einer OrgSeite zum Server ..."
-     :loading/ws-init                                 "Aufbau der Verbindung zum Server ..."
+     :loading/initial-autoresize                      "Berechnung von Größen aller Einheiten, {loading/num-units} verbleiben …"
+     :loading/initial-layout                          "Initiales Layout wird verbessert …"
+     :loading/restoring-opened-pages                  "Positionen von geöffneten Seiten wird wieder hergestellt …"
+     :loading/getting-orgpage                         "Herunterladen der OrgSeite vom Server …"
+     :loading/getting-dashboard                       "Herunterladen der Lister verfügbarer OrgSeiten vom Server …"
+     :loading/getting-website                         "Herunterladen der Webseite vom Server …"
+     :loading/uploading-orgpage                       "Hochladen einer OrgSeite zum Server …"
+     :loading/ws-init                                 "Aufbau der Verbindung zum Server …"
      :loading/ws-closed                               (str "Verbindung zum Server geschlossen, eine Neuverbindung wird versucht. "
                                                            "Falls das Problem andauert, laden Sie die Seite bitte neu.")
-     :loading/administration                          "Verwaltungsdaten werden geladen ..."
-     :loading/profile                                 "Profil wird geladen ..."
-     :loading/style                                   "Stile werden geladen ..."
+     :loading/administration                          "Verwaltungsdaten werden geladen …"
+     :loading/profile                                 "Profil wird geladen …"
+     :loading/style                                   "Stile werden geladen …"
      ;; Needed?
-     :loading/start-trial                             "7-Tage Probe-Abo wird gestartet..."
-     :loading/uploading-attachments                   "Hochladen der Anhänge zum Server ..."
+     :loading/start-trial                             "7-Tage Probe-Abo wird gestartet …"
+     :loading/uploading-attachments                   "Hochladen der Anhänge zum Server …"
 
+     :login/continue-with-email                       "Mit E-Mail fortfahren"
      :login/continue-with-facebook                    "Mit Facebook fortfahren"
      :login/continue-with-google                      "Mit Google fortfahren"
      :login/continue-with-microsoft                   "Mit Microsoft fortfahren"
+     :login/email-sent                                "E-Mail gesendet. Klicken Sie auf den Link in der E-Mail."
      :login/forgotten-password                        "Passwort vergessen"
      :login/forgotten-password-email-resent           "E-Mail zum Zurücksetzen bereits gesendet."
-     :login/forgotten-password-description            (str "Geben Sie bitte eine E-Mail Adresse ein, für welche wir Ihnen einen Link zum Zurücksetzen des Passworts zusenden werden."
-                                                           "Der Link ist 24 Stunden lang gültig.")
+     :login/forgotten-password-description            "Erhalten Sie einen Link zum Zurücksetzen des Passworts per E-Mail (24 Stunden gültig)."
      :login/forgotten-password-error                  [:<> "Diese E-Mail Adresse wird von Ihnen blockiert. Entweder entsperren Sie diese mit dem Klick auf \"Abmelden\" in einer E-Mail von OrgPad, "
                                                        " oder senden Sie eine E-Mail an " [:b "support@orgpad.com"] " von dieser E-Mail Adresse."]
-     :login/remember                                  "Anmeldung merken"
-     :login/remember-tooltip                          "Angemeldet bleiben, wenn Sie zu dieser Seite zurückkehren."
+     :login/go-to-register                            (fn [{:registration/keys [route]}]
+                                                        [:<> "Neu bei OrgPad? " [:a.link-button {:href route} "Registrieren"]])
+     :login/options                                   "Wählen Sie eine andere Anmeldemethode"
      :login/send-reset-link                           "Link zum Zurücksetzen senden"
      :login/wrong-email-or-password                   "E-Mail oder Passwort stimmen nicht überein"
-
-     :login-util/separator                            "oder"
 
      :meta/orgpage-thumbnail                          "OrgSeiten-Ansicht"
      :meta/thumbnail-info                             (str "Wählen Sie die Ansicht für diese OrgSeite. Diese wird in der Übersicht der OrgSeiten,"
@@ -434,8 +447,12 @@
 
      :panel/create-orgpage                            "Neue OrgSeite"
      :panel/logo-tooltip                              "Zur Startseite"
-     :panel/edit-info                                 "Welchseln Sie zum Bearbeiten, wo Sie Einheiten und Verbindungen erstellen, bearbeiten, löschen und noch mehr können."
-     :panel/read-info                                 "Wechseln Sie zum Lesen, wo Sie keine Anpassungen vornehmen können, aber das Lesen ist dort einfacher."
+     :panel/edit-info                                 "Welchseln Sie zum Bearbeiten, wo Sie Einheiten und Verbindungen erstellen, bearbeiten, löschen und noch mehr können. (F7)"
+     :panel/comment-info                              (str "Wechseln Sie zum Kommentieren, wo Sie Ihre Einheiten und Verbindungen"
+                                                           " erstellen, bearbeiten und löschen können, aber nicht die"
+                                                           " von anderen Menschen. Allerdings können Sie Verbindungen"
+                                                           " zu Einheiten erstellen, die Sie nicht besitzen. (F7)")
+     :panel/read-info                                 "Wechseln Sie zum Lesen, wo Sie keine Anpassungen vornehmen können, aber das Lesen ist dort einfacher. (F6)"
      :panel/undo-deletion                             "Rückgängig machen"
      :panel/undo-deletion-info                        [:i18n/plural "Das Löschen von {delete/num-units} {delete/unit-label} und {delete/num-links} {delete/link-label} rückgängig machen (STRG+Z)."
                                                        #:delete{:unit-label [:delete/num-units
@@ -452,6 +469,7 @@
      :panel/ios-install-info                          "App installieren"
      :panel/upload-attachment                         "Bilder oder Dateien in neue Einheiten einfügen"
      :panel/selection-mode                            "Auswahl anfangen"
+     :panel/search                                    "Suche"
 
      :password/too-short                              "Mindestens 8 Zeichen erforderlich"
      :password/different-passwords                    "Passwörter stimmen nicht überein"
@@ -468,11 +486,11 @@
 
      :path/add-step                                   "Schritt hinzufügen"
      :path/add-step-tooltip                           "Halten Sie SHIFT, um die Kamera zu kopieren"
+     :path/hidden-ops                                 " und {path/num-hidden} weitere"
      :path/title                                      "Präsentation {path/num-paths}"
      :paths/create-new-path                           "Präsentation erstellen"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
                                                         [:<> " Wollen Sie die Präsentation \"" [:b title] "\" löschen?"])
-     :paths/show-hidden-units                         "Ausgeblendete Einheiten anzeigen"
 
      :payments/current-subscription                   (fn [{:subscription/keys [tier end-date autorenewal]}]
                                                         [:<> "Aktuell in " [:b tier] ", gültig bis " [:b end-date] "."
@@ -497,9 +515,9 @@
      :payments/customer-portal-failed                 "Beim Laden der Abo-Verwaltung ist ein Problem aufgetreten."
 
      :pending-activation/email-already-used           "Die E-Mail wird mit einem anderen Konto bereits genutzt."
-     :pending-activation/email-not-recieved           "Falls Sie keine E-Mail-Bestätigung erhalten haben, können Sie diese neu senden lassen. Sie können die E-Mail sogar korrigieren."
+     :pending-activation/email-not-recieved           "Keine E-Mail erhalten? Erneut senden oder unten ändern."
      :pending-activation/email-sent                   "E-Mail-Bestätigung gesendet."
-     :pending-activation/instructions                 "Aus Sicherheitsgründen müssen Sie Ihre E-Mail zuerst bestätigen. Klicken Sie auf den Bestätigungslink in der E-Mail, die wir Ihnen geschickt haben."
+     :pending-activation/instructions                 "Fast fertig! Aktivieren Sie Ihr Konto mit einem Klick auf den Link, den wir Ihnen per E-Mail geschickt haben."
      :pending-activation/resend                       "E-Mail-Bestätigung neu senden"
 
      :permission/admin                                "Kann teilen und löschen"
@@ -558,6 +576,14 @@
      :pricing-popup/team-members-limit-reached-owner  (fn [{:usergroup/keys [owner]}]
                                                         [:<> " Der Inhaber dieser OrgSeite " owner " muss zum "
                                                          [:b "Professional-Abo"] " wechseln, um weitere Mitglieder hinzufügen zu können."])
+     :pricing-popup/try-out-share-title               "Registrieren Sie sich um diese OrgSeite zu teilen"
+     :pricing-popup/try-out-storage-exceeded          (fn [{:upload/keys [space-left]}]
+                                                        [:<> "Nur " [:b space-left " verbleiben"] " von Ihrem Speicherplatz."])
+     :pricing-popup/free-account-info                 "Mit dem Registrieren eines Kontos erhalten Sie kostenlos:"
+     :pricing-popup/free-limit                        "bis zu drei OrgSeiten,"
+     :pricing-popup/free-storage                      "bis zu 100 MB Speicherplatz,"
+     :pricing-popup/free-share                        "das Teilen Ihrer Arbeit mit Anderen."
+     :pricing-popup/free-account-info2                "Erstellen Sie ein Konto mit wenigen Klicks."
 
      :profile/open-contact-dialog                     "Nachricht schicken"
      :profile/contact-dialog-title                    (fn [{:profile/keys [first-name last-name]}]
@@ -587,13 +613,20 @@
      :props/double                                    "Doppelpfeil"
 
      :public-permission/none                          "ist privat."
+     :public-permission/comment                       "wird mit allem zum Kommentieren geteilt."
      :public-permission/edit                          "wird mit allen zum Bearbeiten geteilt."
      :public-permission/view                          "wird mit allen zum Lesen geteilt."
 
      :registration/create-user                        "Konto erstellen"
-     :registration/register-by-email                  "Mit E-Mail registrieren"
+     :registration/go-to-login                        (fn [{:login/keys [route]}]
+                                                        [:<> "Haben Sie bereits ein Konto? " [:a.link-button {:href route} "Anmelden"]])
+     :registration/options                            "Wählen Sie eine andere Registrierungsmethode"
      :registration/server-error                       "Serverfehler. Bitte versuchen Sie erneut das Konto zu erstellen."
-     :registration/missing-email                      "{registration/service} hat uns Ihre E-Mail-Adresse nicht mitgeteilt. Bitte geben Sie sie unten ein."
+     :registration/missing-oauth-email                "{registration/service} hat uns Ihre E-Mail-Adresse nicht mitgeteilt. Bitte geben Sie sie unten ein."
+
+     :search/previous-match                           "Vorherige Übereinstimmung (Bild auf)"
+     :search/next-match                               "Nächste Übereinstimmung (Bild ab)"
+     :search/close                                    "Schließen (ESC)"
 
      :selection/change-style-of-selected              [:i18n/plural (fn [{:selection/keys [type]}]
                                                                       (str "Stil der Auswahl von "
@@ -609,7 +642,7 @@
                                                                                 "Verbindungen" "Verbindung" "Verbindungen"]}]
 
      :selection/link                                  "Einheiten verbinden"
-     :selection/hide-contents                         "Inhalte ausblenden"
+     :selection/hide-contents                         "Inhalte ausblenden (ESC)"
      :selection/show-contents                         "Inhalte einblenden"
      :selection/move-to-new-orgpage                   "In eine neue OrgSeite verschieben"
      :selection/copy-units-links                      "Einheiten und Verbindungen in die Zwischenablage kopieren"
@@ -650,6 +683,7 @@
      :settings/delete-account-info                    [:<> "Das Löschen wird alle Ihre OrgSeiten und die Daten darin " [:b "dauerhaft zerstören"] "."]
 
      :share-orgpage/campaigns                         "Kampagne"
+     :share-orgpage/copied-to-clipboard               "In die Zwischenablage kopiert"
      :share-orgpage/copy-template-link                "Link zur Vorlage kopieren"
      :share-orgpage/dialog-title                      "\"{orgpage/title}\" teilen"
      :share-orgpage/info                              (fn [{:share/keys [create-team]}]
@@ -664,7 +698,7 @@
      :share-orgpage/show-profile                      "Profil anzeigen"
      :share-orgpage/links                             "Links"
      :share-orgpage/to-read                           "Lesen"
-     :share-orgpage/to-comment                        "zu kommentieren"
+     :share-orgpage/to-comment                        "Kommentieren"
      :share-orgpage/to-edit                           "Bearbeiten"
      :share-orgpage/links-tooltip                     "Zugriff erteilen mittels teilbaren Links"
      :share-orgpage/template                          "Vorlage"
@@ -678,7 +712,9 @@
                                                                :permission/comment "Kommentieren"
                                                                :permission/edit "Bearbeiten") " geteilt."))
      :share-orgpage/embed                             "Einbetten"
-     :share-orgpage/embed-tooltip                     "In Ihre Webseite einbetten"
+     :share-orgpage/embed-into-microsoft-teams        "In Microsoft Teams einfügen"
+     :share-orgpage/embed-into-website                "In eine Webseite oder Anwendung einfügen"
+     :share-orgpage/embed-tooltip                     "In eine Webseite oder Anwendung einfügen"
      :share-orgpage/new-user-or-usergroup             "Name, E-Mail oder Team"
      :share-orgpage/link-permission-start             "Personen Berechtigung erteilen zum "
      :share-orgpage/link-permission-end               " dieser OrgSeite."
@@ -692,6 +728,7 @@
                                                                :permission/edit "Bearbeiten") " geteilt."))
      :share-orgpage/remove-yourself                   "Sich selbst entfernen"
      :share-orgpage/private-info                      "Nur Sie und die Personen, mit denen Sie die OrgSeite direkt oder über einen Link geteilt haben, haben Zugang. Jedes neu erstellte Dokument ist privat."
+     :share-orgpage/publish-for-commenting-info       "Die OrgSeite ist öffentlich. Jeder im Internet kann sie durchsuchen und mit einem OrgPad-Konto kommentieren."
      :share-orgpage/publish-for-editing-info          "Die OrgSeite ist öffentlich. Jeder im Internet kann sie durchsuchen und bearbeiten."
      :share-orgpage/publish-for-reading-info          "Die OrgSeite ist öffentlich. Jeder im Internet kann sie durchsuchen und lesen. Nur Sie selber oder die Personen, mit denen Sie die OrgSeite zur Bearbeitung geteilt haben, können Änderungen vornehmen."
      :share-orgpage/publish-permission-end            "Diese OrgSeite "
@@ -710,10 +747,11 @@
      :share-orgpage/users                             "Personen"
      :share-orgpage/users-tooltip                     "Zugriff einzelnen Personen erteilen"
 
-     :side-panel/about                                "Über OrgPad"
+     :side-panel/about                                "Startseite"
      :side-panel/files-and-images                     "Dateien und Bilder"
      :side-panel/paths                                "Präsentationen"
      :side-panel/translate                            "Übersetzungen"
+     :side-panel/toggle-debug                         "Debugger"
      :side-panel/help                                 "Hilfe"
      :side-panel/home                                 "Startseite"
      :side-panel/import                               "Import"
@@ -737,20 +775,24 @@
      :step/revealed-units                             "Eingeblendete Seiten"
      :step/switched-pages                             "Gewechselte Seiten"
 
+     :style-select/set-comment                        "Zu einer Kommentar-Einheit mit Ihrem Profilbild wechseln (STRG+,)"
+     :style-select/unset-comment                      "Zu einer normalen Einheit ohne Ihr Profilbild wechseln (STRG+,)"
+
      :tag/public                                      "öffentlich"
 
      :text-field/email                                "E-Mail"
      :text-field/first-name                           "Vorname"
      :text-field/last-name                            "Nachname"
      :text-field/new-password                         "Neues Passwort"
-     :text-field/new-password-again                   "Neues Passwort wiederholen"
      :text-field/password                             "Passwort"
-     :text-field/password-again                       "Passwort wiederholen"
      :text-field/title                                "Überschrift"
      :text-field/content                              "Inhalt"
      :text-field/name-or-email                        "Name oder E-Mail"
      :text-field/subject                              "Betreff"
      :text-field/message                              "Nachricht"
+     :text-field/phone-number                         "Telefonnumber"
+     :text-field/width                                "Breite"
+     :text-field/height                               "Höhe"
 
      ;; das Abo (Abonnement), Standard-Abo
      :tier/free                                       "Kostenlos"
@@ -772,10 +814,87 @@
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
 
-     :role/owner                                      "Inhaber"
-     :role/member                                     "Mitglied"
+     :usergroup-role/owner                            "Inhaber"
+     :usergroup-role/admin                            "Administrator"
+     :usergroup-role/member                           "Mitglied"
 
-     :unit-panel/link                                 "Klicken oder Ziehen zum Verbinden; Umschalttaste halten um mehrere Verbindungen zu erstellen"
+     :unit-editor/add-page                            "Seite hinzufügen"
+     :unit-editor/delete-page                         "Diese Seite löschen"
+     :unit-editor/previous-page                       "Vorherige Seite (Bild ↑); Umschalttaste halten um diese Seite nach links zu verschieben (SHIFT+Bild ↑)"
+     :unit-editor/next-page                           "Nächste Seite (Bild ↓); Umschalttaste halten um diese Seite nach rechts zu verschieben (SHIFT+Bild ↓)"
+     :unit-editor/switch-to-this-page                 (fn [{:render/keys [can-edit]}]
+                                                        (str "Zu dieser Seite wechseln"
+                                                             (when can-edit "; Umschalttaste halten um aktuelle Seite dahin zu verschieben")))
+     :unit-editor/hidden-info                         "Klicken Sie zum Schreiben"
+     :unit-editor/undo                                "Rückgängig machen (STRG+Z)"
+     :unit-editor/redo                                "Wiederherstellen (STRG+SHIFT+Z oder STRG+Y)"
+     :unit-editor/toggle-bold                         "Fett (STRG+B)"
+     :unit-editor/toggle-italic                       "Kursiv (STRG+I)"
+     :unit-editor/toggle-strikethrough                "Durchgestrichen"
+     :unit-editor/toggle-subscript                    "Tiefgestellt (STRG+S)"
+     :unit-editor/toggle-superscript                  "Hochgestellt (STRG+SHIFT+S)"
+     :unit-editor/create-hyperlink                    "Hyperlink erstellen (STRG+K)"
+     :unit-editor/remove-hyperlink                    "Hyperlink entfernen"
+     :unit-editor/set-highlighting                    "Hervorhebungsfarbe"
+     :unit-editor/selection->code                     "Zum Code umwandeln (STRG+D)"
+     :unit-editor/toggle-list-ul                      "Ungeordnete Aufzählung (STRG+U)"
+     :unit-editor/toggle-list-ol                      "Nummerierte Liste (STRG+O)"
+     :unit-editor/indent                              "Einzug vergrößern (TAB)"
+     :unit-editor/outdent                             "Einzug Verkleinern (UMSCHALT+TAB)"
+     :unit-editor/center                              "Ausrichtung zentrieren"
+     :unit-editor/heading                             "Überschrift"
+     :unit-editor/embed-pdf                           "PDF-Inhalt anzeigen"
+     :unit-editor/link-pdf                            "PDF-Inhalt mit seinem Hyperlink ersetzen"
+     :unit-editor/embed-video                         "Video-Player anzeigen"
+     :unit-editor/link-video                          "Video mit seinem Hyperlink ersetzen"
+     :unit-editor/embed-audio                         "Audio-Player anzeigen"
+     :unit-editor/link-audio                          "Audio mit seinem Hyperlink ersetzen"
+     :unit-editor/hyperlink->embed                    "Verlinkte Website einfügen"
+     :unit-editor/embed->hyperlink                    "Eingebettete Website durch ihren Hyperlink ersetzen"
+     :unit-editor/toggle-controls                     "Steuerelemente des Video-Players anzeigen"
+     :unit-editor/toggle-autoplay                     "Automatisch abspielen"
+     :unit-editor/toggle-muted                        "Stummgeschaltetes Abspielen, automatisches Abspielen kann sonst blockiert werden"
+     :unit-editor/toggle-loop                         "Schleifenwiedergabe"
+     :unit-editor/toggle-chained-size                 "Seitenverhältnis beibehalten"
+     :unit-editor/insert-menu                         "Einfügen"
+     :unit-editor/insert-image                        "Bild"
+     :unit-editor/insert-image-shortcut               "STRG+UMSCHALT+I"
+     :unit-editor/insert-image-info                   "Bild von Ihrem Gerät hochladen."
+     :unit-editor/insert-image-info2                  "Tip: Drag or paste images directly into any cell or gray canvas."
+     :unit-editor/insert-camera                       "Kamera"
+     :unit-editor/insert-attachment                   "Insert file"
+     :unit-editor/insert-attachment-shortcut          "STRG+UMSCHALT+F"
+     :unit-editor/insert-video                        "Video"
+     :unit-editor/insert-video-info                   "Upload a video from computer or insert it from YouTube."
+     :unit-editor/insert-video-info2                  "Tipp: Ziehen Sie Videos und YouTube-Miniaturansichten direkt in eine beliebige Einheit oder graue Leinwand."
+     :unit-editor/video-url                           "YouTube link"
+     :unit-editor/youtube-start                       "Start"
+     :unit-editor/youtube-end                         "Ende"
+     :unit-editor/insert-table                        "Tabelle"
+     :unit-editor/insert-table-info                   "Wählen Sie die Größe der eingefügten Tabelle."
+     :unit-editor/toggle-table-border                 "Tabellenränder anzeigen"
+     :unit-editor/add-row-before                      "Zeile oben einfügen"
+     :unit-editor/add-row-after                       "Zeile unten einfügen"
+     :unit-editor/remove-current-row                  "Zeile löschen"
+     :unit-editor/add-column-before                   "Spalte links einfügen"
+     :unit-editor/add-column-after                    "Spalte rechts einfügen"
+     :unit-editor/remove-current-column               "Spalte löschen"
+     :unit-editor/remove-table                        "Tabelle löschen"
+     :unit-editor/insert-website                      "Webseite"
+     :unit-editor/insert-website-info                 (str "Sie können Websiten direkt in eine Einheit einbetten."
+                                                           " Wenn es nicht funktioniert, wird es möglicherweise vom Eigentümer der Website blockiert.")
+     :unit-editor/website-url-or-code                 "Adresse der Website oder Code"
+     :unit-editor/update-website                      "Adresse der Webseite anpassen"
+     :unit-editor/insert-orgpage                      "OrgSeite"
+     :unit-editor/insert-code                         "Code"
+     :unit-editor/insert-code-shortcut                "STRG+D"
+     :unit-editor/toggle-block-code                   "Code-Block"
+     :unit-editor/remove-code                         "Code-Formatierung entfernen"
+
+
+     :unit-panel/link                                 (str "Klicken oder Ziehen zum Verbinden;"
+                                                           " Umschalttaste halten um mehrere Verbindungen zu erstellen;"
+                                                           " STRG halten zum Erstellen einer Kette von Einheiten")
      :unit-panel/upload-attachment                    "Bild oder Datei in diese Einheit einfügen"
      :unit-panel/change-link-style                    (str "Stil der Einheit ändern; "
                                                            "Umschalttaste halten um Stil vom Standard übernehmen, "
@@ -791,16 +910,13 @@
      :usergroups/change                               "Überschrift und Logo des Teams anpassen"
      :usergroups/show-actions                         "Aktivitäten anzeigen"
      :usergroups/name                                 "Team-Name"
-     :usergroups/create-usegroup-info                 (str "Der Team-Namen und das Profilbild sind für alle auf OrgPad sichtbar. "
-                                                           "Wählen Sie einen Namen, der mindestens 5 Zeichen lang ist. "
-                                                           "Leerzeichen am Anfang und am Ende werden entfernt.")
+     :usergroups/create-usegroup-info                 "Der Team-Namen und das Profilbild sind für alle auf OrgPad sichtbar."
      :usergroups/confirm-delete-usergroup             "Sind Sie sicher, Sie wollen das Team dauerhaft löschen?"
      :usergroups/usergroups-members                   "{usergroup/name}'s Mitglieder"
      :usergroups/remove-member                        "Vom Team entfernen"
      :usergroups/remove-admin                         "Administrator entfernen"
      :usergroups/make-admin                           "Zum Administrator machen"
      :usergroups/admin-tooltip                        "Ein Administrator kann die Mitglieder verwalten und das Team löschen."
-     :usergroups/untitled-usergroup                   "Unbenanntes Team"
 
      :wire-transfer/title                             "Banküberweisung für das Jahres-{wire-transfer/tier}-Abo"
      :wire-transfer/info                              "Wir werden Ihr Abo aktivieren, wenn wie den Empfang der Zahlung auf unserem Konto bestätigen können."
@@ -830,6 +946,10 @@
      :wire-transfer/start-trial                       "Überweisung gesendet"
      :wire-transfer/start-trial-result-title          "Danke für die Bezahlung"
      :wire-transfer/copy                              "In die Zwischenablage kopieren"
+     :menu-item/path-type                             "Öffnet eine Route"
+     :menu-item/url-type                              "Öffnet ein Untermenü"
+     :menu-item/children-type                         "Öffnet eine externe URL"
+     :website-editor/menu-item-path                   "Route"
 
      :youtube-placement/watch-on-prefix               "Auf"
      :youtube-placement/watch-on-suffix               "ansehen"

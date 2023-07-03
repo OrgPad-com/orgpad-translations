@@ -1,6 +1,7 @@
 (ns orgpad.client.i18n.dicts.uk
   (:require [clojure.string :as str]
-            [orgpad.common.i18n.dict.uk :as uk]))
+            [orgpad.common.i18n.dict.uk :as uk]
+            [orgpad.client.util.unicode :as unicode]))
 
 (def dict
   "A dictionary map from keywords to the corresponding Ukrainian texts."
@@ -15,7 +16,9 @@
      :attachments/unused-files                        "Сторонні файли"
      :attachments/used-images                         "Зображення в ОргСторінці"
      :attachments/unused-images                       "Сторонні зображення"
-     :attachments/uploading-files                     "Завантаження файлів ..."
+     :attachments/uploading-files                     "Завантаження файлів …"
+     :attachments/previous-attachment                 "Попередній файл або зображення"
+     :attachments/next-attachment                     "Наступний файл або зображення"
 
      :button/back                                     "Назад"
      :button/cancel                                   "Відхилити"
@@ -46,6 +49,7 @@
      :button/present                                  "Презентувати"
      :button/present-tooltip                          "Розпочати презентацію (F5)"
      :button/share                                    "Поширити"
+     :button/start                                    "Cтарт"
      :button/exit                                     "Вийти"
      :button/show-password                            "Показати"
      :button/hide-password                            "Приховати"
@@ -79,35 +83,28 @@
                                                         [:<> [:a {:href login-url} "Увійти"] " або "
                                                          [:a {:href register-url} "зареєструватись,"]
                                                          " щоб створити нові ОргСторінки."])
+     :dashboard/org-subscription-expired              (fn [{:dashboard/keys [info-link]
+                                                            :org/keys       [name subscription-expired]}]
+                                                        [:<> "Термін дії підписки для школи " name " закінчився " subscription-expired ". "
+                                                         "Для поновлення зверніться до свого керівництва. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Більше інформації"] " близько 95% знижки для шкіл."])
+     :dashboard/school-subscription-info              (fn [{:dashboard/keys [info-link]}]
+                                                        [:<> "Отримайте ОргСторінку для своєї школи без обмежень зі знижкою 95%. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Більше інформації."]])
      :dashboard/owned-orgpages                        "Мої ОргСторінки"
      :dashboard/public-orgpages                       "Опублікувати ОргСторінки"
      :dashboard/shared-orgpages                       "ОргСторінки, якими поділились з вами"
      :dashboard/usergroup-orgpages                    "ОргСторінки {usergroup/name} "
-     :dashboard/public-permission-edit                "Надано доступ усім для редагування"
      :dashboard/public-permission-view                "Надано доступ усім для проглядання"
-     :dashboard/create-public-orgpage                 "Створити як загальнодоступну"
-     :dashboard/leave-orgpage-as-public               "Залишити для загального доступу"
-     :dashboard/owner-reached-private-limit           "Власник досяг ліміту"
-     :dashboard/copy-as-public                        "Копіювати як загальнодоступну"
-     :dashboard/copy-from-template-as-public          "Копіювати з шаблону як загальнодоступну"
-
-     :editors/create-page                             "Створити іншу сторінку"
-     :editors/remove-page                             "Видалити цю сторінку"
-     :editors/previous-page                           "Попередня сторінка; утримуйте SHIFT, щоб перемістити цю сторінку ліворуч"
-     :editors/next-page                               "Наступна сторінка; утримуйте SHIFT, щоб перемістити цю сторінку праворуч"
-     :editors/title                                   "Назва"
-     :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
-                                                        (str "Перейти на цю сторінку"
-                                                             (when can-edit "; утримуйте SHIFT, щоб перемістити туди поточну сторінку")))
-     :editors/hidden-info                             "Натисніть, щоб записати"
+     :dashboard/public-permission-edit                "Надано доступ усім для редагування"
 
      :embedding-code/code                             "Кодувати"
-     :embedding-code/description                      [:<> "Щоб вставити цю ОргСторінку у ваш " [:b "веб-сайт"]
-                                                       ", вставте у свій веб-сайт наступний код:"]
+     :embedding-code/description                      "Вставте ОргСторінку на веб-сайт або іншу програму."
 
      :error/orgpage-access-denied                     "Ви не маєте доступу до цієї ОргСторінки. Спробуйте увійти."
      :error/usergroup-access-denied                   "Групове редагування недоступне."
-     :error/already-member                            "“{usergroups/member}” вже є членом групи."
      :error/administration-access                     "Доступ як адміністратору не надано."
      :error/creation-unauthorized                     "Увійдіть, щоб створити ОргСторінки."
      :error/deleting-denied                           "У видаленні ОргСторінки відмовлено."
@@ -115,7 +112,6 @@
      :error/email-not-registered                      "Немає облікового запису, пов'язаного з цією адресою електронної пошти."
      :error/email-missing-mx-record                   "У цьому домені не знайдено сервера електронної пошти."
      :error/email-invalid                             "Адреса електронної пошти недійсна."
-     :error/error                                     "Помилка: "
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Невірна ОргСторінка" (when id " {orgpage/id}")
                                                              ". Перевірте скопійоване посилання."))
@@ -127,12 +123,10 @@
      :error/orgpage-removed                           (fn [{:orgpage/keys [title]}]
                                                         (str "ОргСторінка " (when title "\"{orgpage/title}\"") " було переміщено."))
      :error/owner-of-orgpage                          "Ця людина вже є власником цієї ОргСторінки."
-     :error/passwords-mismatch                        "Пароль не співпадає"
      :error/profile-not-found                         "Профіль не знайдено."
      :error/unknown-error                             "Невідома помилка, спробуйте ще раз."
      :error/unknown-id                                "Невідома ОргСторінка."
      :error/unknown-login-or-email                    "Невідома електронна адреса або логін групи."
-     :error/unknown-user                              "“{usergroups/member}” не існує."
      :error/unknown-usergroup                         "Група була видалена"
      :error/upload-failed                             "Не вдалось загрузити ОргСторінку: \"{orgpage/title}\""
 
@@ -157,21 +151,14 @@
      :feedback/wire-transfer                          (fn [{:user/keys [email]}]
                                                         [:<> "Напишіть нам вашу " [:b "адресу виставлення рахунку"] ", будь-яку додаткову інформацію щодо рахунка-фактури."
                                                          " Ми зв'яжемося з вами найближчим часом за вашою електронною адресою " [:b email] "."])
-     :feedback/school-plan-title                      "Я хочу купити план підписки для своєї школи"
-     :feedback/school-plan                            (fn [{:user/keys     [email]
+     :feedback/org-plan-title                         (fn [{:feedback/keys [org-type]}]
+                                                        (str "Я хочу купити план підписки для своєї " (case org-type
+                                                                                                        :feedback/school-plan "школи"
+                                                                                                        :feedback/enterprise-plan "компанії"
+                                                                                                        "організації")))
+     :feedback/org-plan                               (fn [{:user/keys     [email]
                                                             :feedback/keys [phone]}]
-                                                        [:<> "Повідомте нам, " [:b "наскільки великою є ваша школа"]
-                                                         ", скільки вчителів і учнів бажає користуватись OrgPad і будь-яку іншу додаткову інформацію."
-                                                         " Ми зв'яжемося з вами найближчим часом за вашою електронною адресою " [:b email]
-                                                         ". Ви також можете подзвонити нам за "
-                                                         [:a.link-button {:href (str "тел.:" (str/replace phone #" " ""))} phone] "."])
-     :feedback/enterprise-plan-title                  "Я хочу купити план підписки для своєї компанії"
-     :feedback/enterprise-plan                        (fn [{:user/keys     [email]
-                                                            :feedback/keys [phone]}]
-                                                        [:<> "Повідомте нам, " [:b "наскільки великою є ваша компанія"]
-                                                         "і як багато людей бажають користуватись OrgPad."
-                                                         " Чи є у вас додаткові потреби?"
-                                                         " Чи потрібен вам самостійний хостинг OrgPad за додаткову плату?"
+                                                        [:<> "За допомогою цієї форми ви зв’яжетеся з представником OrgPad s.r.o."
                                                          " Ми зв'яжемося з вами найближчим часом за вашою електронною адресою " [:b email]
                                                          ". Ви також можете подзвонити нам за "
                                                          [:a.link-button {:href (str "тел.:" (str/replace phone #" " ""))} phone] "."])
@@ -208,17 +195,21 @@
 
      :help-screen/help                                "Допомогу можна знайти тут!"
 
-     :info/uploading-attachments                      [:i18n/plural "Завантаження {info/count} {info/num-files} ..."
+     :info/uploading-attachments                      [:i18n/plural "Завантаження {info/count} {info/num-files} …"
                                                        {:info/num-files [:info/count "файлів" "файл" "файла" "файлів"]}]
-     :info/uploading-images                           [:i18n/plural "Завантаження {info/count} {info/num-images} ..."
+     :info/uploading-images                           [:i18n/plural "Завантаження {info/count} {info/num-images} …"
                                                        {:info/num-images [:info/count "зображень" "зображення" "зображення"]}]
      :info/uploading-images-failed                    (fn [info]
                                                         (if info
                                                           [:i18n/plural "Не вдалось завантажити {info/count} {info/num-images}."
                                                            {:info/num-images [:info/count "зображень" "зображення" "зображення"]}]
                                                           "Не вдалось завантажити як мінімум одне зображення."))
+     ;; TODO
+     #_#_:info/uploading-youtubes-failed [:i18n/plural "{info/count} Youtube {info/num-youtubes} не знайдено."
+                                          {:info/num-youtubes [:info/count "videos" "video" "videos"]}]
      :info/uploading-attachments-failed               "Не вдалось завантажити файли."
      :info/presentation-link-copied                   "Посилання на цю презентацію скопійоване."
+     :info/max-orgpages-exceeded                      "Власник цієї ОргСторінки не може створити додаткову ОргСторінку."
      :info/storage-exceeded                           "У власника цієї ОргСторінки не залишилося {upload/total-size} для завантаження цих файлів."
      :info/attachments-too-large                      (str "Неможливо завантажити {upload/total-size} в одному завантаженні."
                                                            " Максимальний розмір усіх завантажених вкладень становить 500 MB.")
@@ -274,43 +265,58 @@
      :link-panel/delete                               "Видалити посилання"
      :link-panel/change-link-style                    "Змінити стиль цього посилання; утримуйте SHIFT для встановлення поточного; утримуйте CTRL, щоб скопіювати до стилю за замовчуванням"
 
-     :loading/initial-autoresize                      "Розрахунок розміру всіх комірок, {loading/num-units} залишилось ..."
-     :loading/initial-layout                          "Удосконалення початкового формату ..."
-     :loading/restoring-opened-pages                  "Відновлення позиції відкритих сторінок ..."
-     :loading/getting-orgpage                         "Завантаження ОргСторінки із сервера ..."
-     :loading/getting-dashboard                       "Завантаження списка доступних ОргСторінок із сервера ..."
-     :loading/getting-website                         "Завантаження веб-сайту з сервера ..."
-     :loading/uploading-orgpage                       "Завантаження ОргСторінки на сервер ..."
-     :loading/ws-init                                 "Налаштування зв'язку з сервером ..."
+     :loading/initial-autoresize                      "Розрахунок розміру всіх комірок, {loading/num-units} залишилось …"
+     :loading/initial-layout                          "Удосконалення початкового формату …"
+     :loading/restoring-opened-pages                  "Відновлення позиції відкритих сторінок …"
+     :loading/getting-orgpage                         "Завантаження ОргСторінки із сервера …"
+     :loading/getting-dashboard                       "Завантаження списка доступних ОргСторінок із сервера …"
+     :loading/getting-website                         "Завантаження веб-сайту з сервера …"
+     :loading/uploading-orgpage                       "Завантаження ОргСторінки на сервер …"
+     :loading/ws-init                                 "Налаштування зв'язку з сервером …"
      :loading/ws-closed                               "Зв'язок із сервером втрачено. Спробуйте перепідключитись. Якщо проблема не зникне, перезавантажте сторінку."
-     :loading/administration                          "Завантаження даних адміністратора ..."
-     :loading/profile                                 "Завантаження профілю ..."
-     :loading/style                                   "Завантаження стилів ..."
+     :loading/administration                          "Завантаження даних адміністратора …"
+     :loading/profile                                 "Завантаження профілю …"
+     :loading/style                                   "Завантаження стилів …"
      ;; Needed?
-     :loading/start-trial                             "Початок 7-денної пробної підписки..."
-     :loading/uploading-attachments                   "Завантаження вкладень на сервер ..."
+     :loading/start-trial                             "Початок 7-денної пробної підписки …"
+     :loading/uploading-attachments                   "Завантаження вкладень на сервер …"
 
+     :login/continue-with-email                       "Продовжити з електронною поштою"
      :login/continue-with-facebook                    "Продовжити з Facebook"
      :login/continue-with-google                      "Продовжити з Google"
      :login/continue-with-microsoft                   "Продовжити з Microsoft"
      :login/forgotten-password                        "Забули пароль"
      :login/forgotten-password-email-resent           "Електронний лист для скидання пароля надіслано."
-     :login/forgotten-password-description            "Введіть електронну адресу, на яку ми відправимо вам посилання, щоб скинути ваш пароль. Це посилання дійсне протягом 24 годин."
+     :login/forgotten-password-description            "Отримайте посилання для скидання пароля електронною поштою (дійсне 24 години)."
      :login/forgotten-password-error                  [:<> "Ця електронна адреса заблокована вами. Розблокуйте або натисніть на Відписатись у будь-якому листі від OrgPad, або надішліть нам електронний лист за адресою "
                                                        [:b "support@orgpad.com"]
                                                        " з цієї електронної адреси."]
-     :login/remember                                  "Запам'ятати"
-     :login/remember-tooltip                          "Залишатись в системі при поверненні на цей сайт."
+     :login/go-to-register                            (fn [{:registration/keys [route]}]
+                                                        [:<> "Новий у OrgPad? " [:a.link-button {:href route} "Зареєструватись"]])
+     :login/options                                   "Виберіть інший спосіб входу"
      :login/send-reset-link                           "Надіслати посилання для скидання"
      :login/wrong-email-or-password                   "Невірна електронна адреса або пароль."
 
-     :login-util/separator                            "або"
-
+     :meta/orgpage-thumbnail                          "зображення ОргСторінки"
+     :meta/thumbnail-info                             (str "Виберіть зображення, яке відображається для цієї ОргСторінки. Воно використовується в "
+                                                           "списку ОргСторінки, у вбудованих вставках, коли ділиться в соціальних мережах.")
+     :meta/automatic-screenshot                       "Автоматично створений образ екрана. Оновлення протягом п’яти хвилин після кожної зміни."
+     :meta/custom-thumbnail                           "Завантажте власне зображення розміром 1360x768."
+     :meta/upload-thumbnail                           "Завантажте власне зображення"
+     :meta/thumbnail-upload-failed                    "Не вдалося завантажити зображення."
      :meta/description                                "Опис"
      :meta/new-tag                                    "Додати тег"
      :meta/info                                       (str "Інформація, наведена нижче, допоможе дізнатися, про що ця ОргСторінка. "
                                                            "Ви можете відфільтровувати за тегами список ОргСторінок.")
      :meta/info-in-share-orgpage                      "Перед поширенням цієї ОргСторінки потрібно встановити назву."
+     :meta/info-move-to-new-orgpage                   [:i18n/plural (str "Перемістити вибране {selection/num-units} {selection/units-label} "
+                                                                         "and {selection/num-links} {selection/links-label} в нову ОргСторінку "
+                                                                         "з наступною інформацією. У поточній ОргСторінці ці комірки та посилання "
+                                                                         "буде замінено однією клітинкою, що містить нову ОргСторінку всередині.")
+                                                       {:selection/units-label [:selection/num-units "cells" "cell" "cells"] ; TODO
+                                                        :selection/links-label [:selection/num-links "links" "link" "links"]}] ; TODO
+     :meta/move-to-new-orgpage-title                  "Перейти до {meta/title}"
+     :meta/move-to-new-orgpage                        "Перейти до нової ОргСторінки"
 
      :notes/create-note                               "Нова нотатка"
      :notes/edit-note                                 "Редагувати нотатку"
@@ -368,6 +374,18 @@
                                                         [:<> "Копія доступна як "
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
+     :orgpage/change-color                            "Змініть колір цієї ОргСторінки"
+     :orgpage/autoshare                               (fn [{:user/keys [label permission on-click]}]
+                                                        [:<> "Ця ОргСторінка автоматично надається " label " для спільного "
+                                                         (case permission
+                                                           :permission/view "читання"
+                                                           :permission/comment "коментування"
+                                                           :permission/edit "редагування"
+                                                           nil)
+                                                         ". " [:span.link-button {:on-click on-click} "Натисніть тут"]
+                                                         " щоб скасувати спільний доступ."])
+
+     :orgpage-placement/activate                      "Дивіться тут"
 
      :orgpage-stats/number-of-units                   "Число комірок"
      :orgpage-stats/number-of-links                   "Число посилань"
@@ -381,8 +399,9 @@
 
      :panel/create-orgpage                            "Нова ОргСторінка"
      :panel/logo-tooltip                              "Додому"
-     :panel/edit-info                                 "Перейти до режиму редагування, де можна створювати і видаляти комірки та посилання, змінювати вміст та інше"
-     :panel/read-info                                 "Перейти до режиму перегляду, де не можна нічого змінювати, проте переглядати вміст простіше"
+     :panel/edit-info                                 "Перейти до режиму редагування, де можна створювати і видаляти комірки та посилання, змінювати вміст та інше (F7)"
+     ;; TODO: Add :panel/comment-info with approapriate translations
+     :panel/read-info                                 "Перейти до режиму перегляду, де не можна нічого змінювати, проте переглядати вміст простіше (F6)"
      :panel/undo-deletion                             "Скасування видалення"
      :panel/undo-deletion-info                        [:i18n/plural "Скасувати видалення {delete/num-units} {delete/unit-label} і {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
@@ -419,7 +438,6 @@
      :paths/create-new-path                           "Створити презентацію"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
                                                         [:<> "Видалити презентацію " [:b title] "?"])
-     :paths/show-hidden-units                         "Показати приховані комірки"
 
      :payments/current-subscription                   (fn [{:subscription/keys [tier end-date autorenewal]}]
                                                         [:<> "Наразі план підписки " [:b tier] ", дійсний до " [:b end-date] "."
@@ -444,9 +462,9 @@
      :payments/customer-portal-failed                 "Під час завантаження сайту керування сталася помилка планом."
 
      :pending-activation/email-already-used           "Електронна пошта вже використовується іншим обліковим записом."
-     :pending-activation/email-not-recieved           "Не одержали електронний лист для активації? Натисніть на кнопку нижче. Ви навіть можете змінити свою адресу електронної пошти."
+     :pending-activation/email-not-recieved           "Не отримали електронного листа? Надішліть його знову або змініть адресу нижче."
      :pending-activation/email-sent                   "Електронний лист для активації надіслано. "
-     :pending-activation/instructions                 "З міркувань безпеки ми повинні спочатку підтвердити вашу електронну пошту. Натисніть посилання для активації в електронному листі, який ми вам надіслали."
+     :pending-activation/instructions                 "Ви майже у цілі! Активуйте свій обліковий запис одним натисканням на посилання, яке ми надіслали вам на електронну пошту."
      :pending-activation/resend                       "Надіслати електронний лист для активації ще раз"
 
      :permission/admin                                "Може ділитися та видаляти"
@@ -466,6 +484,10 @@
      :presentation/next-step                          "Наступний крок"
      :presentation/last-step                          "Останній крок"
      :presentation/present                            "Почати презентацію"
+     :presentation/slideshow                          "Автоматичне покрокове відтворення "
+     :presentation/step-duration                      "Тривалість кроку в секундах"
+     :presentation/loop-slideshow                     "Повторіти після завершення"
+     :presentation/stop-slideshow                     "Зупинити автоматичне покрокове відтворення"
      :presentation/exit-tooltip                       "Вихід з презентації"
 
      :presentation/share-presentation                 "Поділитись цією презентацією з іншими."
@@ -530,13 +552,16 @@
      :props/double                                    "Подвійна стрілка"
 
      :public-permission/none                          "приватне."
+     :public-permission/comment                       "надано всім для коментування."
      :public-permission/edit                          "надано всім для редагування."
      :public-permission/view                          "надано всім для проглядання."
 
      :registration/create-user                        "Створити обліковий запис"
-     :registration/register-by-email                  "Зареєструвати електронну адресу"
+     :registration/go-to-login                        (fn [{:login/keys [route]}]
+                                                        [:<> "Вже маєте обліковий запис? " [:a.link-button {:href route} "Увійти"]])
+     :registration/options                            "Виберіть інший спосіб реєстрації"
      :registration/server-error                       "Помилка серверу. Спробуйте створити обліковий запис ще раз."
-     :registration/missing-email                      "{registration/service} не повідомила нам вашу електронну пошту. Будь ласка, заповніть її нижче."
+     :registration/missing-oauth-email                "{registration/service} не повідомила нам вашу електронну пошту. Будь ласка, заповніть її нижче."
 
      :selection/change-style-of-selected              [:i18n/plural (fn [{:selection/keys [type]}]
                                                                       (str "Змінити стиль вибраного "
@@ -554,6 +579,7 @@
      :selection/link                                  "З'єднати комірки"
      :selection/hide-contents                         "Приховати вміст"
      :selection/show-contents                         "Показати вміст"
+     :selection/move-to-new-orgpage                   "Перейти до нової ОргСторінки"
      :selection/copy-units-links                      "Скопіювати комірки і посилання до буфера обміну"
      :selection/flip-links                            "Перевернути напрямок посилання"
      :selection/delete                                "Видалити вибране"
@@ -602,19 +628,39 @@
      :share-orgpage/invite-for-editing                "Запрошення для редагування"
      :share-orgpage/invite-for-viewing                "Запрошення для проглядання"
      :share-orgpage/invite-by-email                   "Чи бажаєте ви запросити їх електронною поштою, використовуючи певну мову?"
+     :share-orgpage/show-profile                      "Показати профіль"
      :share-orgpage/links                             "Посилання"
      :share-orgpage/to-read                           "щоб проглядати"
-     :share-orgpage/to-comment                        "коментувати"
+     :share-orgpage/to-comment                        "щоб коментувати"
      :share-orgpage/to-edit                           "щоб редагувати"
      :share-orgpage/links-tooltip                     "Надайте доступ через посилання для спільного доступу"
+     :share-orgpage/template                          "Шаблон"
+     :share-orgpage/template-tooltip                  "Посилання автоматично створюють копію цієї ОргСторінки"
      :share-orgpage/template-info                     "Люди можуть використовувати це посилання для створення власних копій цієї ОргСторінки."
+     :share-orgpage/template-autoshare-none           "Не ділітися цими копіями зі мною."
+     :share-orgpage/template-autoshare                (fn [{:share-orgpage/keys [template-autoshare]}]
+                                                        (str "Поділітися цими копіями зі мною для "
+                                                             (case template-autoshare
+                                                               :permission/view "читання"
+                                                               :permission/comment "коментування"
+                                                               :permission/edit "редагування") "."))
      :share-orgpage/embed                             "Вставити"
      :share-orgpage/embed-tooltip                     "Вставте у свій веб-сайт"
      :share-orgpage/new-user-or-usergroup             "Ім'я, електронна адреса або група"
      :share-orgpage/link-permission-start             "Дозволені люди"
      :share-orgpage/link-permission-end               "ця ОргСторінка."
+     :share-orgpage/orgpage-info                      "Info"
+     :share-orgpage/orgpage-info-tooltip              "Інформація про власника та опубліковану ОргСторінку"
+     :share-orgpage/user-permission                   (fn [{:permissions/keys [user-permission]}]
+                                                        (str "Цією ОргСторінкою поділилися з вами для"
+                                                             (case user-permission
+                                                               :permission/view "читання"
+                                                               :permission/comment "коментування"
+                                                               :permission/edit "редагування") "."))
+     :share-orgpage/remove-yourself                   "Видалити себе"
      :share-orgpage/private-info                      (str "Доступ маєте лише ви та люди, яким ви надали доступ до ОргСторінки безпосередньо або за посиланням."
                                                            " Кожен новостворений документ є приватним.")
+     :share-orgpage/publish-for-commenting-info       "ОргСторінка є загальнодоступною. Будь-хто в Інтернеті може шукати та коментувати її." ; add "comment it with an OrgPad account"
      :share-orgpage/publish-for-editing-info          "ОргСторінка є загальнодоступною. Будь-хто в Інтернеті може шукати та редагувати її."
      :share-orgpage/publish-for-reading-info          (str "ОргСторінка є загальнодоступною. Будь-хто в Інтернеті може шукати та проглядати її."
                                                            " Зміни вносити можете лише ви або ті, з ким ви поділились ОргСторінкою для редагування.")
@@ -634,7 +680,7 @@
      :share-orgpage/users                             "Люди"
      :share-orgpage/users-tooltip                     "Надайте доступ окремим людям"
 
-     :side-panel/about                                "Про"
+     :side-panel/about                                "Домашня сторінка"
      :side-panel/files-and-images                     "Файли та зображення"
      :side-panel/paths                                "Презентації"
      :side-panel/translate                            "Перекласти"
@@ -661,15 +707,16 @@
      :step/revealed-units                             "Розкриті комірки"
      :step/switched-pages                             "Сторінки, що перемикалися "
 
+     :style-select/set-comment                        "Перейдіть у комірку для коментарів із зображенням вашого профілю (CTRL+,)"
+     :style-select/unset-comment                      "Змінити на звичайну комірку, видаливши зображення профілю (CTRL+,)"
+
      :tag/public                                      "загальнодоступний"
 
      :text-field/email                                "Email"
      :text-field/first-name                           "Ім'я"
      :text-field/last-name                            "Прізвище"
      :text-field/new-password                         "Новий пароль"
-     :text-field/new-password-again                   "Новий пароль ще раз"
      :text-field/password                             "Пароль"
-     :text-field/password-again                       "Пароль знову"
      :text-field/title                                "Назва"
      :text-field/content                              "Вміст"
      :text-field/name-or-email                        "Ім'я або електронна пошта"
@@ -695,8 +742,18 @@
                                                          [:a.link-button {:href   url
                                                                           :target "_порожньо"} title]])
 
-     :role/owner                                      "Власник"
-     :role/member                                     "Член"
+     :usergroup-role/owner                            "Власник"
+     :usergroup-role/admin                            "Адміністратор"
+     :usergroup-role/member                           "Член"
+
+     :unit-editor/add-page                            "Створити іншу сторінку"
+     :unit-editor/delete-page                         "Видалити цю сторінку"
+     :unit-editor/previous-page                       "Попередня сторінка (PAGEUP) ; утримуйте SHIFT, щоб перемістити цю сторінку ліворуч (SHIFT+PAGEUP)"
+     :unit-editor/next-page                           "Наступна сторінка (PAGEDOWN) ; утримуйте SHIFT, щоб перемістити цю сторінку праворуч (SHIFT+PAGEDOWN)"
+     :unit-editor/switch-to-this-page                 (fn [{:render/keys [can-edit]}]
+                                                        (str "Перейти на цю сторінку"
+                                                             (when can-edit "; утримуйте SHIFT, щоб перемістити туди поточну сторінку")))
+     :unit-editor/hidden-info                         "Натисніть, щоб записати"
 
      :unit-panel/link                                 "Клікніть або перетягніть для з'єднання; утримуйте SHIFT, щоб створити множинні з'єднання"
      :unit-panel/upload-attachment                    "Вставте зображення, або файл у цю клітинку"
@@ -714,16 +771,13 @@
      :usergroups/change                               "Змінити назву і логотип"
      :usergroups/show-actions                         "Показати дії"
      :usergroups/name                                 "Ім'я"
-     :usergroups/create-usegroup-info                 (str "Ім’я групи й аватарку профілю може бачити будь-хто на OrgPad. "
-                                                           "Виберіть ім'я довжиною не менше 5 символів. "
-                                                           "Початкові та кінцеві пробіли будуть видалені.")
+     :usergroups/create-usegroup-info                 "Ім’я групи й аватарку профілю може бачити будь-хто на OrgPad."
      :usergroups/confirm-delete-usergroup             [:<> [:b "Остаточно"] " видалити цю групу?"]
      :usergroups/usergroups-members                   "члени групи {usergroup/name}"
      :usergroups/remove-member                        "Виключити з групи"
      :usergroups/remove-admin                         "Зняти права адміністратора"
      :usergroups/make-admin                           "Зробити адміністратором"
      :usergroups/admin-tooltip                        "Адміністратор може керувати членами групи та видаляти її."
-     :usergroups/untitled-usergroup                   "Група без назви"
 
      :wire-transfer/title                             "Банківський переказ для річного плану {wire-transfer/tier}"
      :wire-transfer/info                              "Ми активуємо вашу річну підписку після одержання коштів на рахунок."
@@ -772,4 +826,7 @@
      :menu-item/url-type                              "Відкриває зовнішнє посилання URL"
      :menu-item/children-type                         "Відкриває підменю"
      :website-editor/menu-item-path                   "Маршрут"
+
+     :youtube-placement/watch-on-prefix               (str "Дивитися" unicode/nbsp "на")
+     :youtube-placement/watch-on-suffix               ""
      }))

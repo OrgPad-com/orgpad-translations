@@ -1,6 +1,7 @@
 (ns orgpad.client.i18n.dicts.ru
   (:require [clojure.string :as str]
-            [orgpad.common.i18n.dict.ru :as ru]))
+            [orgpad.common.i18n.dict.ru :as ru]
+            [orgpad.client.util.unicode :as unicode]))
 
 (def dict
   "A dictionary map from keywords to the corresponding Russian texts."
@@ -15,7 +16,9 @@
      :attachments/unused-files                        "Посторонние файлы"
      :attachments/used-images                         "Изображения в ОргСтраничке"
      :attachments/unused-images                       "Посторонние изображения"
-     :attachments/uploading-files                     "Загрузка файлов ..."
+     :attachments/uploading-files                     "Загрузка файлов …"
+     :attachments/previous-attachment                 "Предыдущий файл или изображение"
+     :attachments/next-attachment                     "Следующий файл или изображение"
 
      :button/back                                     "Назад"
      :button/cancel                                   "Отклонить"
@@ -46,6 +49,7 @@
      :button/present                                  "Презентовать"
      :button/present-tooltip                          "Начать презентацию (F5)"
      :button/share                                    "Поделиться"
+     :button/start                                    "Начинать"
      :button/exit                                     "Выйти"
      :button/show-password                            "Показать"
      :button/hide-password                            "Скрыть"
@@ -78,36 +82,29 @@
      :dashboard/login-needed                          (fn [{:dashboard/keys [login-url register-url]}]
                                                         [:<> [:a {:href login-url} "Войти"] " или "
                                                          [:a {:href register-url} "зарегистрироваться,"]
-                                                         " чтобы создать новые OrgPages."])
+                                                         " чтобы создать новые ОргСтранички."])
+     :dashboard/org-subscription-expired              (fn [{:dashboard/keys [info-link]
+                                                            :org/keys       [name subscription-expired]}]
+                                                        [:<> "Абонемент вашей школы " name " закончился " subscription-expired ". "
+                                                         "Для продления свяжитесь с вашим руководством. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Дополнительная информация"] " около 95% скидка для школ."])
+     :dashboard/school-subscription-info              (fn [{:dashboard/keys [info-link]}]
+                                                        [:<> "Получите ОргСтраничку для своей школы без ограничений со скидкой 95%. "
+                                                         [:a {:href   info-link
+                                                              :target "_blank"} "Дополнительная информация."]])
      :dashboard/owned-orgpages                        "Мои ОргСтранички"
      :dashboard/public-orgpages                       "Опубликовать ОргСтранички"
      :dashboard/shared-orgpages                       "ОргСтранички, которыми с вами поделились"
      :dashboard/usergroup-orgpages                    "ОргСтранички {usergroup/name}"
-     :dashboard/public-permission-edit                "Предоставлен доступ всем для редактирования"
      :dashboard/public-permission-view                "Предоставлен доступ всем для просмотра"
-     :dashboard/create-public-orgpage                 "Создать общедоступную"
-     :dashboard/leave-orgpage-as-public               "Оставить для общего доступа"
-     :dashboard/owner-reached-private-limit           "Владелец достиг лимита"
-     :dashboard/copy-as-public                        "Копировать как общедоступную"
-     :dashboard/copy-from-template-as-public          "Копировать из шаблона как общедоступную"
-
-     :editors/create-page                             "Создать другую страницу"
-     :editors/remove-page                             "Удалить эту страницу"
-     :editors/previous-page                           "Предыдущая страница ; удерживайте SHIFT для перемещения этой страницы влево"
-     :editors/next-page                               "Следующая страница; удерживайте SHIFT для перемещения этой страницы вправо"
-     :editors/title                                   "Заголовок"
-     :editors/switch-to-this-page                     (fn [{:render/keys [can-edit]}]
-                                                        (str "Перейти на эту страицу"
-                                                             (when can-edit "; удерживайте SHIFT для перемещения туда текущей страницы")))
-     :editors/hidden-info                             "Кликнте, чтобы записать"
+     :dashboard/public-permission-edit                "Предоставлен доступ всем для редактирования"
 
      :embedding-code/code                             "Кодировать"
-     :embedding-code/description                      [:<> "Чтобы вставить эту ОргСтраничку в ваш " [:b "веб-сайт"]
-                                                       ", вставьте в веб-сайт следующий код:"]
+     :embedding-code/description                      "Вставьте ОргСтраничку на веб-сайт или другое приложение."
 
      :error/orgpage-access-denied                     "Вы не имеете доступа к этой ОргСтраничке. Попробуйте войти."
      :error/usergroup-access-denied                   "Групповое редактирование недоступно."
-     :error/already-member                            "“{usergroups/member}” уже является членом группы."
      :error/administration-access                     "Доступ как администратору не предоставлен."
      :error/creation-unauthorized                     "Войдите для создания ОргСтраничек."
      :error/deleting-denied                           "В удалении ОргСтранички отказано."
@@ -115,7 +112,6 @@
      :error/email-not-registered                      "Нет учетной записи, связанной с этим адресом электронной почты."
      :error/email-missing-mx-record                   "В этом домене сервер электронной почты не найден."
      :error/email-invalid                             "Адрес электронной почты недействителен."
-     :error/error                                     "Ошибка: "
      :error/incorrect-orgpage-id                      (fn [{:orgpage/keys [id]}]
                                                         (str "Неправильная ОргСтраничка" (when id " {orgpage/id}")
                                                              ". Проверьте скопированную ссылку."))
@@ -127,12 +123,10 @@
      :error/orgpage-removed                           (fn [{:orgpage/keys [title]}]
                                                         (str "ОргСтраничка " (when title "\"{orgpage/title}\"") " была перемещена."))
      :error/owner-of-orgpage                          "Этот человек уже является владельцем этой ОргСтранички."
-     :error/passwords-mismatch                        "Пароль не совпадает"
      :error/profile-not-found                         "Профиль не найден."
      :error/unknown-error                             "Неизвестная ошибка, попробуйте еще раз."
      :error/unknown-id                                "Неизвестная ОргСтраничка."
      :error/unknown-login-or-email                    "Неизвестнный электронный адрес или логин группы."
-     :error/unknown-user                              "“{usergroups/member}” не существует."
      :error/unknown-usergroup                         "Группа была удалена"
      :error/upload-failed                             "Не удалось загрузить ОргСтраничку: \"{orgpage/title}\""
 
@@ -157,21 +151,14 @@
      :feedback/wire-transfer                          (fn [{:user/keys [email]}]
                                                         [:<> "Напишите нам ваш " [:b "адрес для выставления счета"] ", любую другую информацию, касающуюся счета-фактуры."
                                                          " Мы свяжемся с вами в ближайшее время по электронной почте " [:b email] "."])
-     :feedback/school-plan-title                      "Я хочу купить план подписки для своей школы"
-     :feedback/school-plan                            (fn [{:user/keys     [email]
+     :feedback/org-plan-title                         (fn [{:feedback/keys [org-type]}]
+                                                        (str "Я хочу купить план подписки для своей " (case org-type
+                                                                                                        :feedback/school-plan "школы"
+                                                                                                        :feedback/enterprise-plan "компании"
+                                                                                                        "организации"))) ; correct?
+     :feedback/org-plan                               (fn [{:user/keys     [email]
                                                             :feedback/keys [phone]}]
-                                                        [:<> "Сообщите нам, " [:b "как велика ваша школа"]
-                                                         ", сколько учителей и учеников желает пользоваться OrgPad и любую другую дополнительную информацию."
-                                                         " Мы свяжемся с вами в ближайшее время по электронной почте " [:b email]
-                                                         ". Вы также можете позвонить нам по "
-                                                         [:a.link-button {:href (str "тел.:" (str/replace phone #" " ""))} phone] "."])
-     :feedback/enterprise-plan-title                  "Я хочу купить план подписки для своей компании"
-     :feedback/enterprise-plan                        (fn [{:user/keys     [email]
-                                                            :feedback/keys [phone]}]
-                                                        [:<> "Сообщите нам, " [:b "как велика ваша компания"]
-                                                         "и сколько людей желает пользоваться OrgPad."
-                                                         " Есть ли у вас дополнительные потребности?"
-                                                         " Нужен ли вам самостоятельный хостинг OrgPad за дополнительную плату?"
+                                                        [:<> "Через эту форму вы свяжетесь с представителем OrgPad s.r.o."
                                                          " Мы свяжемся с вами в ближайшее время по электронной почте " [:b email]
                                                          ". Вы также можете позвонить нам по "
                                                          [:a.link-button {:href (str "тел.:" (str/replace phone #" " ""))} phone] "."])
@@ -208,17 +195,21 @@
 
      :help-screen/help                                "Помощь можно найти тут!"
 
-     :info/uploading-attachments                      [:i18n/plural "Загрузка {info/count} {info/num-files} ..."
+     :info/uploading-attachments                      [:i18n/plural "Загрузка {info/count} {info/num-files} …"
                                                        {:info/num-files [:info/count "файлов" "файл" "файла" "файлов"]}]
-     :info/uploading-images                           [:i18n/plural "Загрузка {info/count} {info/num-images} ..."
+     :info/uploading-images                           [:i18n/plural "Загрузка {info/count} {info/num-images} …"
                                                        {:info/num-images [:info/count "изображений" "изображения" "изображения"]}]
      :info/uploading-images-failed                    (fn [info]
                                                         (if info
                                                           [:i18n/plural "Не удалось загрузить {info/count} {info/num-images}."
                                                            {:info/num-images [:info/count "изображений" "изображения" "изображения"]}]
                                                           "Не удалось загрузить как минимум одно изображение."))
+     ;; TODO
+     #_#_:info/uploading-youtubes-failed [:i18n/plural "{info/count} Youtube {info/num-youtubes} not found."
+                                          {:info/num-youtubes [:info/count "videos" "video" "videos"]}]
      :info/uploading-attachments-failed               "Не удалось загрузить файлы."
      :info/presentation-link-copied                   "Ссылка на эту презентацию скопирована."
+     :info/max-orgpages-exceeded                      "Владелец этой ОргСтранички не может создать дополнительную ОргСтраничку."
      :info/storage-exceeded                           "У владельца этой ОргСтранички не осталось {upload/total-size} для загрузки этих файлов."
      :info/attachments-too-large                      (str "Невозможно загрузить {upload/total-size} в одной загрузке."
                                                            " Максимальный размер всех загруженных вложений составляет 500 MB.")
@@ -226,7 +217,7 @@
      :import/another-format                           [:<> "Если вы хотите импортировать данные другого формата, свяжитесь с нами по адресу "
                                                        [:b "support@orgpad.com"] "."]
      :import/dialog                                   "Импортировать данные"
-     :import/google-docs                              "Чтобы вставить данные из Microsoft Office или Google Docs, просто вставьте их в OrgPage."
+     :import/google-docs                              "Чтобы вставить данные из Microsoft Office или Google Docs, просто вставьте их в ОргСтраничку."
      :import/supported-formats                        "Сейчас мы поддерживаем такие форматы:"
      :import/lucidchart                               [:<> [:b "Lucidchart"] " экспортировано как файл .vsdx."]
 
@@ -274,22 +265,23 @@
      :link-panel/delete                               "Удалить ссылку"
      :link-panel/change-link-style                    "Изменить стиль этой ссылки; удерживайте SHIFT для установки текущего, удерживайте CTRL для копирования в стиль по умолчанию"
 
-     :loading/initial-autoresize                      "Расчет размера всех ячеек, {loading/num-units} осталось ..."
-     :loading/initial-layout                          "Усовершенствование первоначального формата ..."
-     :loading/restoring-opened-pages                  "Восстановление позиції открытых страниц ..."
-     :loading/getting-orgpage                         "Загрузка ОргСтранички из сервера ..."
-     :loading/getting-dashboard                       "Загрузка списка доступных ОргСтраничек из сервера ..."
-     :loading/getting-website                         "Загрузка веб-сайта из сервера ..."
-     :loading/uploading-orgpage                       "Выгрузка ОргСтранички на сервер ..."
-     :loading/ws-init                                 "Настройка связи с сервером ..."
+     :loading/initial-autoresize                      "Расчет размера всех ячеек, {loading/num-units} осталось …"
+     :loading/initial-layout                          "Усовершенствование первоначального формата …"
+     :loading/restoring-opened-pages                  "Восстановление позиції открытых страниц …"
+     :loading/getting-orgpage                         "Загрузка ОргСтранички из сервера …"
+     :loading/getting-dashboard                       "Загрузка списка доступных ОргСтраничек из сервера …"
+     :loading/getting-website                         "Загрузка веб-сайта из сервера …"
+     :loading/uploading-orgpage                       "Выгрузка ОргСтранички на сервер …"
+     :loading/ws-init                                 "Настройка связи с сервером …"
      :loading/ws-closed                               "Связь с сервером утрачена. Попробуйте переподключиться. Если проблема не исчезнет, перезагрузите страницу."
-     :loading/administration                          "Загрузка данных администратора ..."
-     :loading/profile                                 "Загрузка профиля ..."
-     :loading/style                                   "Загрузка стилей ..."
+     :loading/administration                          "Загрузка данных администратора …"
+     :loading/profile                                 "Загрузка профиля …"
+     :loading/style                                   "Загрузка стилей …"
      ;; Needed?
-     :loading/start-trial                             "Начало 7-дневной пробной подписки..."
-     :loading/uploading-attachments                   "Выгрузка ввложений на сервер ..."
+     :loading/start-trial                             "Начало 7-дневной пробной подписки …"
+     :loading/uploading-attachments                   "Выгрузка ввложений на сервер …"
 
+     :login/continue-with-email                       "Продолжить с электронной почтой"
      :login/continue-with-facebook                    "Продолжить с Facebook"
      :login/continue-with-google                      "Продолжить с Google"
      :login/continue-with-microsoft                   "Продолжить с Microsoft"
@@ -299,19 +291,33 @@
      :login/forgotten-password-error                  [:<> "Этот электронный адрес заблокирован вами. Разблокируйте или нажмите Отписаться в любом письме от OrgPad, или отправьте нам электронное письмо по адресу "
                                                        [:b "support@orgpad.com"]
                                                        " с этого электронного адреса."]
-     :login/remember                                  "Запомнить"
-     :login/remember-tooltip                          "Оставаться в системе по возвращению на этот сайт."
+     :login/go-to-register                            (fn [{:registration/keys [route]}]
+                                                        [:<> "Новый в OrgPad? " [:a.link-button {:href route} "Зарегистрируйтесь"]])
+     :login/options                                   "Выберите другой способ входа"
      :login/send-reset-link                           "Отправить ссылку на сброс"
      :login/wrong-email-or-password                   "Неправильный адрес электронной почты или пароль."
 
-     :login-util/separator                            "или"
-
+     :meta/orgpage-thumbnail                          "Изображение ОргСтранички"
+     :meta/thumbnail-info                             (str "Выберите изображение, отображаемое для этой организационной страницы. Оно используется в "
+                                                           "списке ОргСтранички, во встраиваниях и при публикации в социальных сетях.")
+     :meta/automatic-screenshot                       "Автоматически сгенерированный скриншот. Обновления через пять минут после каждого изменени."
+     :meta/custom-thumbnail                           "Пользовательское загруженное изображение размером 1360x768."
+     :meta/upload-thumbnail                           "Загрузить пользовательское изображение"
+     :meta/thumbnail-upload-failed                    "Не удалось загрузить изображение."
      :meta/description                                "Описание"
      :meta/new-tag                                    "Добавить тэг"
      :meta/info                                       (str "Приведенная ниже информация поможет узнать, о чем эта ОргСтраничка. "
                                                            "Вы можете отфильтровывать по тэгам список ОргСтраничек.")
-
      :meta/info-in-share-orgpage                      "Перед публикацией этой ОргСтранички необходимо установить название."
+     :meta/info-move-to-new-orgpage                   [:i18n/plural (str "Переместить выбранное {selection/num-units} {selection/units-label} "
+                                                                         "and {selection/num-links} {selection/links-label} в новую ОргСтраничку "
+                                                                         "со следующей информацией. В текущей ОргСтраничке эти ячейки и ссылки "
+                                                                         "будут заменены одной ячейкой, содержащей новую ОргСтраничку внутри.")
+                                                       {:selection/units-label [:selection/num-units "cells" "cell" "cells"] ; TODO:
+                                                        :selection/links-label [:selection/num-links "links" "link" "links"]}] ; TODO:
+     :meta/move-to-new-orgpage-title                  "Перейти к {meta/title}"
+     :meta/move-to-new-orgpage                        "Перейти на новую ОргСтраничку"
+
      :notes/create-note                               "Новая заметка"
      :notes/edit-note                                 "Редактировать заметку"
      :notes/manage-notes                              "Управлять заметками"
@@ -368,6 +374,18 @@
                                                         [:<> "Копия доступна как "
                                                          [:a.link-button {:href   url
                                                                           :target "_blank"} title]])
+     :orgpage/change-color                            "Изменить цвет этой ОргСтранички"
+     :orgpage/autoshare                               (fn [{:user/keys [label permission on-click]}]
+                                                        [:<> "Эта страница ОргСтраничка автоматически доступна " label " для  "
+                                                         (case permission
+                                                           :permission/view "чтения"
+                                                           :permission/comment "комментирования"
+                                                           :permission/edit "редактирования"
+                                                           nil)
+                                                         ". " [:span.link-button {:on-click on-click} "Кликните сюда"]
+                                                         " чтобы отменить совместное использование."])
+
+     :orgpage-placement/activate                      "Посмотреть здесь"
 
      :orgpage-stats/number-of-units                   "Количество ячеек"
      :orgpage-stats/number-of-links                   "Количество ссылок"
@@ -381,8 +399,9 @@
 
      :panel/create-orgpage                            "Новая ОргСтраничка"
      :panel/logo-tooltip                              "Домой"
-     :panel/edit-info                                 "Перейти к режиму редактирования, где можно создавать и удалять ячейки и ссылки, менять содержимое и т.п."
-     :panel/read-info                                 "Перейти к режиму просмотра, где нельзя ничего изменять, но просматривать содержимое проще"
+     :panel/edit-info                                 "Перейти к режиму редактирования, где можно создавать и удалять ячейки и ссылки, менять содержимое и т.п. (F7)"
+     ;; TODO: Add :panel/comment-info with approapriate translations
+     :panel/read-info                                 "Перейти к режиму просмотра, где нельзя ничего изменять, но просматривать содержимое проще (F6)"
      :panel/undo-deletion                             "Отмена удаления"
      :panel/undo-deletion-info                        [:i18n/plural "Отменить удаление {delete/num-units} {delete/unit-label} и {delete/num-links} {delete/link-label} (CTRL+Z)."
                                                        #:delete{:unit-label [:delete/num-units
@@ -419,7 +438,6 @@
      :paths/create-new-path                           "Создать презентацию"
      :paths/confirm-path-deletion                     (fn [{:path/keys [title]}]
                                                         [:<> "Удалить презентацию " [:b title] "?"])
-     :paths/show-hidden-units                         "Показать скрытые ячейки"
 
      :payments/current-subscription                   (fn [{:subscription/keys [tier end-date autorenewal]}]
                                                         [:<> "Текущий план подписки " [:b tier] ", действителен до " [:b end-date] "."
@@ -444,9 +462,9 @@
      :payments/customer-portal-failed                 "При загрузке сайта управления произошла ошибка планом."
 
      :pending-activation/email-already-used           "Электронная почта уже используется другой учетной записью."
-     :pending-activation/email-not-recieved           "Не получили электронное письмо для активации? Нажмите кнопку ниже. Вы можете даже изменить свой адрес электронной почты."
+     :pending-activation/email-not-recieved           "Не получили письмо? Отправьте его снова или измените адрес ниже."
      :pending-activation/email-sent                   "Электронное письмо для активации отправлено. "
-     :pending-activation/instructions                 "Из соображений безопасности мы должны сначала подтвердить вашу электронную почту. Нажмите ссылку для активации в электронном письме, которое мы вам отправили."
+     :pending-activation/instructions                 "Вы почти у цели! Активируйте свой аккаунт одним нажатием на ссылку, которую мы отправили вам на электронную почту."
      :pending-activation/resend                       "Отправить электронное письмо для активации повторно"
 
      :permission/admin                                "Может делиться и удалять"
@@ -466,6 +484,10 @@
      :presentation/next-step                          "Следующий шаг"
      :presentation/last-step                          "Последний шаг"
      :presentation/present                            "Начать презентацию"
+     :presentation/slideshow                          "Автоматически воспроизводить пошагово"
+     :presentation/step-duration                      "Длительность шага в секундах"
+     :presentation/loop-slideshow                     "Повторите в конце"
+     :presentation/stop-slideshow                     "Остановить автоматическое пошаговое воспроизведение"
      :presentation/exit-tooltip                       "Выход из презентации"
 
      :presentation/share-presentation                 "Поделиться этой презентацией с другими."
@@ -530,13 +552,16 @@
      :props/double                                    "Двойная стрелка"
 
      :public-permission/none                          "личное."
+     :public-permission/comment                       "предоставлено всем для комментирования."
      :public-permission/edit                          "предоставлено всем для редактирования."
      :public-permission/view                          "предоставлено всем для просмотра."
 
      :registration/create-user                        "Создать учетную запись"
-     :registration/register-by-email                  "Зарегистрировать электронный адрес"
+     :registration/go-to-login                        (fn [{:login/keys [route]}]
+                                                        [:<> "Уже есть аккаунт? " [:a.link-button {:href route} "Войти"]])
+     :registration/options                            "Выберите другой способ регистрации"
      :registration/server-error                       "Ошибка сервера. Попробуйте создать учетную запись еще раз."
-     :registration/missing-email                      "{registration/service} не сообщила нам адрес вашей электронной почты. Пожалуйста, заполните его ниже."
+     :registration/missing-oauth-email                "{registration/service} не сообщила нам адрес вашей электронной почты. Пожалуйста, заполните его ниже."
 
      :selection/change-style-of-selected              [:i18n/plural (fn [{:selection/keys [type]}]
                                                                       (str "Изменить стиль выделенного "
@@ -554,6 +579,7 @@
      :selection/link                                  "Соединить ячейки"
      :selection/hide-contents                         "Скрыть содержание"
      :selection/show-contents                         "Показать содержание"
+     :selection/move-to-new-orgpage                   "Перейти на новую ОргСтраничку"
      :selection/copy-units-links                      "Скопировать ячейки и ссылки в буфер обмена"
      :selection/flip-links                            "Перевернуть направление ссылки"
      :selection/delete                                "Удалить выделенное"
@@ -602,19 +628,38 @@
      :share-orgpage/invite-for-editing                "Приглашение для редактирования"
      :share-orgpage/invite-for-viewing                "Приглашение для просмотра"
      :share-orgpage/invite-by-email                   "Желаете ли вы пригласить их по электронной почте на определенном языке?"
+     :share-orgpage/show-profile                      "Показать профиль"
      :share-orgpage/links                             "Ссылки"
      :share-orgpage/to-read                           "для просмотра"
-     :share-orgpage/to-comment                        "комментировать"
+     :share-orgpage/to-comment                        "для комментировать"
      :share-orgpage/to-edit                           "для редактирования"
      :share-orgpage/links-tooltip                     "Предоставьте доступ по ссылке для общего доступа"
+     :share-orgpage/template                          "Шаблон"
+     :share-orgpage/template-tooltip                  "Ссылки автоматически создают копию этой ОргСтранички"
      :share-orgpage/template-info                     "Люди могут использовать эту ссылку для создания собственных копий этой ОргСтранички."
+     :share-orgpage/template-autoshare-none           "Не делитесь копиями со мной."
+     :share-orgpage/template-autoshare                (fn [{:share-orgpage/keys [template-autoshare]}]
+                                                        (str "Поделитесь копиями со мной для "
+                                                             (case template-autoshare
+                                                               :permission/view "чтения"
+                                                               :permission/comment "комментирования"
+                                                               :permission/edit "редактирования") "."))
      :share-orgpage/embed                             "Встроить"
      :share-orgpage/embed-tooltip                     "Вставьте в свой веб-сайт"
      :share-orgpage/new-user-or-usergroup             "Имя, адрес электронной почты или группа"
      :share-orgpage/link-permission-start             "Разрешенные люди"
      :share-orgpage/link-permission-end               "эта ОргСтраничка."
+     :share-orgpage/orgpage-info-tooltip              "Информация о владельце и опубликована ли ОргСтраничка"
+     :share-orgpage/user-permission                   (fn [{:permissions/keys [user-permission]}]
+                                                        (str "Вам предоставлен доступ к этой ОргСтраничке для "
+                                                             (case user-permission
+                                                               :permission/view "чтения"
+                                                               :permission/comment "коментирования"
+                                                               :permission/edit "редактирования") "."))
+     :share-orgpage/remove-yourself                   "Удалить себя"
      :share-orgpage/private-info                      (str "Доступ имеете только вы и люди, которым вы предоставили доступ к ОргСтраничке непосредственно или по ссылке."
                                                            " Каждый вновь созданный документ является личным.")
+     :share-orgpage/publish-for-commenting-info       "ОргСтраничка является общедоступной. Кто-либо в Интернете может искать и комментировать ее." ; add "comment it with an OrgPad account"
      :share-orgpage/publish-for-editing-info          "ОргСтраничка является общедоступной. Кто-либо в Интернете может искать и редактировать ее."
      :share-orgpage/publish-for-reading-info          (str "ОргСтраничка является общедоступной. Кто-либо в Интернете может искать и просматривать ее."
                                                            " Изменения вносить можете только вы или те, с кем вы поделились ОргСтраничкой для редактирования.")
@@ -634,7 +679,7 @@
      :share-orgpage/users                             "Люди"
      :share-orgpage/users-tooltip                     "Предоставьте доступ отдельным людям"
 
-     :side-panel/about                                "О"
+     :side-panel/about                                "Домашняя страница"
      :side-panel/files-and-images                     "Файлы и изображения"
      :side-panel/paths                                "Презентации"
      :side-panel/translate                            "Перевести"
@@ -661,15 +706,16 @@
      :step/revealed-units                             "Раскрытые ячейки"
      :step/switched-pages                             "Переключенные страницы"
 
+     :style-select/set-comment                        "Перейдите в ячейку комментария с изображением вашего профиля (CTRL+,)"
+     :style-select/unset-comment                      "Измените на обычную ячейку, удалив изображение профиля (CTRL+,)"
+
      :tag/public                                      "общедоступный"
 
      :text-field/email                                "Email"
      :text-field/first-name                           "Имя"
      :text-field/last-name                            "Фамилия"
      :text-field/new-password                         "Новый пароль"
-     :text-field/new-password-again                   "Новый пароль еще раз"
      :text-field/password                             "Пароль"
-     :text-field/password-again                       "Пароль еще раз"
      :text-field/title                                "Название"
      :text-field/content                              "Содержимое"
      :text-field/name-or-email                        "Имя или адрес электронной почты"
@@ -695,8 +741,18 @@
                                                          [:a.link-button {:href   url
                                                                           :target "_пусто"} title]])
 
-     :role/owner                                      "Владелец"
-     :role/member                                     "Член"
+     :usergroup-role/owner                            "Владелец"
+     :usergroup-role/admin                            "Администратор"
+     :usergroup-role/member                           "Член"
+
+     :unit-editor/add-page                            "Создать другую страницу"
+     :unit-editor/delete-page                         "Удалить эту страницу"
+     :unit-editor/previous-page                       "Предыдущая страница (PAGEUP) ; удерживайте SHIFT для перемещения этой страницы влево (SHIFT+PAGEUP)"
+     :unit-editor/next-page                           "Следующая страница (PAGEDOWN) ; удерживайте SHIFT для перемещения этой страницы вправо (SHIFT+PAGEDOWN)"
+     :unit-editor/switch-to-this-page                 (fn [{:render/keys [can-edit]}]
+                                                        (str "Перейти на эту страицу"
+                                                             (when can-edit "; удерживайте SHIFT для перемещения туда текущей страницы")))
+     :unit-editor/hidden-info                         "Кликнте, чтобы записать"
 
      :unit-panel/link                                 "Кликните или перетащите для соединения; удерживайте SHIFT для создания множественных соединений"
      :unit-panel/upload-attachment                    "Вставьте изображение, или файл в эту ячейку"
@@ -714,16 +770,13 @@
      :usergroups/change                               "Сменить название и логотип"
      :usergroups/show-actions                         "Показать действия"
      :usergroups/name                                 "Имя"
-     :usergroups/create-usegroup-info                 (str "Имя группы и аватарку профиля может видеть кто-либо на OrgPad. "
-                                                           "Виберите имя длиной не меньше 5 символов. "
-                                                           "Начальные и конечные пробелы будут удалены.")
+     :usergroups/create-usegroup-info                 "Имя группы и аватарку профиля может видеть кто-либо на OrgPad."
      :usergroups/confirm-delete-usergroup             [:<> [:b "Окончательно"] " удалить эту группу?"]
      :usergroups/usergroups-members                   "члены группы {usergroup/name}"
      :usergroups/remove-member                        "Исключить из группы"
      :usergroups/remove-admin                         "Снять права администратора"
      :usergroups/make-admin                           "Сделать администратором"
      :usergroups/admin-tooltip                        "Администратор может управлять членами группы и удалять ее."
-     :usergroups/untitled-usergroup                   "Безымянная группа"
 
      :wire-transfer/title                             "Банкіовский перевод для годового плана {wire-transfer/tier}"
      :wire-transfer/info                              "Мы активируем вашу годовую подписку после поступления средств на счет."
@@ -772,4 +825,7 @@
      :menu-item/url-type                              "Открывает внешнюю ссылку URL"
      :menu-item/children-type                         "Открывает подменю"
      :website-editor/menu-item-path                   "Маршрут"
+
+     :youtube-placement/watch-on-prefix               (str "Смотреть" unicode/nbsp "на")
+     :youtube-placement/watch-on-suffix               ""
      }))
