@@ -10,7 +10,7 @@
    :date/february      "二月"
    :date/march         "三月"
    :date/april         "四月"
-   :date/may           "五月“
+   :date/may           "五月"
    :date/june          "六月"
    :date/july          "七月"
    :date/august        "八月"
