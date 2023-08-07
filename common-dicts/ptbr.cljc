@@ -1,4 +1,4 @@
-(ns orgpad.common.i18n.dict.ptbr)
+(ns orgpad.common.i18n.dict.pt)
 
 (def dict
   "A dictionary map from keywords to the corresponding English texts."

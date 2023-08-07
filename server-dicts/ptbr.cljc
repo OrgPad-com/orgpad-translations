@@ -1,4 +1,4 @@
-(ns orgpad.server.i18n.ptbr
+(ns orgpad.server.i18n.pt
   (:require [orgpad.common.i18n.dict.en :as en]
             [orgpad.server.i18n.en-admin :as en-admin]))
 
