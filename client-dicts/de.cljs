@@ -365,17 +365,6 @@
      :meta/move-to-new-orgpage-title                  "Zu {meta/title} verschieben"
      :meta/move-to-new-orgpage                        "Zu einer neuen OrgSeite verschieben"
 
-     :notes/create-note                               "Neue Notiz"
-     :notes/edit-note                                 "Notiz bearbeiten"
-     :notes/manage-notes                              "Notizen verwalten"
-     :notes/my-notes                                  "Meine Notizen"
-     :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
-                                                       {:notes/notes-label [:notes/num-notes
-                                                                            "Notizen" "Notiz" "Notizen"]}]
-     :notes/untitled                                  "Unbenannte Notiz"
-     :notes/confirm-delete                            "Wollen Sie wirklich diese Notiz löschen?"
-     :notes/notes-description                         "Erfassen Sie Ideen und sortieren Sie diese später."
-
      :notifications/info                              "Wählen Sie bitte aus, welche E-Mails Sie von OrgPad erhalten möchten. Wir werden Sie immer über wichtige Änderungen benachrichtigen."
      :notifications/any-email                         "Alle E-Mails von OrgPad"
      :notifications/email-verification                (str "E-Mail Bestätigung beim Registrieren, Links zum Zurücksetzen des Passworts"
@@ -392,6 +381,7 @@
      :onboarding/drag-canvas                          "Mit dem Ziehen bewegen"
      :onboarding/open-units                           "Einheiten mit Schatten haben Inhalt"
 
+     :orgpage/creating-preview                        "Ansicht wird erstellt …"
      :orgpage/change-information                      "Informationen ändern"
      :orgpage/copy-orgpage                            "In eine neue OrgSeite kopieren"
      :orgpage/delete-orgpage                          "OrgSeite löschen"
@@ -481,8 +471,8 @@
      :password-reset/without-password                 "Kein Passwort ist gesetzt, da ein verbundenes Konto zur Anmeldung benutzt wurde."
      :password-reset/invalid-link                     "Ungültiger Link, vielleicht älter als 24 Stunden. Bitte fordern Sie das erneute Senden der E-Mail an."
      :password-reset/description                      "Setzen Sie Ihr neues Passwort."
-     :password-reset/enter-current-and-new-password   "Geben Sie Ihr aktuelles Passwort und zweimal das neue Passwort ein."
-     :password-reset/enter-new-password-twice         "Das neue Passwort bitte zweimal eingeben."
+     :password-reset/enter-current-and-new-password   "Geben Sie Ihr aktuelles Passwort und das neue Passwort ein."
+     :password-reset/enter-new-password-twice         "Das neue Passwort bitte eingeben."
 
      :path/add-step                                   "Schritt hinzufügen"
      :path/add-step-tooltip                           "Halten Sie SHIFT, um die Kamera zu kopieren"
@@ -584,6 +574,10 @@
      :pricing-popup/free-storage                      "bis zu 100 MB Speicherplatz,"
      :pricing-popup/free-share                        "das Teilen Ihrer Arbeit mit Anderen."
      :pricing-popup/free-account-info2                "Erstellen Sie ein Konto mit wenigen Klicks."
+
+     :pricing-popup/register-to-comment               "Um Kommentieren zu können, melden Sie sich an."
+     :pricing-popup/register-to-comment-info          (str "Kommentar-Einheiten werden Ihren Namen und Ihr Profilbild"
+                                                           " anzeigen. Deswegen müssen Sie zuerst Ihr Konto anlegen.")
 
      :profile/open-contact-dialog                     "Nachricht schicken"
      :profile/contact-dialog-title                    (fn [{:profile/keys [first-name last-name]}]
@@ -692,6 +686,9 @@
                                                          "Sie können "
                                                          [:a.link-button create-team "ein Team erstellen"]
                                                          " um mit einer Gruppe von Menschen OrgSeiten einfacher teilen zu können."])
+     :share-orgpage/email-found                       "Ein OrgPad-Konto gefunden."
+     :share-orgpage/email-unused                      "Kein OrgPad-Konto gefunden. Senden Sie stattdessen eine E-Mail."
+     :share-orgpage/checking-email-address            "Die E-Mail-Adresse wird überprüft ..."
      :share-orgpage/invite-for-editing                "Einladen zum Bearbeiten"
      :share-orgpage/invite-for-viewing                "Einladen zum Lesen"
      :share-orgpage/invite-by-email                   "Wollen Sie diese mit einer E-Mail in bestimmter Sprache einladen?"

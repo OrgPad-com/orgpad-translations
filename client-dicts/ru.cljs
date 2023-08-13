@@ -318,17 +318,6 @@
      :meta/move-to-new-orgpage-title                  "Перейти к {meta/title}"
      :meta/move-to-new-orgpage                        "Перейти на новую ОргСтраничку"
 
-     :notes/create-note                               "Новая заметка"
-     :notes/edit-note                                 "Редактировать заметку"
-     :notes/manage-notes                              "Управлять заметками"
-     :notes/my-notes                                  "Мои заметки"
-     :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
-                                                       {:notes/notes-label [:notes/num-notes
-                                                                            "заметок" "заметка" "заметки" "заметок"]}]
-     :notes/untitled                                  "Безымянная заметка"
-     :notes/confirm-delete                            "Удалить эту заметку?"
-     :notes/notes-description                         "Зафиксируйте свои идеи и отсортируйте их позже."
-
      :notifications/info                              "Виберите, какие электронные письма будет отправлять вам OrgPad. Мы всегда будем информировать вас о важных изменениях."
      :notifications/any-email                         "Любое письмо от OrgPad"
      :notifications/email-verification                "Проверка электронной почты при регистрации, ссылка для сброса пароля и необходимая платежная информация"
@@ -429,8 +418,8 @@
      :password-reset/without-password                 "Пароль еще не установлен, поскольку для входа использовались привязанные учетные записи."
      :password-reset/invalid-link                     "Неправильная ссылка; возможно, прошло 24 часа. Пожалуйста, попросите отправить электронное письмо повторно"
      :password-reset/description                      "Установите ваш новый пароль."
-     :password-reset/enter-current-and-new-password   "Введите текущий пароль и дважды новый пароль."
-     :password-reset/enter-new-password-twice         "Введите новый пароль дважды."
+     :password-reset/enter-current-and-new-password   "Введите текущий пароль и новый пароль."
+     :password-reset/enter-new-password-twice         "Введите новый пароль."
 
      :path/add-step                                   "Добавить шаг"
      :path/add-step-tooltip                           "Удерживайте SHIFT, чтобы скопировать камеру"

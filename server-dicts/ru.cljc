@@ -63,8 +63,8 @@
      :feedback/preheader                   "{{first-name}} {{last-name}} прислал(-а) вопрос {{title}}"
      :feedback/heading                     "{{first-name}} {{last-name}} ({{email}}) прислал(-а) вопрос {{title}}"
 
-     :newsletter/subject                   "Новостная рассылка OrgPad {newsletter/date}"
-     :newsletter/preheader                 "Для получения новостной рассылки {newsletter/date}. нажмите ссылку ниже."
+     :newsletter/subject                   "Новостная рассылка OrgPad {{newsletter/date}}"
+     :newsletter/preheader                 "Для получения новостной рассылки {{newsletter/date}}. нажмите ссылку ниже."
      :newsletter/button                    "Открыть новостную рассылку "
      :newsletter/text                      "Эта новостная рассылка получена вами, поскольку вы подписались на нее. Если вы получили это письмо по ошибке или не хотите более получать их, "
      :newsletter/unsubscribe               "отпишитесь, используя эту ссылку"

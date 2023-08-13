@@ -318,17 +318,6 @@
      :meta/move-to-new-orgpage-title                  "Перейти до {meta/title}"
      :meta/move-to-new-orgpage                        "Перейти до нової ОргСторінки"
 
-     :notes/create-note                               "Нова нотатка"
-     :notes/edit-note                                 "Редагувати нотатку"
-     :notes/manage-notes                              "Управляти нотатками"
-     :notes/my-notes                                  "Мої нотатки"
-     :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
-                                                       {:notes/notes-label [:notes/num-notes
-                                                                            "нотаток" "нотатка" "нотатки" "нотаток"]}]
-     :notes/untitled                                  "Нотатка без назви"
-     :notes/confirm-delete                            "Видалити цю нотатку?"
-     :notes/notes-description                         "Зафіксуйте свої ідеї та відсортуйте їх пізніше."
-
      :notifications/info                              "Виберіть, які електронні листи вам надсилатиме OrgPad. Ми завжди інформуватимемо вас про важливі зміни."
      :notifications/any-email                         "Будь-який лист від OrgPad"
      :notifications/email-verification                "Перевірка електронної пошти при реєстрації, посилання для скидання пароля та необхідна платіжна інформація"
@@ -429,8 +418,8 @@
      :password-reset/without-password                 "Пароль ще не встановлено, оскільки для входу використовувалися пов’язані облікові записи."
      :password-reset/invalid-link                     "Невірне посилання; можливо, минуло 24 години. Будь ласка, попросіть надіслати електронний лист ще раз"
      :password-reset/description                      "Встановіть ваш новий пароль."
-     :password-reset/enter-current-and-new-password   "Введіть поточний пароль і двічі новий пароль."
-     :password-reset/enter-new-password-twice         "ВВедіть новий пароль двічі."
+     :password-reset/enter-current-and-new-password   "Введіть поточний пароль і новий пароль."
+     :password-reset/enter-new-password-twice         "ВВедіть новий пароль."
 
      :path/add-step                                   "Додати крок"
      :path/add-step-tooltip                           "Утримуйте SHIFT, щоб скопіювати камеру"

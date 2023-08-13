@@ -358,17 +358,6 @@
      :meta/move-to-new-orgpage-title                  "Move to {meta/title}"
      :meta/move-to-new-orgpage                        "Move to a new OrgPage"
 
-     :notes/create-note                               "New note"
-     :notes/edit-note                                 "Edit a note"
-     :notes/manage-notes                              "Manage notes"
-     :notes/my-notes                                  "My notes"
-     :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
-                                                       {:notes/notes-label [:notes/num-notes
-                                                                            "notes" "note" "notes"]}]
-     :notes/untitled                                  "Untitled note"
-     :notes/confirm-delete                            "Delete this note?"
-     :notes/notes-description                         "Capture your ideas and sort them later."
-
      :notifications/info                              "Pick which emails OrgPad sends to you. We'll always let you know about important changes."
      :notifications/any-email                         "Any email from OrgPad"
      :notifications/email-verification                "Email verification when signed up, links for resetting password and essential payment information"
@@ -384,6 +373,7 @@
      :onboarding/drag-canvas                          "Move by dragging"
      :onboarding/open-units                           "Cells with shadows have content"
 
+     :orgpage/creating-preview                        "Creating preview …"
      :orgpage/change-information                      "Change information"
      :orgpage/copy-orgpage                            "Copy into a new OrgPage"
      :orgpage/delete-orgpage                          "Delete OrgPage"
@@ -472,8 +462,8 @@
      :password-reset/without-password                 "No password is yet set since linked accounts were used for login."
      :password-reset/invalid-link                     "Invalid link, maybe older than 24 hours. Please ask to resend the email."
      :password-reset/description                      "Set your new password."
-     :password-reset/enter-current-and-new-password   "Enter the current password and twice the new password."
-     :password-reset/enter-new-password-twice         "Enter the new password twice."
+     :password-reset/enter-current-and-new-password   "Enter the current password and the new password."
+     :password-reset/enter-new-password-twice         "Enter the new password."
 
      :path/add-step                                   "Add a step"
      :path/add-step-tooltip                           "Hold SHIFT to copy the camera"
@@ -575,6 +565,10 @@
      :pricing-popup/free-storage                      "up to 100 MB of storage,"
      :pricing-popup/free-share                        "sharing your work with others."
      :pricing-popup/free-account-info2                "Create your account in just a few clicks."
+
+     :pricing-popup/register-to-comment               "Sign up to add your comments"
+     :pricing-popup/register-to-comment-info          (str "Comment cells will display your name and profile photo."
+                                                           " For that you need to create your account first.")
 
      :profile/open-contact-dialog                     "Send message"
      :profile/contact-dialog-title                    (fn [{:profile/keys [first-name last-name]}]
@@ -682,6 +676,9 @@
                                                                   " After they open the link, they can read this OrgPage. ")
                                                          [:a.link-button create-team "Create a team"]
                                                          " to easily share OrgPages with a group of people."])
+     :share-orgpage/email-found                       "An OrgPad account found."
+     :share-orgpage/email-unused                      "No OrgPad account found. Send an email invite instead."
+     :share-orgpage/checking-email-address            "Checking email address ..."
      :share-orgpage/invite-for-editing                "Invite for editing"
      :share-orgpage/invite-for-viewing                "Invite for reading"
      :share-orgpage/invite-by-email                   "Do you want to invite them by email using a specific language?"

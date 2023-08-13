@@ -366,17 +366,6 @@
      :meta/move-to-new-orgpage-title                  "Přesunout do {meta/title}"
      :meta/move-to-new-orgpage                        "Přesunout do nové OrgStránky"
 
-     :notes/create-note                               "Nová poznámka"
-     :notes/edit-note                                 "Upravit poznámku"
-     :notes/manage-notes                              "Spravovat poznámky"
-     :notes/my-notes                                  "Moje poznámky"
-     :notes/notes                                     [:i18n/plural "{notes/num-notes} {notes/notes-label}"
-                                                       {:notes/notes-label [:notes/num-notes
-                                                                            "poznámek" "poznámka" "poznámky" "poznámek"]}]
-     :notes/untitled                                  "Poznámka bez názvu"
-     :notes/confirm-delete                            "Smazat tuto poznámku?"
-     :notes/notes-description                         "Zachyťte své nápady a uspořádejte je později."
-
      :notifications/info                              "Zvolte, které e-maily Vám OrgPad bude zasílat. O důležitých změnách Vás budeme vždy informovat."
      :notifications/any-email                         "Jakýkoliv e-mail od OrgPadu"
      :notifications/email-verification                "Ověření e-mailu při registraci, odkazy pro obnovení hesla a důležité informace o platbách"
@@ -392,6 +381,7 @@
      :onboarding/drag-canvas                          "Pohybujte se taháním"
      :onboarding/open-units                           "Buňky se stíny mají obsah"
 
+     :orgpage/creating-preview                        "Vytváříme náhled …"
      :orgpage/change-information                      "Změnit informace"
      :orgpage/copy-orgpage                            "Kopírovat do nové OrgStránky"
      :orgpage/delete-orgpage                          "Smazat OrgStránku"
@@ -480,8 +470,8 @@
      :password-reset/without-password                 "Žádné heslo není zatím nastavené, protože jste k přihlášení využili propojené účty."
      :password-reset/invalid-link                     "Neplatný odkaz, možná je starší než 24 hodin. Prosím požádejte o opětovné zaslání e-mailu."
      :password-reset/description                      "Nastavte nové heslo"
-     :password-reset/enter-current-and-new-password   "Vložte současné heslo a dvakrát nové heslo."
-     :password-reset/enter-new-password-twice         "Vložte dvakrát nové heslo."
+     :password-reset/enter-current-and-new-password   "Vložte současné heslo a nové heslo."
+     :password-reset/enter-new-password-twice         "Vložte nové heslo."
 
      :path/add-step                                   "Přidat krok"
      :path/add-step-tooltip                           "Podržte SHIFT pro zkopírování kamery"
@@ -583,6 +573,10 @@
      :pricing-popup/free-storage                      "až 100MB úložiště,"
      :pricing-popup/free-share                        "sdílení vaší práce s ostatními."
      :pricing-popup/free-account-info2                "Vytvořte si svůj účet jen na několik kliknutí."
+
+     :pricing-popup/register-to-comment               "Pro přidání Vašich komentářu se zaregistrujte"
+     :pricing-popup/register-to-comment-info          (str "Komentářové buňky budou obsahovat Vaše jméno a profilovku."
+                                                           " Proto si nejprve musíte vytvořit účet.")
 
      :profile/open-contact-dialog                     "Poslat zprávu"
      :profile/contact-dialog-title                    (fn [{:profile/keys [first-name last-name]}]
@@ -690,6 +684,9 @@
                                                                   " Po otevření odkazu mohou číst tuto OrgStránku. ")
                                                          "Pro snazší sdílení OrgStránek se skupinou lidí si můžete "
                                                          [:a.link-button create-team "vytvořit tým"] "."])
+     :share-orgpage/email-found                       "Účet v OrgPadu nalezen."
+     :share-orgpage/email-unused                      "Účet v OrgPadu nenalezen. Můžete poslat pozvánku e-mailem."
+     :share-orgpage/checking-email-address            "Kontrolujeme e-mailovou adresu ..."
      :share-orgpage/invite-for-editing                "Pozvat pro úpravy"
      :share-orgpage/invite-for-viewing                "Pozvat pro čtení"
      :share-orgpage/invite-by-email                   "Chcete jej pozvat e-mailem v určitém jazyce?"
