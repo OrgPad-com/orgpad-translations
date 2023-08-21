@@ -232,7 +232,8 @@
      :lang/pl                                         "Польська"
      :lang/ru                                         "Російська"
 
-     :language-select/lang-tooltip                    (fn [{:language-select/keys [lang-name lang-en-name]}]
+     :lang-select/tooltip                             "Мова застосунку (Ctrl+Shift+L)"
+     :lang-select/full-lang-name                      (fn [{:language-select/keys [lang-name lang-en-name]}]
                                                         (str lang-name (when lang-en-name (str " (" lang-en-name ")"))))
 
      :limit/of                                        " з "
@@ -599,7 +600,6 @@
      :settings/set-password-text                      " Встановіть пароль перед тим, як відв'язати."
      :settings/linked-accounts-info                   "Прив'яжіть ваш обліковий запис у Facebook або Google до облікового запису OrgPad, щоб ви могли використовувати його для входу."
      :settings/profile-info                           "Надана інформація допоможе вам легше знайти співробітників по проекту."
-     :settings/select-language                        "Мова застосунку (Ctrl+Shift+L): "
 
      :settings/delete-account                         "Видалити обліковий запис"
      :settings/confirm-delete-account-question        [:<> [:b "Остаточно"] " видалити обліковий запис?"]

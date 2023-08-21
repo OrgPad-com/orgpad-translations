@@ -81,8 +81,8 @@
      :feedback/preheader                      "{{first-name}} {{last-name}} has sent question {{title}}"
      :feedback/heading                        "{{first-name}} {{last-name}} ({{email}}) has sent question {{title}}"
 
-     :newsletter/subject                      "OrgPad Newsletter {{newsletter/date}}"
-     :newsletter/preheader                    "OrgPad Newsletter for {{newsletter/date}}. Click the link below."
+     :newsletter/subject                      "OrgPad Newsletter {newsletter/date}"
+     :newsletter/preheader                    "OrgPad Newsletter for {newsletter/date}. Click the link below."
      :newsletter/button                       "Open newsletter"
      :newsletter/text                         "This newsletter is delivered to you since you subscribed for it. If you have received this email by mistake or do not want to receive them anymore, "
      :newsletter/unsubscribe                  "unsubscribe using this link"

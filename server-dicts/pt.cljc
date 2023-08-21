@@ -1,12 +1,10 @@
 (ns orgpad.server.i18n.pt
-  (:require [orgpad.common.i18n.dict.en :as en]
-            [orgpad.server.i18n.en-admin :as en-admin]))
+  (:require [orgpad.common.i18n.dict.pt :as pt]))
 
 (def dict
   "A dictionary map from keywords to the corresponding English texts."
   (merge
-    en/dict
-    en-admin/dict
+    pt/dict
     {:orgpage/untitled                        "um documento"
      :permission/view                         "ler"
      :permission/edit                         "editar"

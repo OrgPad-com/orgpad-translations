@@ -3,7 +3,8 @@
 (def dict
   "A dictionary map from keywords to the corresponding English texts."
   {:lang/name          "Português"
-   :lang/plural-breaks [0 1 2]             ; Counts of elements for which the next translation for :i18n/plural is used.
+   :lang/en-name       "Portuguese"
+   :lang/plural-breaks [0 1 2]                              ; Counts of elements for which the next translation for :i18n/plural is used.
 
    :date/january       "Janeiro"
    :date/february      "Fevereiro"

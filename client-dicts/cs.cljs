@@ -269,7 +269,11 @@
      :lang/pl                                         "Polsky"
      :lang/ru                                         "Rusky"
 
-     :language-select/lang-tooltip                    (fn [{:language-select/keys [lang-name lang-en-name]}]
+     :lang-select/tooltip                             "Jazyk aplikace (CTRL+SHIFT+L)"
+     :lang-select/help-by-translating                 [:<> "Chybí Váš jazyk? Pomozte nám "
+                                                       [:a {:href   "https://github.com/OrgPad-com/orgpad-translations"
+                                                            :target "_blank"} "přeložit OrgPad"] "."]
+     :lang-select/full-lang-name                      (fn [{:language-select/keys [lang-name lang-en-name]}]
                                                         (str lang-name (when lang-en-name (str " (" lang-en-name ")"))))
 
      :limit/of                                        " z "
@@ -668,7 +672,6 @@
      :settings/set-password-text                      " Nastavte heslo před zrušením propojení."
      :settings/linked-accounts-info                   "Propojte svůj účet na Facebooku nebo na Googlu s OrgPadem, abyste ho mohli využít k přihlášení."
      :settings/profile-info                           "Pomocí zadaných informací Vás spolupracující na společných projektech snadněji naleznou."
-     :settings/select-language                        "Jazyk aplikace (CTRL+SHIFT+L): "
 
      :settings/delete-account                         "Smazat účet"
      :settings/confirm-delete-account-question        [:<> [:b "Trvale"] " smazat účet?"]

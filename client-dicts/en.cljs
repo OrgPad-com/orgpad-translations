@@ -269,7 +269,11 @@
      :lang/pl                                         "Polish"
      :lang/ru                                         "Russian"
 
-     :language-select/lang-tooltip                    (fn [{:language-select/keys [lang-name lang-en-name]}]
+     :lang-select/tooltip                             "Language of the app (CTRL+SHIFT+L)"
+     :lang-select/help-by-translating                 [:<> "Do you miss your language? Help us by "
+                                                       [:a {:href   "https://github.com/OrgPad-com/orgpad-translations"
+                                                            :target "_blank"} "translating OrgPad"] "."]
+     :lang-select/full-lang-name                      (fn [{:language-select/keys [lang-name lang-en-name]}]
                                                         (str lang-name (when lang-en-name (str " (" lang-en-name ")"))))
 
      :limit/of                                        " of "
@@ -660,7 +664,6 @@
      :settings/set-password-text                      " Set password before unlinking."
      :settings/linked-accounts-info                   "Link your Facebook or Google account to OrgPad so you can use them to log in."
      :settings/profile-info                           "With the given information you will be easier to find for co-workers on a project."
-     :settings/select-language                        "Language of the app (CTRL+SHIFT+L): "
 
      :settings/delete-account                         "Delete account"
      :settings/confirm-delete-account-question        [:<> [:b "Permanently"] " delete your account?"]

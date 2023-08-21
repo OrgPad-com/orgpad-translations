@@ -275,7 +275,11 @@
      :lang/pl                                         "Polnisch"
      :lang/ru                                         "Russisch"
 
-     :language-select/lang-tooltip                    (fn [{:language-select/keys [lang-name lang-en-name]}]
+     :lang-select/tooltip                             "Sprache für die Anwendung auswählen (STRG+UMSCHALT+L)"
+     :lang-select/help-by-translating                 [:<> "Vermissen Sie Ihre Sprache? Helfen Sie uns mit der "
+                                                       [:a {:href   "https://github.com/OrgPad-com/orgpad-translations"
+                                                            :target "_blank"} "Übersetzung von OrgPad"] "."]
+     :lang-select/full-lang-name                      (fn [{:language-select/keys [lang-name lang-en-name]}]
                                                         (str lang-name (when lang-en-name (str " (" lang-en-name ")"))))
 
      :limit/of                                        " von "
@@ -669,7 +673,6 @@
      :settings/set-password-text                      " Setzen Sie vor dem Trennen der Verbindung bitte ein Passwort."
      :settings/linked-accounts-info                   "Verbindnen Sie Ihr Facebook oder Google Konto mit OrgPad, sodass Sie diese Konten zur Anmeldung benutzen können."
      :settings/profile-info                           "Über die angeführten Informationen sind Sie leichter für Mitwirkende an gemeinsamen Projekten auffindbar."
-     :settings/select-language                        "Sprache für die Anwendung auswählen (STRG+UMSCHALT+L): "
 
      :settings/delete-account                         "Konto löschen"
      :settings/confirm-delete-account-question        "Sind Sie sicher, Sie wollen das Konto dauerhaft löschen?"
