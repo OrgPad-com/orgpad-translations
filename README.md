@@ -10,4 +10,4 @@ Thank you for contributing! We appreciate it dearly and hope it will make OrgPad
 
 # Contributing
 
-We appreciate formal and informal contributions. If you want to submit corrections or small improvements, please open a Pull Request or let us know using the support [at] orgpad.com e-mail address or using the [social media](https://orgpad.com/s/vwWxIb2TgHh). For anything bigger, such as a full new language, please let us know beforehand to discuss the approach.
+We appreciate formal and informal contributions. If you want to submit corrections or small improvements, please open a Pull Request or let us know using the support@orgpad.info e-mail address or using the [social media](https://orgpad.com/s/vwWxIb2TgHh). For anything bigger, such as a full new language, please let us know beforehand to discuss the approach.
