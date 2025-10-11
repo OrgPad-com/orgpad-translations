@@ -87,11 +87,38 @@ Here are examples of what you might see:
 ### Simple text:
 
 ```clojure
-:button/save "Save"
+:button/save              "Save"
 :dashboard/owned-orgpages "My OrgPages"
-:export/title "Export {orgpage/title}"
+:export/title             "Export {orgpage/title}"
 ```
 
+### Pluralization (:i18n/plural)
+
+Pluralization handles different grammatical forms based on count values.
+
+```clojure
+:info/uploading-attachments [:i18n/plural "Uploading {info/count} {info/num-files} …"
+                             {:info/num-files [:info/count "files" "file" "files"]}]
+ ```
+
+**How it works:**
+
+The system looks up the count value using `param/count-key`. It uses `:lang/plural-breaks` to determine which plural
+form to use
+
+For English: `[0 1 2]` means:
+
+- 0 or less: use first form ("files")
+- 1: use second form ("file")
+- 2+: use third form ("files")
+
+### Dynamic content:
+
+```clojure
+:feedback/upgrade-subscription (fn [{:user/keys [email]}]
+                                   [:<> "Write us how we should change your existing subscription and any further information."
+                                    " We will contact you shortly at your email address " [:b email] "."])
+```
 ### Pluralization (:i18n/plural)
 
 Pluralization handles different grammatical forms based on count values.
