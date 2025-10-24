@@ -704,8 +704,8 @@
      :registration/server-error                       "Error del servidor. Intenta crear la cuenta de nuevo."
      :registration/missing-oauth-email                "{registration/service} no nos ha proporcionado tu correo electrónico. Por favor, rellénalo a continuación."
 
-     :search/previous-match                           "Coincidencia anterior (Pág. arriba)"
-     :search/next-match                               "Coincidencia siguiente (Pág. abajo)"
+     :search/previous-match                           "Coincidencia anterior (PÁGINA ARRIBA); primera coincidencia (INICIO)"
+     :search/next-match                               "Coincidencia siguiente (PÁGINA ABAJO, INTRO); última coincidencia (FIN)"
      :search/close                                    "Cerrar (ESC)"
      :search/cells-with-selected-attachments          "Las células con archivos y imágenes seleccionados."
 

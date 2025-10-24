@@ -689,8 +689,8 @@
      :registration/server-error                       "服务器错误。请重试创建帐户。"
      :registration/missing-oauth-email                "{registration/service}没有告诉我们您的电子邮件。请在下面填写。"
 
-     :search/previous-match                           "上一个匹配项 (Page Up)"
-     :search/next-match                               "下一个匹配项 (Page Down)"
+     :search/previous-match                           "上一个匹配项 (PAGE UP); 第一个匹配项 (HOME)"
+     :search/next-match                               "下一个匹配项 (PAGE DOWN, ENTER); 最后一个匹配项 (END)"
      :search/close                                    "关闭 (ESC)"
      :search/cells-with-selected-attachments          "包含所选文件和图片的单元格。"
 

@@ -702,8 +702,8 @@
      :registration/server-error                       "Помилка серверу. Спробуйте створити обліковий запис ще раз."
      :registration/missing-oauth-email                "{registration/service} не повідомила нам вашу електронну пошту. Будь ласка, заповніть її нижче."
 
-     :search/previous-match                           "Попередній збіг (Page Up)"
-     :search/next-match                               "Наступний збіг (Page Down)"
+     :search/previous-match                           "Попередній збіг (PAGE UP); перший збіг (HOME)"
+     :search/next-match                               "Наступний збіг (PAGE DOWN, ENTER); останній збіг (END)"
      :search/close                                    "Закрити (ESC)"
      :search/cells-with-selected-attachments          "Комірки з вибраними файлами та зображеннями."
 

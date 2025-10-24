@@ -708,8 +708,8 @@
      :registration/server-error                       "Erreur du serveur. Réessayez de créer le compte."
      :registration/missing-oauth-email                "{registration/service} ne nous a pas communiqué votre e-mail. Veuillez le renseigner ci-dessous."
 
-     :search/previous-match                           "Correspondance précédente (PAGEUP)"
-     :search/next-match                               "Correspondance suivante (PAGEDOWN)"
+     :search/previous-match                           "Correspondance précédente (PAGE UP); première correspondance (DÉBUT)"
+     :search/next-match                               "Correspondance suivante (PAGE DOWN, ENTRÉE); dernière correspondance (FIN)"
      :search/close                                    "Fermer (ESC)"
      :search/cells-with-selected-attachments          "Les cellules avec les fichiers et images sélectionnés."
 

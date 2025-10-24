@@ -706,8 +706,8 @@
      :registration/server-error                       "सर्वर त्रुटि। फिर से खाता बनाने का प्रयास करें।"
      :registration/missing-oauth-email                "{registration/service} ने हमें आपका ईमेल नहीं बताया। कृपया इसे नीचे भरें।"
 
-     :search/previous-match                           "पिछला मिलान (Page Up)"
-     :search/next-match                               "अगला मिलान (Page Down)"
+     :search/previous-match                           "पिछला मिलान (PAGE UP); पहला मिलान (HOME)"
+     :search/next-match                               "अगला मिलान (PAGE DOWN, ENTER); अंतिम मिलान (END)"
      :search/close                                    "बंद करें (ESC)"
      :search/cells-with-selected-attachments          "चयनित फ़ाइलों और छवियों वाले सेल।"
 

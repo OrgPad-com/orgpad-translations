@@ -706,8 +706,8 @@
      :registration/server-error                       "Błąd serwera. Spróbuj utworzyć konto ponownie."
      :registration/missing-oauth-email                "{{registration/service}} nie przekazał nam Twojego adresu e-mail. Wpisz go poniżej."
 
-     :search/previous-match                           "Poprzednie dopasowanie (PAGEUP)"
-     :search/next-match                               "Następne dopasowanie (PAGEDOWN)"
+     :search/previous-match                           "Poprzednie dopasowanie (PAGE UP); pierwsze dopasowanie (HOME)"
+     :search/next-match                               "Następne dopasowanie (PAGE DOWN, ENTER); ostatnie dopasowanie (END)"
      :search/close                                    "Zamknij (ESC)"
      :search/cells-with-selected-attachments          "Komórki z wybranymi plikami i obrazami."
 

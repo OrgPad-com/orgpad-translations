@@ -720,8 +720,8 @@
      :registration/server-error                       "Chyba servera. Skúste vytvoriť účet znova."
      :registration/missing-oauth-email                "{{registration/service}} nám neposkytol váš e-mail. Vyplňte ho prosím nižšie."
 
-     :search/previous-match                           "Predchádzajúca zhoda (Page Up)"
-     :search/next-match                               "Nasledujúca zhoda (Page Down)"
+     :search/previous-match                           "Predchádzajúca zhoda (PAGE UP); prvá zhoda (HOME)"
+     :search/next-match                               "Nasledujúca zhoda (PAGE DOWN, ENTER); posledná zhoda (END)"
      :search/close                                    "Zavrieť (ESC)"
      :search/cells-with-selected-attachments          "Bunky s označenými súbormi a obrázkami."
 

@@ -707,8 +707,8 @@
      :registration/server-error                       "Errore del server. Prova a creare di nuovo l'account."
      :registration/missing-oauth-email                "{{registration/service}} non ci ha comunicato la tua e-mail. Compilala di seguito."
 
-     :search/previous-match                           "Corrispondenza precedente (Pagina su)"
-     :search/next-match                               "Corrispondenza successiva (Pagina giù)"
+     :search/previous-match                           "Corrispondenza precedente (PAGINA SU); prima corrispondenza (HOME)"
+     :search/next-match                               "Corrispondenza successiva (PAGINA GIÙ, INVIO); ultima corrispondenza (FINE)"
      :search/close                                    "Chiudi (ESC)"
      :search/cells-with-selected-attachments          "Le celle con i file e le immagini selezionati."
 

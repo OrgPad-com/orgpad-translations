@@ -718,8 +718,8 @@
      :registration/server-error                       "Serverfout. Probeer het account opnieuw aan te maken."
      :registration/missing-oauth-email                "{registration/service} heeft je e-mailadres niet doorgegeven. Vul het hieronder in."
 
-     :search/previous-match                           "Vorige overeenkomst (Page Up)"
-     :search/next-match                               "Volgende overeenkomst (Page Down)"
+     :search/previous-match                           "Vorige overeenkomst (PAGE UP); eerste overeenkomst (HOME)"
+     :search/next-match                               "Volgende overeenkomst (PAGE DOWN, ENTER); laatste overeenkomst (END)"
      :search/close                                    "Sluiten (ESC)"
      :search/cells-with-selected-attachments          "Cellen met de geselecteerde bestanden en afbeeldingen."
 

@@ -705,8 +705,8 @@
      :registration/server-error                       "Ошибка сервера. Попробуйте создать учетную запись еще раз."
      :registration/missing-oauth-email                "{registration/service} не сообщила нам ваш адрес электронной почты. Пожалуйста, заполните его ниже."
 
-     :search/previous-match                           "Предыдущее совпадение (Page Up)"
-     :search/next-match                               "Следующее совпадение (Page Down)"
+     :search/previous-match                           "Предыдущее совпадение (PAGE UP); первое совпадение (HOME)"
+     :search/next-match                               "Следующее совпадение (PAGE DOWN, ENTER); последнее совпадение (END)"
      :search/close                                    "Закрыть (ESC)"
      :search/cells-with-selected-attachments          "Ячейки с выбранными файлами и изображениями."
 

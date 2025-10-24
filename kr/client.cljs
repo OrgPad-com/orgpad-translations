@@ -686,8 +686,8 @@
      :registration/server-error                       "서버 오류입니다. 계정을 다시 만들어 보십시오."
      :registration/missing-oauth-email                "{registration/service}에서 귀하의 이메일을 알려주지 않았습니다. 아래에 기입해 주십시오."
 
-     :search/previous-match                           "이전 일치 항목 (PAGEUP)"
-     :search/next-match                               "다음 일치 항목 (PAGEDOWN)"
+     :search/previous-match                           "이전 일치 항목 (PAGE UP); 첫 번째 일치 항목 (HOME)"
+     :search/next-match                               "다음 일치 항목 (PAGE DOWN, ENTER); 마지막 일치 항목 (END)"
      :search/close                                    "닫기 (ESC)"
      :search/cells-with-selected-attachments          "선택한 파일 및 이미지가 있는 셀."
 

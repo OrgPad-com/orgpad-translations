@@ -720,8 +720,8 @@
      :registration/server-error                       "Serverfehler. Bitte versuchen Sie erneut das Konto zu erstellen."
      :registration/missing-oauth-email                "{registration/service} hat uns Ihre E-Mail-Adresse nicht mitgeteilt. Bitte geben Sie sie unten ein."
 
-     :search/previous-match                           "Vorherige Übereinstimmung (Bild auf)"
-     :search/next-match                               "Nächste Übereinstimmung (Bild ab)"
+     :search/previous-match                           "Vorherige Übereinstimmung (BILD AUF); erste Übereinstimmung (POS1)"
+     :search/next-match                               "Nächste Übereinstimmung (BILD AB, EINGABE); letzte Übereinstimmung (ENDE)"
      :search/close                                    "Schließen (ESC)"
      :search/cells-with-selected-attachments          "Die Einheiten mit ausgewählten Dateien und Bildern."
 

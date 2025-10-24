@@ -710,8 +710,8 @@
      :registration/server-error                       "Erro no servidor. Tente criar a conta novamente."
      :registration/missing-oauth-email                "{registration/service} não nos informou seu e-mail. Preencha seu e-mail abaixo."
 
-     :search/previous-match                           "Resultado anterior (Page Up)"
-     :search/next-match                               "Próximo resultado (Page Down)"
+     :search/previous-match                           "RESULTADO ANTERIOR (PAGE UP); PRIMEIRO RESULTADO (HOME)"
+     :search/next-match                               "Próximo resultado (PAGE DOWN, ENTER); último resultado (END)"
      :search/close                                    "Fechar (ESC)"
      :search/cells-with-selected-attachments          "As células com arquivos e imagens selecionados."
 

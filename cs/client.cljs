@@ -724,8 +724,8 @@
      :registration/server-error                       "Chyba serveru. Zkuste vytvořit účet znovu."
      :registration/missing-oauth-email                "{registration/service} nám nesdělil Váš e-mail. Vyplňte ho prosím níže."
 
-     :search/previous-match                           "Předchozí výskyt (Page Up)"
-     :search/next-match                               "Následující výskyt (Page Down)"
+     :search/previous-match                           "Předchozí výskyt (PAGE UP); první výskyt (HOME)"
+     :search/next-match                               "Následující výskyt (PAGE DOWN, ENTER); poslední výskyt (END)"
      :search/close                                    "Zavřít (ESC)"
      :search/cells-with-selected-attachments          "Buňky s označenými soubory a obrázky."
 

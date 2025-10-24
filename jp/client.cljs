@@ -687,8 +687,8 @@
      :registration/server-error                       "サーバーエラー。もう一度アカウントを作成してみてください。"
      :registration/missing-oauth-email                "{registration/service}からメールアドレスが提供されませんでした。以下に入力してください。"
 
-     :search/previous-match                           "前の候補 (Page Up)"
-     :search/next-match                               "次の候補 (Page Down)"
+     :search/previous-match                           "前の候補 (PAGE UP); 最初の候補 (HOME)"
+     :search/next-match                               "次の候補 (PAGE DOWN, ENTER); 最後の候補 (END)"
      :search/close                                    "閉じる (ESC)"
      :search/cells-with-selected-attachments          "選択されたファイルと画像を含むセル。"
 

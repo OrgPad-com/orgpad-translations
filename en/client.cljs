@@ -707,8 +707,8 @@
      :registration/server-error                       "Server error. Try creating the account again."
      :registration/missing-oauth-email                "{registration/service} did not let us know your email. Please fill it out below."
 
-     :search/previous-match                           "Previous match (Page Up)"
-     :search/next-match                               "Next match (Page Down)"
+     :SEARCH/PREVIOUS-MATCH                           "Previous match (PAGE UP); first match (HOME)"
+     :SEARCH/NEXT-MATCH                               "Next match (PAGE DOWN, ENTER); last match (END)"
      :search/close                                    "Close (ESC)"
      :search/cells-with-selected-attachments          "The cells with selected files and images."
 
